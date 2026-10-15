@@ -380,9 +380,9 @@ themeToggles.forEach((t) => t.addEventListener('click', () => {
 darkMQ.addEventListener('change', (e) => { if (!storedTheme()) applyTheme(e.matches ? 'dark' : 'light'); });
 applyTheme(root.dataset.theme === 'dark' ? 'dark' : 'light');
 
-// Below 1024px the links collapse behind a menu button.
+// Below 640px (phones) the links collapse behind a menu button.
 const menuBtn = document.querySelector('.menu-btn');
-const menuMQ = window.matchMedia('(max-width: 1024px)');
+const menuMQ = window.matchMedia('(max-width: 639px)');
 
 function setMenu(open) {
   nav.classList.toggle('is-open', open);
