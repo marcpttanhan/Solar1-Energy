@@ -349,6 +349,35 @@ function syncNavThumb() {
   placeThumb(navThumb, navLinks.find((a) => a.getAttribute('aria-current') === 'page'));
 }
 
+// ---------- Theme ----------
+// index.html sets <html data-theme> before paint. A stored choice wins; with no
+// stored choice the page follows the OS setting, including live changes.
+const root = document.documentElement;
+const themeToggle = document.querySelector('.theme-toggle');
+const themeColor = document.querySelector('meta[name="theme-color"]');
+const darkMQ = window.matchMedia('(prefers-color-scheme: dark)');
+
+function storedTheme() {
+  try {
+    const t = localStorage.getItem('theme');
+    return t === 'light' || t === 'dark' ? t : null;
+  } catch { return null; }
+}
+
+function applyTheme(theme) {
+  root.dataset.theme = theme;
+  themeToggle.setAttribute('aria-checked', String(theme === 'dark'));
+  themeColor.setAttribute('content', getComputedStyle(root).getPropertyValue('--paper').trim());
+}
+
+themeToggle.addEventListener('click', () => {
+  const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  try { localStorage.setItem('theme', next); } catch { /* private mode: still switches for this visit */ }
+  applyTheme(next);
+});
+darkMQ.addEventListener('change', (e) => { if (!storedTheme()) applyTheme(e.matches ? 'dark' : 'light'); });
+applyTheme(root.dataset.theme === 'dark' ? 'dark' : 'light');
+
 // Below 1024px the links collapse behind a menu button.
 const menuBtn = document.querySelector('.menu-btn');
 const menuMQ = window.matchMedia('(max-width: 1024px)');
