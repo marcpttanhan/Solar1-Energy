@@ -44,7 +44,7 @@ function renderPackages(seg) {
   pkGrid.innerHTML = data.items.map((p) => `
     <article class="pk">
       <div class="pk-media media-frame" data-img="Media/packages/${p.img}.jpg" data-alt="${p.name}">
-        <video src="Media/hero.mp4#t=${p.t}" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+        <video src="Media/hero.mp4#t=${p.t}" muted loop playsinline webkit-playsinline preload="metadata" disablepictureinpicture aria-hidden="true"></video>
         <span class="pk-badge">${p.badge}</span>
       </div>
       <h4>${p.name}</h4>
@@ -300,7 +300,9 @@ const heroVideo = document.querySelector('.hero-video');
 const impactVideo = document.querySelector('.impact-video');
 const videoToggles = [...document.querySelectorAll('.video-toggle')];
 const onScreen = new Map([[heroVideo, true], [impactVideo, false]]);
-let videosPaused = reduced();
+// Start paused under reduced motion or when the browser asks to save data.
+const saveData = navigator.connection?.saveData === true;
+let videosPaused = reduced() || saveData;
 
 heroVideo.muted = true; // required for autoplay in every browser
 impactVideo.muted = true;
@@ -337,13 +339,13 @@ impactVideo.addEventListener('loadedmetadata', () => { impactVideo.playbackRate 
 // Some browsers hold autoplay until the first interaction (e.g. battery saver).
 ['pointerdown', 'keydown', 'scroll'].forEach((ev) => window.addEventListener(ev, syncVideos, { once: true, passive: true }));
 document.addEventListener('visibilitychange', syncVideos);
-motionMQ.addEventListener('change', () => { videosPaused = reduced(); syncVideos(); });
+motionMQ.addEventListener('change', () => { videosPaused = reduced() || saveData; syncVideos(); });
 syncVideos();
 
 // ---------- Nav: sticks after the hero, highlights the section in view ----------
 const nav = document.querySelector('.nav');
 const navThumb = document.querySelector('.nav-thumb');
-const navLinks = [...document.querySelectorAll('.nav-links a')];
+const navLinks = [...document.querySelectorAll('.nav-links > a')];
 
 function syncNavThumb() {
   placeThumb(navThumb, navLinks.find((a) => a.getAttribute('aria-current') === 'page'));
@@ -353,7 +355,7 @@ function syncNavThumb() {
 // index.html sets <html data-theme> before paint. A stored choice wins; with no
 // stored choice the page follows the OS setting, including live changes.
 const root = document.documentElement;
-const themeToggle = document.querySelector('.theme-toggle');
+const themeToggles = [...document.querySelectorAll('.theme-toggle')];
 const themeColor = document.querySelector('meta[name="theme-color"]');
 const darkMQ = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -366,15 +368,15 @@ function storedTheme() {
 
 function applyTheme(theme) {
   root.dataset.theme = theme;
-  themeToggle.setAttribute('aria-checked', String(theme === 'dark'));
+  themeToggles.forEach((t) => t.setAttribute('aria-checked', String(theme === 'dark')));
   themeColor.setAttribute('content', getComputedStyle(root).getPropertyValue('--paper').trim());
 }
 
-themeToggle.addEventListener('click', () => {
+themeToggles.forEach((t) => t.addEventListener('click', () => {
   const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
   try { localStorage.setItem('theme', next); } catch { /* private mode: still switches for this visit */ }
   applyTheme(next);
-});
+}));
 darkMQ.addEventListener('change', (e) => { if (!storedTheme()) applyTheme(e.matches ? 'dark' : 'light'); });
 applyTheme(root.dataset.theme === 'dark' ? 'dark' : 'light');
 
@@ -388,7 +390,8 @@ function setMenu(open) {
   menuBtn.setAttribute('aria-label', open ? 'ปิดเมนู' : 'เปิดเมนู');
 }
 menuBtn.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
-navLinks.forEach((a) => a.addEventListener('click', () => setMenu(false)));
+// Any link in the drawer (sections or the CTA) closes it.
+document.querySelector('.nav-links').addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape' || !nav.classList.contains('is-open')) return;
   setMenu(false);

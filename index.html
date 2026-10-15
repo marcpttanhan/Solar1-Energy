@@ -36,7 +36,7 @@
 <!-- ============ HERO ============ -->
 <header class="hero-shell" id="top">
   <div class="hero">
-    <video class="hero-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true">
+    <video class="hero-video" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true">
       <source src="Media/hero.mp4" type="video/mp4">
     </video>
 
@@ -57,6 +57,18 @@
         <a href="#reviews">รีวิว</a>
         <a href="#contact">ติดต่อ</a>
         <span class="nav-thumb" aria-hidden="true"></span>
+        <!-- drawer extras: only shown when the links collapse behind the menu button -->
+        <div class="nav-drawer-foot">
+          <div class="drawer-row">
+            <span id="drawer-theme-label">โหมดมืด</span>
+            <button class="theme-toggle" type="button" role="switch" aria-checked="false" aria-labelledby="drawer-theme-label">
+              <span class="theme-knob" aria-hidden="true"></span>
+              <svg class="i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+              <svg class="i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+            </button>
+          </div>
+          <a class="btn btn--orange drawer-cta" href="#calculator">คำนวณความคุ้มค่า <span class="btn-ico"><svg><use href="#i-arrow"/></svg></span></a>
+        </div>
       </div>
       <div class="nav-actions">
         <button class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="โหมดมืด">
@@ -109,7 +121,7 @@
     </div>
 
     <div class="impact-panel media-frame">
-      <video class="impact-video" src="Media/hero.mp4#t=6.5" muted loop playsinline preload="metadata" disablepictureinpicture disableremoteplayback aria-hidden="true"></video>
+      <video class="impact-video" src="Media/hero.mp4#t=6.5" muted loop playsinline webkit-playsinline preload="metadata" disablepictureinpicture disableremoteplayback aria-hidden="true"></video>
       <button class="video-toggle video-toggle--panel" type="button" aria-pressed="false" aria-label="หยุดวิดีโอพื้นหลัง">
         <svg class="i-pause"><use href="#i-pause"/></svg><svg class="i-play"><use href="#i-play"/></svg>
       </button>
@@ -210,7 +222,7 @@
 
           <div class="field">
             <label for="tariff">ค่าไฟต่อหน่วยรวม Ft และภาษี</label>
-            <div class="tariff"><input type="number" id="tariff" step="0.05" min="2" max="9"><span>บาท / หน่วย</span></div>
+            <div class="tariff"><input type="number" id="tariff" step="0.05" min="2" max="9" inputmode="decimal"><span>บาท / หน่วย</span></div>
           </div>
         </div>
 
