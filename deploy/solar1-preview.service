@@ -1,0 +1,15 @@
+[Unit]
+Description=Solar One Energy preview server (127.0.0.1:8080, HTTP Range support)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/devuser/Downloads/Solar1
+ExecStart=/usr/bin/python3 /home/devuser/Downloads/Solar1/.claude/serve.py 8080
+Restart=always
+RestartSec=3
+# Python output goes straight to the journal
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=default.target
