@@ -323,6 +323,7 @@ a, button, input, label { -webkit-tap-highlight-color: transparent; }
   letter-spacing: -0.015em;
 }
 .hero h1 .line { display: block; }
+.hero h1 .line[hidden] { display: none; }
 
 .hero-copy p {
   font-size: 15px;
@@ -1058,6 +1059,18 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
 .tariff:focus-within { box-shadow: 0 0 0 4px rgba(252,87,31,.1); }
 
 .foot-col a { transition: color .2s; }
+
+/* admin entry: a quiet dot after the copyright line */
+.admin-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  margin-left: 8px;
+  vertical-align: middle;
+  border-radius: 50%;
+  background: var(--line-strong);
+  transition: background-color .2s, transform .2s;
+}
+.admin-dot:hover, .admin-dot:focus-visible { background: var(--orange); transform: scale(1.4); }
 
 .bar i { transition: top .5s var(--ease), height .5s var(--ease), background-color .4s; }
 

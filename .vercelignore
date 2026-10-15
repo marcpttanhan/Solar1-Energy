@@ -1,3 +1,4 @@
 .claude/
 deploy/
 Media/README.md
+supabase_schema.sql

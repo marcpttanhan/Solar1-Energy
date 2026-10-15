@@ -1,61 +1,37 @@
-// ---------- Packages ----------
-const PACKAGES = {
-  home: {
-    note: 'ราคารวมติดตั้งบนหลังคาเมทัลชีตหรือกระเบื้องลอนคู่ ราคาสำหรับหลังคาประเภทอื่นวิศวกรจะประเมินหลังสำรวจหน้างาน',
-    items: [
-      { name: 'ชุดบ้าน 5 kWp', badge: 'ออนกริด 1 เฟส', t: 2.2, img: 'home-5kwp',
-        fit: 'บ้านที่ค่าไฟ 3,000–5,000 บาทต่อเดือน มีคนอยู่บ้านช่วงกลางวัน',
-        specs: [['แผง N-type 580W', '9 แผง'], ['ผลิตไฟเฉลี่ย', '550 หน่วย/เดือน'], ['ประหยัดได้', '~2,300 บาท/เดือน'], ['รับประกันแผง', '30 ปี']],
-        price: '159,000' },
-      { name: 'ชุดบ้านไฮบริด 10 kWp', badge: 'ไฮบริด + แบตเตอรี่ 10 kWh', t: 5, img: 'home-hybrid-10kwp',
-        fit: 'บ้านที่ใช้ไฟช่วงเย็นถึงกลางคืนสูง หรืออยู่ในพื้นที่ไฟตกบ่อย',
-        specs: [['แผง N-type 580W', '18 แผง'], ['ผลิตไฟเฉลี่ย', '1,100 หน่วย/เดือน'], ['ประหยัดได้', '~4,600 บาท/เดือน'], ['รับประกันแบตเตอรี่', '10 ปี']],
-        price: '389,000' },
-      { name: 'ชุดธุรกิจ 30 kWp', badge: 'ออนกริด 3 เฟส', t: 8.2, img: 'business-30kwp',
-        fit: 'ร้านค้า คลินิก และสำนักงานที่เปิดทำการช่วงกลางวัน',
-        specs: [['แผง N-type 580W', '52 แผง'], ['ผลิตไฟเฉลี่ย', '3,300 หน่วย/เดือน'], ['ประหยัดได้', '~13,900 บาท/เดือน'], ['รับประกันอินเวอร์เตอร์', '10 ปี']],
-        price: '690,000' },
-    ],
-  },
-  factory: {
-    note: 'สำหรับระบบตั้งแต่ 500 kWp ขึ้นไป มีทางเลือกสัญญาซื้อขายไฟ (PPA) ที่ไม่ต้องลงทุนเอง โดยจ่ายเฉพาะค่าไฟในอัตราที่ต่ำกว่าการไฟฟ้า',
-    items: [
-      { name: 'ชุดโรงงาน 100 kWp', badge: 'ออนกริด 3 เฟส', t: 1.2, img: 'factory-100kwp',
-        fit: 'โรงงานขนาดเล็กและโกดังสินค้าที่เดินเครื่องช่วงกลางวัน',
-        specs: [['แผง N-type 580W', '172 แผง'], ['ผลิตไฟเฉลี่ย', '11,000 หน่วย/เดือน'], ['ประหยัดได้', '~48,400 บาท/เดือน'], ['คืนทุนประมาณ', '3.5 ปี']],
-        price: '2,050,000' },
-      { name: 'ชุดโรงงาน 300 kWp', badge: 'ออนกริด พร้อมระบบกันย้อน', t: 4.2, img: 'factory-300kwp',
-        fit: 'โรงงานที่ใช้ไฟต่อเนื่องสองกะ และอาคารพาณิชย์ขนาดกลาง',
-        specs: [['แผง N-type 580W', '518 แผง'], ['ผลิตไฟเฉลี่ย', '33,000 หน่วย/เดือน'], ['ประหยัดได้', '~145,000 บาท/เดือน'], ['คืนทุนประมาณ', '3.2 ปี']],
-        price: '5,550,000' },
-      { name: 'ชุดโรงงาน 1 MWp', badge: 'ลงทุนเองหรือ PPA', t: 7.4, img: 'factory-1mwp',
-        fit: 'นิคมอุตสาหกรรมและโรงงานขนาดใหญ่ที่ต้องการลดคาร์บอนตามเป้าองค์กร',
-        specs: [['แผง N-type 580W', '1,724 แผง'], ['ผลิตไฟเฉลี่ย', '110,000 หน่วย/เดือน'], ['ประหยัดได้', '~484,000 บาท/เดือน'], ['ลดคาร์บอน', '~660 ตัน/ปี']],
-        price: '16,900,000' },
-    ],
-  },
-};
+// ---------- Content ----------
+// Defaults from js/content.js; Supabase content (if configured) replaces them
+// section by section once loaded. See applyContent() near the end of this file.
+let content = SolarContent.resolve(null);
+const { esc } = SolarContent;
 
+// ---------- Packages ----------
 const pkGrid = document.getElementById('pk-grid');
 const pkNote = document.getElementById('pk-note');
 
+let pkSeg = 'home';
+
+// Every value is escaped: package text can come from the admin panel.
 function renderPackages(seg) {
-  const data = PACKAGES[seg];
-  pkGrid.innerHTML = data.items.map((p) => `
+  pkSeg = seg;
+  const data = content.packages[seg];
+  pkGrid.innerHTML = data.items.map((p) => {
+    // An admin-supplied image URL loads directly; built-in slots wait for Media/images.json.
+    const img = p.image ? `data-img-src="${esc(p.image)}"` : p.slot ? `data-img="Media/packages/${esc(p.slot)}.jpg"` : '';
+    return `
     <article class="pk">
-      <div class="pk-media media-frame" data-img="Media/packages/${p.img}.jpg" data-alt="${p.name}">
+      <div class="pk-media media-frame" ${img} data-alt="${esc(p.name)}">
         <video src="Media/hero.mp4#t=${p.t}" muted loop playsinline webkit-playsinline preload="metadata" disablepictureinpicture aria-hidden="true"></video>
-        <span class="pk-badge">${p.badge}</span>
+        ${p.badge ? `<span class="pk-badge">${esc(p.badge)}</span>` : ''}
       </div>
-      <h4>${p.name}</h4>
-      <p class="pk-fit">${p.fit}</p>
-      <dl class="pk-specs">
-        ${p.specs.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}
-      </dl>
-      <div class="pk-price"><span>ราคาเริ่มต้นรวมติดตั้ง</span><strong>${p.price} บาท</strong></div>
+      <h4>${esc(p.name)}</h4>
+      ${p.fit ? `<p class="pk-fit">${esc(p.fit)}</p>` : ''}
+      ${p.specs.length ? `<dl class="pk-specs">${p.specs.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
+      ${p.price ? `<div class="pk-price"><span>ราคาเริ่มต้นรวมติดตั้ง</span><strong>${fmt(p.price)} บาท</strong></div>` : ''}
       <a class="pk-more" href="#contact">ขอรายละเอียดแพ็กเกจ <svg width="10" height="10"><use href="#i-arrow"/></svg></a>
-    </article>`).join('');
+    </article>`;
+  }).join('');
   pkNote.textContent = data.note;
+  pkNote.hidden = !data.note;
   pkGrid.querySelectorAll('.media-frame').forEach(initFrame);
 }
 
@@ -76,38 +52,26 @@ function initFrame(frame) {
     video.addEventListener('loadeddata', () => frame.classList.remove('is-loading'), { once: true });
     video.addEventListener('error', () => frame.classList.remove('is-loading'), { once: true });
   }
-  const src = frame.dataset.img;
-  if (!src) return;
-  availableImages.then((list) => {
-    if (!list.has(src) || !frame.isConnected) return;
+  const placeImage = (src) => {
     const img = document.createElement('img');
     img.className = 'frame-img';
     img.alt = frame.dataset.alt || '';
     img.decoding = 'async';
-    img.addEventListener('load', () => { frame.prepend(img); frame.classList.add('has-img'); }, { once: true });
+    // Only swap in once it has loaded; a broken URL leaves the line drawing.
+    img.addEventListener('load', () => { if (frame.isConnected) { frame.prepend(img); frame.classList.add('has-img'); } }, { once: true });
     img.src = src;
-  });
+  };
+  if (frame.dataset.imgSrc) return placeImage(frame.dataset.imgSrc);
+  const src = frame.dataset.img;
+  if (!src) return;
+  availableImages.then((list) => { if (list.has(src) && frame.isConnected) placeImage(src); });
 }
 
 // ---------- Calculator ----------
-// Thailand averages: ~110 kWh per kWp per month, 0.5%/yr panel degradation,
-// grid emission factor ~0.5 kgCO2/kWh.
-const YIELD = 110;
-const DEGRADE = 0.005;
-const PROFILES = {
-  home: {
-    bill: { min: 1500, max: 30000, step: 500, value: 4500 },
-    day: 50, tariff: 4.2,
-    round: 0.5, minKw: 3, maxKw: 50,
-    costPerKw: (kw) => (kw <= 5 ? 32000 : kw <= 10 ? 28000 : kw <= 20 ? 25000 : 23000),
-  },
-  factory: {
-    bill: { min: 30000, max: 2000000, step: 10000, value: 250000 },
-    day: 70, tariff: 4.4,
-    round: 5, minKw: 30, maxKw: 1000,
-    costPerKw: (kw) => (kw <= 100 ? 21000 : kw <= 300 ? 19000 : kw <= 600 ? 18000 : 17000),
-  },
-};
+// Yield, degradation, tariffs and cost tiers come from content.roi (js/content.js
+// defaults, or the admin panel). Cost per kWp is the first tier whose upTo covers
+// the system size; the last tier is open-ended.
+const costPerKw = (profile, kw) => (profile.tiers.find((t) => t.upTo === null || kw <= t.upTo) || profile.tiers[profile.tiers.length - 1]).perKw;
 
 const $ = (id) => document.getElementById(id);
 const bill = $('bill');
@@ -128,7 +92,7 @@ function setFill(input) {
 
 function loadProfile(seg) {
   calcSeg = seg;
-  const p = PROFILES[seg];
+  const p = content.roi[seg];
   Object.assign(bill, { min: p.bill.min, max: p.bill.max, step: p.bill.step });
   bill.value = p.bill.value;
   day.value = p.day;
@@ -137,7 +101,8 @@ function loadProfile(seg) {
 }
 
 function calculate() {
-  const p = PROFILES[calcSeg];
+  const { yield: YIELD, degradation: DEGRADE } = content.roi;
+  const p = content.roi[calcSeg];
   const b = +bill.value;
   const share = +day.value / 100;
   const rate = Math.max(+tariff.value || p.tariff, 1);
@@ -147,7 +112,7 @@ function calculate() {
   let kw = Math.round(dayUnits / YIELD / p.round) * p.round;
   kw = Math.min(Math.max(kw, p.minKw), p.maxKw);
 
-  const cost = kw * p.costPerKw(kw);
+  const cost = kw * costPerKw(p, kw);
   const usedUnits = Math.min(kw * YIELD, dayUnits);
   const monthly = usedUnits * rate;
   const yearly = monthly * 12;
@@ -429,8 +394,14 @@ navLinks.forEach((a) => {
 });
 
 // ---------- Hero load sequence ----------
-// Wait for Anuphan so the headline doesn't reflow mid-animation (capped at 700ms).
-Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 700))]).then(() => {
+// Wait for Anuphan (and, on a first visit, Supabase content) so the headline
+// doesn't reflow or swap mid-animation. Capped so a slow network never blocks it.
+// Assigned by the content boot at the end of this file; read in a microtask, after it has run.
+let contentReady = Promise.resolve();
+Promise.race([
+  Promise.all([document.fonts.ready, Promise.resolve().then(() => contentReady)]),
+  new Promise((r) => setTimeout(r, 900)),
+]).then(() => {
   // Not rAF: it never fires in background tabs, which would leave the hero invisible.
   void hero.offsetWidth;
   hero.classList.add('is-ready');
@@ -528,6 +499,91 @@ window.addEventListener('resize', () => {
   syncNavThumb();
 });
 
+// ---------- Content: hero, contact, packages, calculator ----------
+
+function setText(sel, text) {
+  document.querySelectorAll(sel).forEach((el) => { el.textContent = text; });
+}
+
+function applyHero(h) {
+  setText('[data-c="hero.tag"]', h.tag);
+  setText('[data-c="hero.subtitle"]', h.subtitle);
+  setText('[data-c="hero.ctaPrimary"]', h.ctaPrimary);
+  setText('[data-c="hero.ctaSecondary"]', h.ctaSecondary);
+  document.querySelectorAll('.hero h1 .line').forEach((line, i) => {
+    line.hidden = i >= h.lines.length;
+    if (i < h.lines.length) line.firstElementChild.textContent = h.lines[i];
+  });
+  if (h.posterUrl) heroVideo.poster = h.posterUrl; else heroVideo.removeAttribute('poster');
+  const want = new URL(h.videoUrl, document.baseURI).href;
+  if ((heroVideo.currentSrc || heroVideo.querySelector('source')?.src) !== want) {
+    heroVideo.querySelector('source')?.remove();
+    heroVideo.src = h.videoUrl;
+    heroVideo.load();
+    heroVideo.addEventListener('canplay', syncVideos, { once: true });
+  }
+}
+
+const telHref = (phone) => {
+  const digits = phone.replace(/[^\d+]/g, '');
+  return /^\+?\d{9,15}$/.test(digits) ? `tel:${digits}` : '';
+};
+const mailHref = (email) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? `mailto:${email}` : '');
+
+function listItem(text, href) {
+  const li = document.createElement('li');
+  if (href) {
+    const a = document.createElement('a');
+    a.href = href;
+    a.textContent = text;
+    if (/^https?:/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
+    li.append(a);
+  } else {
+    li.textContent = text;
+  }
+  return li;
+}
+
+function applyContact(c) {
+  document.getElementById('foot-address').replaceChildren(...c.addressLines.map((l) => listItem(l)));
+  const items = [];
+  if (c.phone) items.push(listItem(c.phone, telHref(c.phone)));
+  if (c.email) items.push(listItem(c.email, mailHref(c.email)));
+  if (c.hours) items.push(listItem(c.hours));
+  if (c.lineId) items.push(listItem(`LINE ${c.lineId}`, `https://line.me/R/ti/p/${encodeURIComponent(c.lineId)}`));
+  [['Facebook', c.facebook], ['Instagram', c.instagram], ['YouTube', c.youtube], ['TikTok', c.tiktok]]
+    .forEach(([label, url]) => { if (url) items.push(listItem(label, url)); });
+  document.getElementById('foot-contact').replaceChildren(...items);
+  document.getElementById('foot-cta-btn').href = telHref(c.phone) || mailHref(c.email) || '#contact';
+}
+
+// Applies a complete content object. Sections that did not change are left
+// alone, so a late Supabase response never resets what a visitor typed.
+function applyContent(next, { force = false } = {}) {
+  const prev = content;
+  content = next;
+  const changed = (k) => force || JSON.stringify(prev[k]) !== JSON.stringify(next[k]);
+  if (changed('hero')) applyHero(next.hero);
+  if (changed('contact')) applyContact(next.contact);
+  if (changed('packages')) renderPackages(pkSeg);
+  if (changed('roi')) loadProfile(calcSeg);
+}
+
 document.querySelectorAll('.avatar[data-img], .impact-panel').forEach(initFrame);
+
+// First paint: last cached Supabase content (repeat visits) or the defaults.
+const cached = SolarContent.readCache();
+content = SolarContent.resolve(cached);
+if (cached) { applyHero(content.hero); applyContact(content.contact); }
 renderPackages('home');
 loadProfile('home');
+
+// Then refresh from Supabase. Failures keep whatever is on screen.
+contentReady = SolarContent.config()
+  ? SolarContent.fetchRemote()
+      .then((remote) => {
+        SolarContent.writeCache(remote);
+        applyContent(SolarContent.resolve(remote));
+      })
+      .catch((err) => { console.warn('[content] using built-in content:', err.message); })
+  : Promise.resolve();

@@ -91,7 +91,7 @@
 
     <div class="hero-bottom">
       <div>
-        <span class="tag" data-in style="--d:200ms"><span class="dot"></span>ให้บริการติดตั้งโซลาร์เซลล์ทั่วประเทศ</span>
+        <span class="tag" data-in style="--d:200ms"><span class="dot"></span><span data-c="hero.tag">ให้บริการติดตั้งโซลาร์เซลล์ทั่วประเทศ</span></span>
         <h1>
           <span class="line"><span style="--d:260ms">เปลี่ยนหลังคา</span></span>
           <span class="line"><span style="--d:340ms">ให้เป็นโรงไฟฟ้า</span></span>
@@ -99,10 +99,10 @@
         </h1>
       </div>
       <div class="hero-copy">
-        <p data-in style="--d:520ms">Solar One Energy ออกแบบและติดตั้งระบบโซลาร์เซลล์สำหรับบ้าน ธุรกิจ และโรงงานทั่วประเทศไทย ทีมวิศวกรจากสำนักงานใหญ่ที่นครปฐมดูแลตั้งแต่สำรวจหลังคา คำนวณโครงสร้าง ยื่นขออนุญาตกับการไฟฟ้า จนถึงบำรุงรักษาหลังติดตั้ง</p>
+        <p data-in style="--d:520ms" data-c="hero.subtitle">Solar One Energy ออกแบบและติดตั้งระบบโซลาร์เซลล์สำหรับบ้าน ธุรกิจ และโรงงานทั่วประเทศไทย ทีมวิศวกรจากสำนักงานใหญ่ที่นครปฐมดูแลตั้งแต่สำรวจหลังคา คำนวณโครงสร้าง ยื่นขออนุญาตกับการไฟฟ้า จนถึงบำรุงรักษาหลังติดตั้ง</p>
         <div class="hero-actions">
-          <a class="btn btn--orange" href="#calculator" data-in style="--d:600ms">คำนวณความคุ้มค่า <span class="btn-ico"><svg><use href="#i-arrow"/></svg></span></a>
-          <a class="btn btn--white btn--plain" href="#packages" data-in style="--d:660ms">ดูแพ็กเกจ</a>
+          <a class="btn btn--orange" href="#calculator" data-in style="--d:600ms"><span data-c="hero.ctaPrimary">คำนวณความคุ้มค่า</span> <span class="btn-ico"><svg><use href="#i-arrow"/></svg></span></a>
+          <a class="btn btn--white btn--plain" href="#packages" data-in style="--d:660ms"><span data-c="hero.ctaSecondary">ดูแพ็กเกจ</span></a>
         </div>
       </div>
     </div>
@@ -314,7 +314,7 @@
   <div class="foot">
     <div class="foot-cta">
       <h2 class="h2">ให้วิศวกรของเราประเมินหลังคาคุณ<br>ฟรี ภายใน 3 วันทำการ</h2>
-      <a class="btn btn--orange" href="mailto:contact@solar1energy.co.th">นัดสำรวจหน้างาน <span class="btn-ico"><svg><use href="#i-arrow"/></svg></span></a>
+      <a class="btn btn--orange" id="foot-cta-btn" href="mailto:contact@solar1energy.co.th">นัดสำรวจหน้างาน <span class="btn-ico"><svg><use href="#i-arrow"/></svg></span></a>
     </div>
 
     <div class="foot-card">
@@ -333,20 +333,22 @@
       <div class="foot-col">
         <h5>สำนักงานใหญ่</h5>
         <!-- placeholder address: replace with the registered Nakhon Pathom address -->
-        <ul><li>เลขที่ XX ถนน XXXXXXX</li><li>ตำบล XXXXX อำเภอเมืองนครปฐม</li><li>จังหวัดนครปฐม 73000</li><li>ให้บริการติดตั้งทั่วประเทศ</li></ul>
+        <ul id="foot-address"><li>เลขที่ XX ถนน XXXXXXX</li><li>ตำบล XXXXX อำเภอเมืองนครปฐม</li><li>จังหวัดนครปฐม 73000</li><li>ให้บริการติดตั้งทั่วประเทศ</li></ul>
       </div>
       <div class="foot-col">
         <h5>ติดต่อ</h5>
         <!-- placeholder phone: link it as tel: once the real number is set -->
-        <ul><li>02-XXX-XXXX</li><li><a href="mailto:contact@solar1energy.co.th">contact@solar1energy.co.th</a></li><li>จันทร์–เสาร์ 08:30–17:30 น.</li></ul>
+        <ul id="foot-contact"><li>02-XXX-XXXX</li><li><a href="mailto:contact@solar1energy.co.th">contact@solar1energy.co.th</a></li><li>จันทร์–เสาร์ 08:30–17:30 น.</li></ul>
       </div>
-      <div class="foot-legal"><span>© 2569 Solar One Energy สงวนลิขสิทธิ์</span><span>สำนักงานใหญ่ นครปฐม — ให้บริการครอบคลุมทั่วประเทศไทย</span><span>นโยบายความเป็นส่วนตัว</span></div>
+      <div class="foot-legal"><span>© 2569 Solar One Energy สงวนลิขสิทธิ์<a class="admin-dot" href="admin.html" rel="nofollow" title="ผู้ดูแลระบบ" aria-label="ผู้ดูแลระบบ"></a></span><span>สำนักงานใหญ่ นครปฐม — ให้บริการครอบคลุมทั่วประเทศไทย</span><span>นโยบายความเป็นส่วนตัว</span></div>
     </div>
 
     <div class="wordmark" aria-hidden="true">Solar One</div>
   </div>
 </footer>
 
+<script src="supabase-config.js"></script>
+<script src="js/content.js"></script>
 <script src="main.js"></script>
 </body>
 </html>
