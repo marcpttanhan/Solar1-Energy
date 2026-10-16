@@ -243,7 +243,8 @@
     const c = window.SOLAR1_SUPABASE || {};
     const url = typeof c.url === 'string' ? c.url.trim().replace(/\/+$/, '') : '';
     const anonKey = typeof c.anonKey === 'string' ? c.anonKey.trim() : '';
-    return /^https:\/\/[^/]+$/.test(url) && anonKey ? { url, anonKey } : null;
+    const adminEmail = typeof c.adminEmail === 'string' ? c.adminEmail.trim() : '';
+    return /^https:\/\/[^/]+$/.test(url) && anonKey ? { url, anonKey, adminEmail } : null;
   }
 
   // Resolves to { section: data } for every row, {} when nothing is stored.

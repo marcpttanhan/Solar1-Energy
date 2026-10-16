@@ -1,8 +1,8 @@
 // Admin panel: sign in with Supabase Auth, edit site content, save to site_content.
 //
 // Access control is enforced by Supabase (row-level security in supabase_schema.sql):
-// anyone can read content, only users listed in public.admin_users can write it.
-// This file only decides what to show; it is not the security boundary.
+// anyone can read content, only the admin account (adminEmail in supabase-config.js)
+// can write it. This file only decides what to show; it is not the security boundary.
 (function () {
   'use strict';
 
@@ -69,13 +69,13 @@
       h('p', { class: 'muted' }, 'ตอนนี้เว็บไซต์ใช้ข้อมูลที่ติดมากับโค้ด หากต้องการแก้ไขเนื้อหาจากหน้านี้ ให้ตั้งค่าตามขั้นตอนด้านล่าง'),
       h('ol', { class: 'steps' },
         h('li', {}, 'รันไฟล์ ', h('code', {}, 'supabase_schema.sql'), ' ใน Supabase SQL Editor'),
-        h('li', {}, 'สร้างบัญชีผู้ดูแลใน Authentication และเพิ่มอีเมลนั้นลงตาราง ', h('code', {}, 'admin_users'), ' (คำสั่งอยู่ในไฟล์ SQL)'),
+        h('li', {}, 'สร้างบัญชีผู้ดูแลใน Authentication ด้วยอีเมลเดียวกับ ', h('code', {}, 'adminEmail'), ' ใน supabase-config.js'),
         h('li', {}, 'ใส่ Project URL และ anon key ในไฟล์ ', h('code', {}, 'supabase-config.js'), ' แล้ว push ขึ้น GitHub')),
     );
   }
 
   function showLogin(errorMessage) {
-    const email = h('input', { type: 'email', name: 'email', autocomplete: 'username', required: true, autofocus: true });
+    const username = h('input', { type: 'text', name: 'username', autocomplete: 'username', autocapitalize: 'none', spellcheck: false, required: true, autofocus: true });
     const password = h('input', { type: 'password', name: 'password', autocomplete: 'current-password', required: true });
     const error = h('p', { class: 'form-error', role: 'alert', hidden: !errorMessage }, errorMessage || '');
     const submit = h('button', { class: 'btn btn--primary btn--wide', type: 'submit' }, 'เข้าสู่ระบบ');
@@ -87,7 +87,7 @@
         submit.disabled = true;
         submit.textContent = 'กำลังตรวจสอบ…';
         error.hidden = true;
-        const { error: err } = await sb.auth.signInWithPassword({ email: email.value.trim(), password: password.value });
+        const { error: err } = await sb.auth.signInWithPassword({ email: loginEmail(username.value), password: password.value });
         if (err) {
           error.textContent = loginMessage(err);
           error.hidden = false;
@@ -98,7 +98,7 @@
         // success: onAuthStateChange routes to the dashboard
       },
     },
-      h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'อีเมล'), email),
+      h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'ชื่อผู้ใช้'), username),
       h('label', { class: 'field' }, h('span', { class: 'field-label' }, 'รหัสผ่าน'), password),
       error,
       submit,
@@ -108,8 +108,14 @@
       h('a', { class: 'muted small back', href: './' }, 'กลับหน้าเว็บไซต์'));
   }
 
+  // "admin" / "solar1" sign in as the configured admin account; a full email also works.
+  function loginEmail(value) {
+    const v = value.trim().toLowerCase();
+    return ['admin', 'solar1'].includes(v) && cfg.adminEmail ? cfg.adminEmail : v;
+  }
+
   function loginMessage(err) {
-    if (err.status === 400) return 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+    if (err.status === 400) return 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
     if (err.status === 429) return 'ลองเข้าสู่ระบบหลายครั้งเกินไป กรุณารอสักครู่แล้วลองใหม่';
     if (err.name === 'AuthRetryableFetchError' || /fetch/i.test(err.message)) return 'เชื่อมต่อ Supabase ไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่';
     return `เข้าสู่ระบบไม่สำเร็จ: ${err.message}`;
@@ -118,7 +124,7 @@
   function showDenied(email) {
     screen(
       h('h1', { class: 'title' }, 'บัญชีนี้ไม่มีสิทธิ์ผู้ดูแล'),
-      h('p', { class: 'muted' }, `เข้าสู่ระบบด้วย ${email} แล้ว แต่บัญชีนี้ยังไม่อยู่ในตาราง admin_users`),
+      h('p', { class: 'muted' }, `เข้าสู่ระบบด้วย ${email} แล้ว แต่สิทธิ์แก้ไขเนื้อหามีเฉพาะบัญชีผู้ดูแล`),
       h('div', { class: 'row' }, h('button', { class: 'btn', onclick: () => sb.auth.signOut() }, 'ออกจากระบบ')),
     );
   }
@@ -150,11 +156,13 @@
     }
     if (user.id === userId) return; // token refresh for the same user
     userId = user.id;
-    showLoading('กำลังตรวจสอบสิทธิ์…');
+    // The database only accepts writes from the admin account; mirror that here
+    // so any other signed-in account gets a clear message instead of failed saves.
+    if (cfg.adminEmail && (user.email || '').toLowerCase() !== cfg.adminEmail.toLowerCase()) {
+      showDenied(user.email);
+      return;
+    }
     try {
-      const { data, error } = await sb.from('admin_users').select('user_id').eq('user_id', user.id).maybeSingle();
-      if (error) throw error;
-      if (!data) { showDenied(user.email); return; }
       showLoading('กำลังโหลดเนื้อหา…');
       await loadContent();
       showDashboard(user);

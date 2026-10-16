@@ -23,11 +23,12 @@ When the skills disagree, the existing design system wins. The site has a define
 - Filled buttons use `--cta` / `--cta-deep` (white text at 4.8:1 / 6:1). Keep `--orange` for accents, rules and large numerals, not behind small white text
 - Text is 14px minimum (Thai script gets hard to read below that)
 
-## Supabase status (2026-10-16)
+## Supabase and admin sign-in
 
-The URL and anon key in `supabase-config.js` are valid, but the database doesn't match `supabase_schema.sql`:
-`site_content` has no `key` column, and an `admin_users` policy recurses ("infinite recursion detected in policy").
-Until the schema is reset in the Supabase SQL editor, the site serves its built-in content (by design) and admin login can't load content.
+- Admin sign-in is Supabase Auth. Typing the username `admin` (or `solar1`) on `admin.html` signs in as `adminEmail` from `supabase-config.js` (`admin@solar1energy.co.th`). The password lives only in Supabase, never in the repo.
+- Write access is enforced by RLS in `supabase_schema.sql`: only a JWT with that email can insert, update or delete `site_content`. If you change the admin email, change it in both files. There is no `admin_users` table or `is_admin()` anymore.
+- Public sign-ups must stay off (Authentication → Sign In / Providers).
+- The live project had a mismatched `site_content` table (2026-10-16). `supabase_fix.sql` moves it aside as `site_content_legacy_*` and applies the schema. Until that's run, the site serves its built-in content (by design).
 
 ## UX/design audit (2026-10-16)
 
