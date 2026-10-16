@@ -26,7 +26,7 @@
 
 create table if not exists public.site_content (
   key         text primary key
-              check (key in ('hero', 'packages', 'roi', 'contact', 'testimonials')),
+              check (key in ('hero', 'packages', 'roi', 'contact', 'projects', 'testimonials')),
   data        jsonb not null
               check (jsonb_typeof(data) = 'object')
               check (pg_column_size(data) < 200000),        -- ~200 KB per section

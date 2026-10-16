@@ -188,6 +188,7 @@
     packages: { title: 'แพ็กเกจ', desc: 'แพ็กเกจสำหรับบ้าน/ธุรกิจขนาดเล็ก และโรงงาน/อาคาร' },
     roi: { title: 'เครื่องคำนวณความคุ้มค่า', desc: 'ค่าไฟ ผลผลิตไฟ และต้นทุนต่อ kWp ที่ใช้คำนวณระยะคืนทุน' },
     contact: { title: 'ติดต่อและส่วนท้าย', desc: 'ที่อยู่ เบอร์โทร LINE และลิงก์โซเชียลในส่วนท้ายของหน้า' },
+    projects: { title: 'ผลงานและตัวเลข', desc: 'ตัวเลขในส่วนเกี่ยวกับเรา ผลงานติดตั้ง และโลโก้ลูกค้า' },
   };
 
   const state = { saved: {}, draft: {}, meta: {}, section: 'hero', pkSeg: 'home', busy: false };
@@ -615,7 +616,7 @@
         field('ที่อยู่ (บรรทัดละหนึ่งรายการ)', lines(d, 'addressLines', 4))),
       h('fieldset', { class: 'group' }, h('legend', {}, 'ช่องทางติดต่อ'),
         h('div', { class: 'grid-2' },
-          field('เบอร์โทร', text(d, 'phone', { inputmode: 'tel', maxlength: 40 }), 'ใส่เบอร์จริงเพื่อให้กดโทรได้ เช่น 034-123-456'),
+          field('เบอร์โทร', text(d, 'phone', { inputmode: 'tel', maxlength: 80 }), 'หลายเบอร์ให้คั่นด้วยจุลภาค เบอร์แรกใช้กับปุ่มนัดสำรวจหน้างาน'),
           field('อีเมล', text(d, 'email', { inputmode: 'email', maxlength: 120 })),
           field('เวลาทำการ', text(d, 'hours', { maxlength: 80 })),
           field('LINE ID', text(d, 'lineId', { maxlength: 40, placeholder: '@solar1energy' }), 'ปุ่มในส่วนท้ายจะเปิดแชต LINE โดยตรง'))),
@@ -627,5 +628,84 @@
           link(d, 'tiktok', 'TikTok'))));
   }
 
-  const EDITORS = { hero: heroEditor, packages: packagesEditor, roi: roiEditor, contact: contactEditor };
+  function checkbox(obj, prop, label) {
+    return h('label', { class: 'check' },
+      h('input', { type: 'checkbox', checked: obj[prop] === true, onchange: (e) => { obj[prop] = e.target.checked; changed(); } }),
+      h('span', {}, label));
+  }
+
+  function select(obj, prop, options) {
+    return h('select', { onchange: (e) => { obj[prop] = e.target.value; changed(); } },
+      options.map(([value, label]) => h('option', { value, selected: obj[prop] === value }, label)));
+  }
+
+  const PROJECT_CATEGORY_LABELS = [['industry', 'โรงงานและฟาร์ม'], ['business', 'ธุรกิจ อาคาร และองค์กร'], ['home', 'บ้านพักอาศัย']];
+
+  function projectsEditor(d) {
+    const move = (list, i, dir) => {
+      const j = i + dir;
+      [list[i], list[j]] = [list[j], list[i]];
+      renderEditor();
+    };
+
+    const statRows = d.stats.map((s, i) => h('div', { class: 'grid-3' },
+      field(`ตัวเลขที่ ${i + 1}`, number(s, 'value', { min: 0, step: 'any' }), 'ทศนิยมได้ เช่น 3.5'),
+      field('หน่วยต่อท้าย', text(s, 'small', { maxlength: 20 }), 'เช่น + ปี, MW, ล้านบาท'),
+      field('คำอธิบาย', text(s, 'label', { maxlength: 120 }))));
+
+    const cards = d.items.map((p, i) => h('article', { class: 'card' },
+      h('header', { class: 'card-head' },
+        h('h3', {}, `${i + 1}. ${p.name || 'ผลงานใหม่'}`),
+        h('span', { class: 'spacer' }),
+        smallBtn('ขึ้น', () => move(d.items, i, -1), { disabled: i === 0, 'aria-label': `เลื่อนผลงานที่ ${i + 1} ขึ้น` }),
+        smallBtn('ลง', () => move(d.items, i, 1), { disabled: i === d.items.length - 1, 'aria-label': `เลื่อนผลงานที่ ${i + 1} ลง` }),
+        smallBtn('ลบ', () => {
+          if (!confirm(`ลบ "${p.name || `ผลงานที่ ${i + 1}`}" หรือไม่?`)) return;
+          d.items.splice(i, 1);
+          renderEditor();
+        }, { class: 'btn btn--small btn--danger', 'aria-label': `ลบผลงานที่ ${i + 1}` })),
+      h('div', { class: 'grid-2' },
+        field('ชื่อโครงการหรือลูกค้า', text(p, 'name', { maxlength: 120 }), 'ต้องมีชื่อ ผลงานที่ไม่มีชื่อจะไม่ถูกบันทึก'),
+        field('ประเภท', select(p, 'category', PROJECT_CATEGORY_LABELS)),
+        field('สถานที่', text(p, 'location', { maxlength: 120 }), 'อำเภอ/เขต, จังหวัด'),
+        field('ปีที่ติดตั้งแล้วเสร็จ (พ.ศ.)', number(p, 'year', { min: 0, step: 1 }), 'ใส่ 0 หากไม่ต้องการแสดงปี'),
+        field('ขนาดระบบ (kW)', number(p, 'kw', { min: 0, step: 'any' }), '1,000 kW ขึ้นไปจะแสดงเป็น MW'),
+        field('ค่าไฟที่ลดได้ (บาท/เดือน)', number(p, 'saving', { min: 0, step: 100 }), 'ใส่ 0 เพื่อซ่อน')),
+      h('div', { class: 'checks' },
+        checkbox(p, 'savingUpTo', 'แสดงค่าไฟเป็น "สูงสุด" (กรณีข้อมูลเป็นช่วง)'),
+        checkbox(p, 'featured', 'แสดงเป็นโครงการเด่น (การ์ดใหญ่ ใช้รายการแรกที่เลือก)')),
+      media(p, 'image', 'image', 'รูปผลงาน', 'เช่น Media/projects/ชื่อไฟล์.webp หรือลิงก์ https://')));
+
+    const clientRows = d.clients.map((c, i) => h('div', { class: 'card' },
+      h('header', { class: 'card-head' },
+        h('h3', {}, c.name || `โลโก้ที่ ${i + 1}`),
+        h('span', { class: 'spacer' }),
+        smallBtn('ขึ้น', () => move(d.clients, i, -1), { disabled: i === 0, 'aria-label': `เลื่อนโลโก้ที่ ${i + 1} ขึ้น` }),
+        smallBtn('ลง', () => move(d.clients, i, 1), { disabled: i === d.clients.length - 1, 'aria-label': `เลื่อนโลโก้ที่ ${i + 1} ลง` }),
+        smallBtn('ลบ', () => { d.clients.splice(i, 1); renderEditor(); }, { class: 'btn btn--small btn--danger', 'aria-label': `ลบโลโก้ที่ ${i + 1}` })),
+      field('ชื่อลูกค้า (ใช้เป็นข้อความแทนรูป)', text(c, 'name', { maxlength: 80 })),
+      media(c, 'logo', 'image', 'ไฟล์โลโก้', 'พื้นโปร่งใสหรือพื้นขาว เช่น Media/clients/ชื่อไฟล์.webp')));
+
+    return h('div', { class: 'stack-lg' },
+      h('fieldset', { class: 'group' }, h('legend', {}, 'ตัวเลขในส่วนเกี่ยวกับเรา (4 ช่อง)'), statRows),
+      h('fieldset', { class: 'group' }, h('legend', {}, `ผลงานติดตั้ง (${d.items.length} รายการ)`),
+        h('p', { class: 'muted small' }, 'ลำดับในรายการคือลำดับที่แสดงบนเว็บ หน้าเว็บแสดงครั้งละ 6 รายการพร้อมปุ่มดูทั้งหมด'),
+        cards,
+        d.items.length < 80
+          ? h('button', {
+              class: 'btn btn--dashed', type: 'button',
+              onclick: () => {
+                d.items.push({ name: '', category: 'business', location: '', kw: 0, saving: 0, savingUpTo: false, year: 0, image: '', featured: false });
+                renderEditor();
+              },
+            }, 'เพิ่มผลงาน')
+          : h('p', { class: 'muted small' }, 'มีผลงานครบ 80 รายการแล้ว')),
+      h('fieldset', { class: 'group' }, h('legend', {}, 'โลโก้ลูกค้าองค์กร'),
+        clientRows,
+        d.clients.length < 30
+          ? h('button', { class: 'btn btn--dashed', type: 'button', onclick: () => { d.clients.push({ name: '', logo: '' }); renderEditor(); } }, 'เพิ่มโลโก้')
+          : null));
+  }
+
+  const EDITORS = { hero: heroEditor, packages: packagesEditor, roi: roiEditor, contact: contactEditor, projects: projectsEditor };
 })();

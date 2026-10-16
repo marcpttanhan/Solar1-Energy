@@ -6,7 +6,7 @@ Content can be overridden from Supabase through the admin panel.
 - `index.html`, `styles.css`, `main.js`: the public site (Thai, `lang="th"`, Anuphan variable font)
 - `admin.html`, `admin.css`, `js/admin.js`: Supabase-backed admin panel. `js/content.js` applies `data-c="…"` overrides
 - `supabase-config.js`: public URL + anon key only (never the service_role key). `supabase_schema.sql`: tables and RLS
-- Deploy: GitHub `marcpttanhan/Solar1-Energy` → Vercel auto-deploys `main`. `.vercelignore` keeps `.claude/` and `deploy/` out of the build
+- Deploy: GitHub `marcpttanhan/Solar1-Energy` → Vercel auto-deploys `main` (live at solar1-energy.vercel.app). `.vercelignore` keeps `.claude/`, `deploy/` and the SQL files out of the build
 - Local preview: `.claude/launch.json` has `solar1` (port 8080, attaches to `python3 .claude/serve.py 8080`) and `solar1-node` (port 8081, runs `node .claude/serve.mjs`, for machines without Python such as the Windows VPS). Both support Range requests for video seeking
 
 ## Design skills (project-local, in `.claude/skills/`)
@@ -19,9 +19,17 @@ Content can be overridden from Supabase through the admin panel.
 When the skills disagree, the existing design system wins. The site has a defined direction, so new work extends it instead of restyling it:
 - "Cool drafting paper": `--paper #F3F5F7`, graphite ink `#22272C`. Brand orange `#FC571F` is used sparingly. A dark theme sits under `[data-theme="dark"]`
 - Use the tokens in `:root`. Don't put raw hex values in new rules. Radii are `--r-panel 20px` / `--r-card 12px` / `--r-pill`, and the easing is `--ease`
-- Breakpoints: 1100 / 1024 (tablet) / 767 / 639 (phone). Both `prefers-reduced-motion` blocks must cover any new motion
+- Breakpoints: 1100 / 1024 (tablet) / 899 (nav CTA hides so the links stay on one line) / 767 / 639 (phone). Both `prefers-reduced-motion` blocks must cover any new motion
 - Filled buttons use `--cta` / `--cta-deep` (white text at 4.8:1 / 6:1). Keep `--orange` for accents, rules and large numerals, not behind small white text
 - Text is 14px minimum (Thai script gets hard to read below that)
+
+## Content (from the company profile PDF, 2026-10-17)
+
+- Site sections, in order: hero, เกี่ยวกับเรา (`#impact`, four figures), แพ็กเกจ, คำนวณความคุ้มค่า, ผลงาน (`#projects`), footer/contact. The old placeholder reviews section was replaced by the real portfolio.
+- `site_content` keys: `hero`, `packages`, `roi`, `contact`, `projects`. `projects` holds `stats` (exactly 4), `items` (portfolio; the first `featured` item gets the large card; `year` is Buddhist-era, 0 = hidden; `savingUpTo` shows the top of a range as "สูงสุด") and `clients` (logos). Built-in defaults in `js/content.js` mirror the PDF; `supabase_content_seed.sql` loads them into Supabase.
+- Private customers are listed as "บ้านพักอาศัย" with district/province only (no names or house numbers), even though the PDF shows them.
+- Images: `Media/projects/` (WebP ≤1200 px), `Media/clients/`, `Media/brands/`, `Media/certs/`, `Media/awards/`, and slot photos in `Media/packages/` (listed in `Media/images.json`). See `Media/README.md`.
+- Not in the PDF, so still placeholders: package prices and specs, the 3-day survey promise in the footer, opening hours, Facebook URL (the PDF gives only the page name).
 
 ## Supabase and admin sign-in
 

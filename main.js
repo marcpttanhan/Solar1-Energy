@@ -35,11 +35,131 @@ function renderPackages(seg) {
   pkGrid.querySelectorAll('.media-frame').forEach(initFrame);
 }
 
+// ---------- Projects (portfolio) ----------
+// content.projects.items: the first featured item gets the large card, the rest
+// fill the grid, filtered by category and shown PJ_PAGE at a time.
+const pjFeature = document.getElementById('pj-feature');
+const pjGrid = document.getElementById('pj-grid');
+const pjCount = document.getElementById('pj-count');
+const pjMore = document.getElementById('pj-more');
+const pjClients = document.getElementById('pj-clients');
+const PJ_PAGE = 6;
+let pjFilter = 'all';
+let pjExpanded = false;
+
+const num = (n, max = 2) => n.toLocaleString('th-TH', { maximumFractionDigits: max });
+const kwParts = (kw) => (kw >= 1000 ? [num(kw / 1000), 'MW'] : [num(kw), 'kW']);
+const savingText = (p) => `${p.savingUpTo ? 'สูงสุด ' : ''}${num(p.saving, 0)} บาท/เดือน`;
+
+// A photo that fails to load is dropped, leaving the frame's line drawing.
+function dropBrokenImages(root) {
+  root.querySelectorAll('img').forEach((img) => img.addEventListener('error', () => img.remove(), { once: true }));
+}
+
+function projectImg(p) {
+  if (!p.image) return '';
+  const [k, unit] = kwParts(p.kw);
+  return `<img class="frame-img" src="${esc(p.image)}" alt="${esc(`ระบบโซลาร์ ${k} ${unit} ของ${p.name} ${p.location}`)}" loading="lazy" decoding="async">`;
+}
+
+function renderFeature() {
+  const f = content.projects.items.find((p) => p.featured);
+  pjFeature.hidden = !f;
+  if (!f) return null;
+  const [k, unit] = kwParts(f.kw);
+  const big = f.saving >= 1e6;
+  pjFeature.innerHTML = `
+    <div class="pj-feature-media media-frame">${projectImg(f)}</div>
+    <div class="pj-feature-body">
+      <div>
+        <p class="kicker">โครงการเด่น</p>
+        <h3>${esc(f.name)}</h3>
+        <p class="pj-loc">${esc(f.location)}${f.year ? `<br>ติดตั้งแล้วเสร็จปี ${f.year}` : ''}</p>
+      </div>
+      <div class="pj-feature-stats">
+        <div><strong>${k}<small>${unit}</small></strong><span>ขนาดระบบ</span></div>
+        ${f.saving ? `<div><strong>${big ? num(f.saving / 1e6) : num(f.saving, 0)}<small>${big ? 'ล้านบาท' : 'บาท'}</small></strong><span>ค่าไฟที่ลด${f.savingUpTo ? 'ได้สูงสุด' : 'ได้'}ต่อเดือน</span></div>` : ''}
+      </div>
+    </div>`;
+  dropBrokenImages(pjFeature);
+  return f;
+}
+
+function renderProjects() {
+  const featured = renderFeature();
+  const list = content.projects.items.filter((p) => p !== featured && (pjFilter === 'all' || p.category === pjFilter));
+  const shown = pjExpanded ? list : list.slice(0, PJ_PAGE);
+  pjGrid.innerHTML = shown.map((p) => {
+    const [k, unit] = kwParts(p.kw);
+    return `
+    <article class="pj">
+      <div class="pj-media media-frame">${projectImg(p)}</div>
+      <h3 class="pj-name">${esc(p.name)}</h3>
+      <p class="pj-loc">${esc(p.location)}</p>
+      <dl class="pj-specs">
+        <div><dt>ขนาดระบบ</dt><dd>${k} ${unit}</dd></div>
+        ${p.saving ? `<div><dt>ลดค่าไฟ</dt><dd>${savingText(p)}</dd></div>` : ''}
+        ${p.year ? `<div><dt>ติดตั้งปี</dt><dd>${p.year}</dd></div>` : ''}
+      </dl>
+    </article>`;
+  }).join('');
+  dropBrokenImages(pjGrid);
+  pjCount.textContent = list.length ? `แสดง ${shown.length} จาก ${list.length} โครงการ` : 'ยังไม่มีผลงานในหมวดนี้';
+  pjMore.hidden = list.length <= PJ_PAGE;
+  pjMore.textContent = pjExpanded ? 'แสดงน้อยลง' : `ดูผลงานทั้งหมด ${list.length} โครงการ`;
+  pjMore.setAttribute('aria-expanded', String(pjExpanded));
+}
+
+function renderClients() {
+  const { clients } = content.projects;
+  pjClients.innerHTML = clients.map((c) =>
+    `<li><img src="${esc(c.logo)}" alt="${esc(c.name)}" title="${esc(c.name)}" loading="lazy" decoding="async"></li>`).join('');
+  pjClients.querySelectorAll('img').forEach((img) => img.addEventListener('error', () => img.parentElement.remove(), { once: true }));
+  document.getElementById('pj-clients-wall').hidden = !clients.length;
+}
+
+pjMore.addEventListener('click', () => {
+  pjExpanded = !pjExpanded;
+  renderProjects();
+  // Collapsing from far down the list: bring the grid back into view.
+  if (!pjExpanded && pjGrid.getBoundingClientRect().top < 0) pjGrid.scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' });
+});
+
+function filterProjects(val) {
+  pjFilter = val;
+  pjExpanded = false;
+  if (reduced()) return renderProjects();
+  pjGrid.classList.add('is-swapping');
+  setTimeout(() => {
+    renderProjects();
+    requestAnimationFrame(() => requestAnimationFrame(() => pjGrid.classList.remove('is-swapping')));
+  }, 220);
+}
+
+// ---------- About-us figures ----------
+const decimalsOf = (v) => (String(v).split('.')[1] || '').length;
+let statsCounted = false;
+
+function applyStats(stats) {
+  document.querySelectorAll('.stat').forEach((el, i) => {
+    const s = stats[i];
+    if (!s) return;
+    const n = el.querySelector('[data-count]');
+    n.dataset.count = s.value;
+    n._v = s.value;
+    if (statsCounted) n.textContent = fmt(s.value, decimalsOf(s.value));
+    const small = el.querySelector('.stat-num small');
+    small.textContent = s.small;
+    small.hidden = !s.small;
+    el.querySelector('.stat-label').textContent = s.label;
+  });
+}
+
 // ---------- Media frames ----------
 // Every photo/video frame shows a vector fallback (styles.css: .media-frame) until
-// its media arrives. Final images go at the frame's data-img path (Media/packages/…,
-// Media/reviews/…) and are listed in Media/images.json; only listed files are
-// requested, so slots without a photo yet never produce a 404.
+// its media arrives. Package photos go at the frame's data-img path (Media/packages/…)
+// and are listed in Media/images.json; only listed files are requested, so slots
+// without a photo yet never produce a 404.
 const availableImages = fetch('Media/images.json')
   .then((r) => (r.ok ? r.json() : []))
   .then((list) => new Set(list))
@@ -214,6 +334,7 @@ document.querySelectorAll('.seg').forEach((seg) => {
     seg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
     seg._sync();
     if (seg.dataset.seg === 'pk') swapPackages(btn.dataset.val);
+    else if (seg.dataset.seg === 'pj') filterProjects(btn.dataset.val);
     else loadProfile(btn.dataset.val);
   });
 });
@@ -419,10 +540,10 @@ const REVEAL_GROUPS = [
   '.impact-head', '.stats',
   '.packages .split-left', '.pk-head', '.pk-grid', '.benefits',
   '.calc-top', '.calc-inputs', '.calc-out',
-  '.reviews .split-left', '.rv-grid',
+  '.projects .split-left',
   '.foot-cta', '.foot-card',
 ];
-const SINGLE_REVEALS = ['.impact-panel', '.rv-feature', '.pk-note'];
+const SINGLE_REVEALS = ['.impact-panel', '.pk-note', '.pj-feature', '.pj-bar'];
 
 function markReveal(el, delay) {
   el.classList.add('reveal');
@@ -484,13 +605,15 @@ wordmark.innerHTML = [...wordmark.textContent].map((ch, i) =>
   `<span class="ch" style="--d:${i * 40}ms">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('');
 watchReveal(wordmark);
 
-// Impact stats count up when they arrive.
+// Impact stats count up when they arrive (keeping each figure's decimals, e.g. 3.5, 1.75).
 document.querySelector('.stats').addEventListener('revealed', () => {
+  statsCounted = true;
   document.querySelectorAll('[data-count]').forEach((el, i) => {
     const to = +el.dataset.count;
+    const d = decimalsOf(el.dataset.count);
     el._v = 0;
     el.textContent = '0';
-    setTimeout(() => tween(el, to, (v) => fmt(Math.round(v)), false, 1200), reduced() ? 0 : 150 + i * 70);
+    setTimeout(() => tween(el, to, (v) => fmt(d ? v : Math.round(v), d), false, 1200), reduced() ? 0 : 150 + i * 70);
   });
 }, { once: true });
 
@@ -499,7 +622,7 @@ window.addEventListener('resize', () => {
   syncNavThumb();
 });
 
-// ---------- Content: hero, contact, packages, calculator ----------
+// ---------- Content: hero, contact, packages, calculator, projects ----------
 
 function setText(sel, text) {
   document.querySelectorAll(sel).forEach((el) => { el.textContent = text; });
@@ -528,6 +651,9 @@ const telHref = (phone) => {
   const digits = phone.replace(/[^\d+]/g, '');
   return /^\+?\d{9,15}$/.test(digits) ? `tel:${digits}` : '';
 };
+// LINE official accounts start with "@"; personal IDs need the "~" form.
+const lineHref = (id) => `https://line.me/R/ti/p/${id.startsWith('@') ? encodeURIComponent(id) : `~${encodeURIComponent(id)}`}`;
+const phonesOf = (phone) => phone.split(',').map((p) => p.trim()).filter(Boolean);
 const mailHref = (email) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? `mailto:${email}` : '');
 
 function listItem(text, href) {
@@ -547,14 +673,14 @@ function listItem(text, href) {
 function applyContact(c) {
   document.getElementById('foot-address').replaceChildren(...c.addressLines.map((l) => listItem(l)));
   const items = [];
-  if (c.phone) items.push(listItem(c.phone, telHref(c.phone)));
+  phonesOf(c.phone).forEach((p) => items.push(listItem(p, telHref(p))));
   if (c.email) items.push(listItem(c.email, mailHref(c.email)));
   if (c.hours) items.push(listItem(c.hours));
-  if (c.lineId) items.push(listItem(`LINE ${c.lineId}`, `https://line.me/R/ti/p/${encodeURIComponent(c.lineId)}`));
+  if (c.lineId) items.push(listItem(`LINE ${c.lineId}`, lineHref(c.lineId)));
   [['Facebook', c.facebook], ['Instagram', c.instagram], ['YouTube', c.youtube], ['TikTok', c.tiktok]]
     .forEach(([label, url]) => { if (url) items.push(listItem(label, url)); });
   document.getElementById('foot-contact').replaceChildren(...items);
-  document.getElementById('foot-cta-btn').href = telHref(c.phone) || mailHref(c.email) || '#contact';
+  document.getElementById('foot-cta-btn').href = telHref(phonesOf(c.phone)[0] || '') || mailHref(c.email) || '#contact';
 }
 
 // Applies a complete content object. Sections that did not change are left
@@ -567,9 +693,10 @@ function applyContent(next, { force = false } = {}) {
   if (changed('contact')) applyContact(next.contact);
   if (changed('packages')) renderPackages(pkSeg);
   if (changed('roi')) loadProfile(calcSeg);
+  if (changed('projects')) { applyStats(next.projects.stats); renderProjects(); renderClients(); }
 }
 
-document.querySelectorAll('.avatar[data-img], .impact-panel').forEach(initFrame);
+document.querySelectorAll('.impact-panel').forEach(initFrame);
 
 // First paint: last cached Supabase content (repeat visits) or the defaults.
 const cached = SolarContent.readCache();
@@ -577,6 +704,9 @@ content = SolarContent.resolve(cached);
 if (cached) { applyHero(content.hero); applyContact(content.contact); }
 renderPackages('home');
 loadProfile('home');
+applyStats(content.projects.stats);
+renderProjects();
+renderClients();
 
 // Then refresh from Supabase. Failures keep whatever is on screen.
 contentReady = SolarContent.config()
