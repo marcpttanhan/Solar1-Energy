@@ -250,8 +250,12 @@
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), timeoutMs);
     try {
+      // Legacy anon keys are JWTs and may also go in Authorization; the newer
+      // publishable keys (sb_publishable_…) are not JWTs and only work as apikey.
+      const headers = { apikey: cfg.anonKey, Accept: 'application/json' };
+      if (cfg.anonKey.startsWith('eyJ')) headers.Authorization = `Bearer ${cfg.anonKey}`;
       const res = await fetch(`${cfg.url}/rest/v1/site_content?select=key,data`, {
-        headers: { apikey: cfg.anonKey, Authorization: `Bearer ${cfg.anonKey}`, Accept: 'application/json' },
+        headers,
         signal: ctrl.signal,
         cache: 'no-store',
       });

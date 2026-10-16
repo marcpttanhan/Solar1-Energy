@@ -2,7 +2,8 @@
 //
 // Paste the values from Supabase → Project Settings → API:
 //   url      the Project URL, e.g. https://abcdefghijkl.supabase.co
-//   anonKey  the "anon" / "public" key
+//   anonKey  the legacy "anon" / "public" key (eyJ…) or the newer
+//            publishable key (sb_publishable_…). Never a secret key.
 //
 // Both are designed to be public: what the anon key can do is limited by the
 // row-level security rules in supabase_schema.sql (read content only).
@@ -11,6 +12,6 @@
 // While these are empty the site runs on its built-in content and the admin
 // page explains how to connect.
 window.SOLAR1_SUPABASE = {
-  url: '',
-  anonKey: '',
+  url: 'https://xhghsytjtuoohjwkhznh.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhoZ2hzeXRqdHVvb2hqd2toem5oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwNzIxMzAsImV4cCI6MjEwNzY0ODEzMH0.t9leh4AP4SrBOXGRJ4PUG0ADxz4JMw75SXJz_rAy5G4',
 };
