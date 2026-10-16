@@ -21,6 +21,8 @@
 </head>
 <body>
 
+<a class="skip-link" href="#content">ข้ามไปยังเนื้อหา</a>
+
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-arrow" viewBox="0 0 12 12"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-pause" viewBox="0 0 14 14"><path d="M4.5 2.5v9M9.5 2.5v9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
@@ -36,7 +38,7 @@
 <!-- ============ HERO ============ -->
 <header class="hero-shell" id="top">
   <div class="hero">
-    <video class="hero-video" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true">
+    <video class="hero-video" muted loop playsinline webkit-playsinline preload="metadata" poster="Media/hero-poster.jpg" disablepictureinpicture disableremoteplayback aria-hidden="true">
       <source src="Media/hero.mp4" type="video/mp4">
     </video>
 
@@ -89,7 +91,7 @@
       <p>ทุกระบบเชื่อมต่อแอปมอนิเตอร์ ดูผลผลิตไฟรายชั่วโมงและแจ้งเตือนเมื่อระบบผิดปกติ</p>
     </div>
 
-    <div class="hero-bottom">
+    <div class="hero-bottom" id="content" tabindex="-1">
       <div>
         <span class="tag" data-in style="--d:200ms"><span class="dot"></span><span data-c="hero.tag">ให้บริการติดตั้งโซลาร์เซลล์ทั่วประเทศ</span></span>
         <h1>
@@ -163,19 +165,19 @@
         <p>สิ่งที่ได้จากระบบของเรา</p>
         <div class="benefit">
           <button type="button" aria-expanded="false">
-            <span class="benefit-n">01</span><span class="benefit-t">ค่าไฟลดลงตั้งแต่รอบบิลแรก</span><svg><use href="#i-chev"/></svg>
+            <span class="benefit-t">ค่าไฟลดลงตั้งแต่รอบบิลแรก</span><svg><use href="#i-chev"/></svg>
           </button>
           <div class="benefit-body"><div><p>ไฟที่ผลิตได้ช่วงกลางวันถูกใช้ในอาคารทันที ลดหน่วยที่ต้องซื้อจากการไฟฟ้าตั้งแต่วันที่ระบบเริ่มเดินเครื่อง</p></div></div>
         </div>
         <div class="benefit is-open">
           <button type="button" aria-expanded="true">
-            <span class="benefit-n">02</span><span class="benefit-t">ล็อกต้นทุนพลังงานยาว 25 ปี</span><svg><use href="#i-chev"/></svg>
+            <span class="benefit-t">ล็อกต้นทุนพลังงานยาว 25 ปี</span><svg><use href="#i-chev"/></svg>
           </button>
           <div class="benefit-body"><div><p>เมื่อจ่ายค่าระบบครั้งเดียว ต้นทุนไฟจากหลังคาจะคงที่ไปตลอดอายุแผง ไม่ว่าค่า Ft จะปรับขึ้นอีกกี่รอบ</p></div></div>
         </div>
         <div class="benefit">
           <button type="button" aria-expanded="false">
-            <span class="benefit-n">03</span><span class="benefit-t">ระบบทำงานเอง ตรวจสอบผ่านแอปได้</span><svg><use href="#i-chev"/></svg>
+            <span class="benefit-t">ระบบทำงานเอง ตรวจสอบผ่านแอปได้</span><svg><use href="#i-chev"/></svg>
           </button>
           <div class="benefit-body"><div><p>ไม่ต้องเปิดปิดเอง ระบบแจ้งเตือนเมื่อผลผลิตต่ำกว่าปกติ และทีมบริการของเราเข้าตรวจล้างแผงตามรอบที่กำหนด</p></div></div>
         </div>
@@ -323,24 +325,23 @@
         <p>บริษัทออกแบบและติดตั้งระบบโซลาร์เซลล์ครบวงจร สำหรับบ้านพักอาศัย ธุรกิจ และโรงงานอุตสาหกรรมทั่วประเทศไทย</p>
       </div>
       <div class="foot-col">
-        <h5>เมนู</h5>
+        <h3>เมนู</h3>
         <ul><li><a href="#top">หน้าแรก</a></li><li><a href="#impact">ผลงาน</a></li><li><a href="#packages">แพ็กเกจ</a></li><li><a href="#calculator">คำนวณความคุ้มค่า</a></li><li><a href="#reviews">รีวิว</a></li></ul>
       </div>
       <div class="foot-col">
-        <h5>แพ็กเกจ</h5>
+        <h3>แพ็กเกจ</h3>
         <ul><li>ชุดบ้าน 5 kWp</li><li>ชุดบ้านไฮบริด 10 kWp</li><li>ชุดธุรกิจ 30 kWp</li><li>ชุดโรงงาน 100–1,000 kWp</li><li>สัญญาซื้อขายไฟ (PPA)</li></ul>
       </div>
       <div class="foot-col">
-        <h5>สำนักงานใหญ่</h5>
-        <!-- placeholder address: replace with the registered Nakhon Pathom address -->
-        <ul id="foot-address"><li>เลขที่ XX ถนน XXXXXXX</li><li>ตำบล XXXXX อำเภอเมืองนครปฐม</li><li>จังหวัดนครปฐม 73000</li><li>ให้บริการติดตั้งทั่วประเทศ</li></ul>
+        <h3>สำนักงานใหญ่</h3>
+        <!-- full street address and phone are set from the admin panel (Contact) -->
+        <ul id="foot-address"><li>อำเภอเมืองนครปฐม</li><li>จังหวัดนครปฐม 73000</li><li>ให้บริการติดตั้งทั่วประเทศ</li></ul>
       </div>
       <div class="foot-col">
-        <h5>ติดต่อ</h5>
-        <!-- placeholder phone: link it as tel: once the real number is set -->
-        <ul id="foot-contact"><li>02-XXX-XXXX</li><li><a href="mailto:contact@solar1energy.co.th">contact@solar1energy.co.th</a></li><li>จันทร์–เสาร์ 08:30–17:30 น.</li></ul>
+        <h3>ติดต่อ</h3>
+        <ul id="foot-contact"><li><a href="mailto:contact@solar1energy.co.th">contact@solar1energy.co.th</a></li><li>จันทร์–เสาร์ 08:30–17:30 น.</li></ul>
       </div>
-      <div class="foot-legal"><span>© 2569 Solar One Energy สงวนลิขสิทธิ์<a class="admin-dot" href="admin.html" rel="nofollow" title="ผู้ดูแลระบบ" aria-label="ผู้ดูแลระบบ"></a></span><span>สำนักงานใหญ่ นครปฐม — ให้บริการครอบคลุมทั่วประเทศไทย</span><span>นโยบายความเป็นส่วนตัว</span></div>
+      <div class="foot-legal"><span>© 2569 Solar One Energy สงวนลิขสิทธิ์<a class="admin-dot" href="admin.html" rel="nofollow" title="ผู้ดูแลระบบ" aria-label="ผู้ดูแลระบบ"></a></span><span>สำนักงานใหญ่ นครปฐม — ให้บริการครอบคลุมทั่วประเทศไทย</span></div>
     </div>
 
     <div class="wordmark" aria-hidden="true">Solar One</div>

@@ -5,6 +5,12 @@
       "name": "solar1",
       "url": "http://localhost:8080",
       "port": 8080
+    },
+    {
+      "name": "solar1-node",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [".claude/serve.mjs", "8081"],
+      "port": 8081
     }
   ]
 }

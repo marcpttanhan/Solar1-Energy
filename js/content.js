@@ -17,7 +17,7 @@
       ctaPrimary: 'คำนวณความคุ้มค่า',
       ctaSecondary: 'ดูแพ็กเกจ',
       videoUrl: 'Media/hero.mp4',
-      posterUrl: '',
+      posterUrl: 'Media/hero-poster.jpg',
     },
 
     packages: {
@@ -77,8 +77,10 @@
     },
 
     contact: {
-      addressLines: ['เลขที่ XX ถนน XXXXXXX', 'ตำบล XXXXX อำเภอเมืองนครปฐม', 'จังหวัดนครปฐม 73000', 'ให้บริการติดตั้งทั่วประเทศ'],
-      phone: '02-XXX-XXXX',
+      // Street address and phone come from the admin panel; until then the
+      // footer shows only what is confirmed (no placeholder numbers).
+      addressLines: ['อำเภอเมืองนครปฐม', 'จังหวัดนครปฐม 73000', 'ให้บริการติดตั้งทั่วประเทศ'],
+      phone: '',
       email: 'contact@solar1energy.co.th',
       hours: 'จันทร์–เสาร์ 08:30–17:30 น.',
       lineId: '',
@@ -122,14 +124,16 @@
     d = d && typeof d === 'object' ? d : {};
     let lines = Array.isArray(d.lines) ? d.lines.map((l) => str(l, '', 80)).filter(Boolean) : [];
     if (lines.length > 3) lines = [lines[0], lines[1], lines.slice(2).join(' ')];
+    const videoUrl = safeUrl(d.videoUrl) || def.videoUrl;
     return {
       tag: str(d.tag, def.tag, 80),
       lines: lines.length ? lines : clone(def.lines),
       subtitle: str(d.subtitle, def.subtitle, 600),
       ctaPrimary: str(d.ctaPrimary, def.ctaPrimary, 40) || def.ctaPrimary,
       ctaSecondary: str(d.ctaSecondary, def.ctaSecondary, 40) || def.ctaSecondary,
-      videoUrl: safeUrl(d.videoUrl) || def.videoUrl,
-      posterUrl: safeUrl(d.posterUrl),
+      videoUrl,
+      // the bundled poster is a frame of the bundled clip, so it only applies to that clip
+      posterUrl: safeUrl(d.posterUrl) || (videoUrl === def.videoUrl ? def.posterUrl : ''),
     };
   }
 
