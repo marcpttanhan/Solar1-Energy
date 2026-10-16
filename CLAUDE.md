@@ -28,7 +28,7 @@ When the skills disagree, the existing design system wins. The site has a define
 - Admin sign-in is Supabase Auth. Typing the username `admin` (or `solar1`) on `admin.html` signs in as `adminEmail` from `supabase-config.js` (`admin@solar1energy.co.th`). The password lives only in Supabase, never in the repo.
 - Write access is enforced by RLS in `supabase_schema.sql`: only a JWT with that email can insert, update or delete `site_content`. If you change the admin email, change it in both files. There is no `admin_users` table or `is_admin()` anymore.
 - Public sign-ups must stay off (Authentication → Sign In / Providers).
-- The live project had a mismatched `site_content` table (2026-10-16). `supabase_fix.sql` moves it aside as `site_content_legacy_*` and applies the schema. Until that's run, the site serves its built-in content (by design).
+- The live project had a mismatched `site_content` table. `supabase_fix.sql` was run on 2026-10-16: the old table is kept as `site_content_legacy_*`, and the live table and policies now match `supabase_schema.sql`. Admin sign-in and saving were verified end to end (a calculator change showed on solar1-energy.vercel.app). The old `admin_users` / `*_legacy*` tables are unused and can be dropped.
 
 ## UX/design audit (2026-10-16)
 
