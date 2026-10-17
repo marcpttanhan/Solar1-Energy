@@ -35,6 +35,31 @@ function renderPackages(seg) {
   pkGrid.querySelectorAll('.media-frame').forEach(initFrame);
 }
 
+// ---------- Motion helper ----------
+// Plays a one-shot CSS animation class (see styles.css "entrance and scroll motion").
+// Elements are always visible at rest; the class is removed when the animation ends
+// so it can be replayed, and a timeout cleans up if animationend never fires.
+function playOnce(el, cls, delayMs = 0, maxMs = 1600) {
+  el.classList.remove(cls);
+  if (delayMs) el.style.setProperty('--d', `${delayMs}ms`);
+  void el.offsetWidth; // restart the animation if it was already applied
+  el.classList.add(cls);
+  // Removing the class drops the animation, so the element is back at its visible resting style.
+  const done = () => { el.classList.remove(cls); el.style.removeProperty('--d'); clearTimeout(timer); el.removeEventListener('animationend', onEnd); };
+  const onEnd = (e) => { if (e.target === el) done(); };
+  const timer = setTimeout(done, maxMs + delayMs);
+  el.addEventListener('animationend', onEnd);
+}
+
+// Watchdog for the CSS-only hero entrance: a page that isn't rendering (background tab,
+// some in-app browsers) holds animations on their first keyframe. Timers still run, so
+// shortly after the entrance should have ended, any of it still pending is finished.
+setTimeout(() => {
+  document.querySelector('.hero')?.getAnimations({ subtree: true }).forEach((a) => {
+    if (a.effect && a.effect.getComputedTiming().iterations !== Infinity) a.finish();
+  });
+}, 3000);
+
 // ---------- Projects (portfolio) ----------
 // content.projects.items: the first featured item gets the large card, the rest
 // fill the grid, filtered by category and shown PJ_PAGE at a time.
@@ -147,12 +172,8 @@ pjMore.addEventListener('click', () => {
 function filterProjects(val) {
   pjFilter = val;
   pjExpanded = false;
-  if (reduced()) return renderProjects();
-  pjGrid.classList.add('is-swapping');
-  setTimeout(() => {
-    renderProjects();
-    requestAnimationFrame(() => requestAnimationFrame(() => pjGrid.classList.remove('is-swapping')));
-  }, 220);
+  renderProjects();
+  [...pjGrid.children].forEach((card, i) => playOnce(card, 'reveal-in', Math.min(i, 5) * 50));
 }
 
 // ---------- About-us figures ----------
@@ -384,15 +405,8 @@ document.querySelectorAll('.seg').forEach((seg) => {
 });
 
 function swapPackages(val) {
-  if (reduced()) return renderPackages(val);
-  pkGrid.classList.add('is-swapping');
-  setTimeout(() => {
-    renderPackages(val);
-    const cards = [...pkGrid.children];
-    cards.forEach((c, i) => { c.style.transitionDelay = `${i * 70}ms`; });
-    requestAnimationFrame(() => requestAnimationFrame(() => pkGrid.classList.remove('is-swapping')));
-    setTimeout(() => cards.forEach((c) => { c.style.transitionDelay = ''; }), 800);
-  }, 320);
+  renderPackages(val);
+  [...pkGrid.children].forEach((card, i) => playOnce(card, 'reveal-in', i * 70));
 }
 
 // Package clips play while hovered.
@@ -542,6 +556,8 @@ window.addEventListener('scroll', () => {
   if (shouldStick !== stuck) {
     stuck = shouldStick;
     nav.classList.toggle('is-stuck', stuck);
+    // the bar slides in with a CSS animation; make sure it lands even if rendering is paused
+    if (stuck) setTimeout(() => nav.getAnimations().forEach((an) => an.finish()), 700);
     syncNavThumb();
   }
 }, { passive: true });
@@ -563,17 +579,15 @@ navLinks.forEach((a) => {
 });
 
 // ---------- Hero load sequence ----------
-// Wait for Anuphan (and, on a first visit, Supabase content) so the headline
-// doesn't reflow or swap mid-animation. Capped so a slow network never blocks it.
+// The entrance itself is a CSS animation on first paint (styles.css), so the hero is
+// never waiting on JS to become visible. Once fonts (and, on a first visit, Supabase
+// content) settle, the sliding indicators are measured. Capped at 900 ms.
 // Assigned by the content boot at the end of this file; read in a microtask, after it has run.
 let contentReady = Promise.resolve();
 Promise.race([
   Promise.all([document.fonts.ready, Promise.resolve().then(() => contentReady)]),
   new Promise((r) => setTimeout(r, 900)),
 ]).then(() => {
-  // Not rAF: it never fires in background tabs, which would leave the hero invisible.
-  void hero.offsetWidth;
-  hero.classList.add('is-ready');
   document.querySelectorAll('.seg').forEach((s) => s._sync());
   syncNavThumb();
   // Once the entrance is over, drop the hooks so hover/press respond without entrance delays.
@@ -584,6 +598,12 @@ Promise.race([
 });
 
 // ---------- Scroll reveal ----------
+// Purely additive: every block is visible at all times. Shortly before a block
+// scrolls into view (observer margin 12% below the viewport) it plays a one-shot
+// rise-in. A block that is already on screen when first observed (page load,
+// reload mid-page, jump links, scrolling back up) is left alone: it's visible, so
+// animating it would only flash. No IntersectionObserver: nothing animates,
+// everything shows.
 const REVEAL_GROUPS = [
   '.impact-head', '.stats',
   '.packages .split-left', '.pk-head', '.benefits',
@@ -591,79 +611,45 @@ const REVEAL_GROUPS = [
   '.projects .split-left',
   '.foot-cta', '.foot-card',
 ];
-// Grids rendered later by JS (packages, portfolio) reveal as one block: their cards
-// don't exist yet when this runs, and they are re-rendered on filter/content changes.
+// Grids rendered by JS (packages, portfolio) animate as one block: their cards are
+// re-rendered on filter/content changes.
 const SINGLE_REVEALS = ['.impact-panel', '.pk-grid', '.pk-note', '.pj-feature', '.pj-bar', '.pj-grid'];
 
-function markReveal(el, delay) {
-  el.classList.add('reveal');
-  el.style.setProperty('--d', `${delay}ms`);
-  // Hand control back to each element's own transitions once it has arrived.
-  const done = (e) => {
-    if (e.target !== el || e.propertyName !== 'opacity') return;
-    el.classList.remove('reveal', 'is-in');
-    el.style.removeProperty('--d');
-    el.removeEventListener('transitionend', done);
-  };
-  el.addEventListener('transitionend', done);
-}
-
-// threshold 0: a block reveals as soon as its top crosses 90% of the viewport, so
-// blocks taller than the screen (stacked cards on phones) can never miss the trigger.
 const revealObserver = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (!entry.isIntersecting) return;
-    reveal(entry.target);
+    const box = entry.target;
+    revealObserver.unobserve(box);
+    // Only animate what is still below the visible area; anything on screen stays as is.
+    if (entry.boundingClientRect.top < window.innerHeight) return;
+    (box._items || [box]).forEach((el, i) => playOnce(el, 'reveal-in', box._items ? Math.min(i, 3) * 60 : 0));
+    box.dispatchEvent(new CustomEvent('revealed'));
   });
-}, { rootMargin: '0px 0px -10% 0px', threshold: 0 }) : null;
+}, { rootMargin: '0px 0px 12% 0px', threshold: 0 }) : null;
 
-const pendingReveals = new Set();
-function reveal(box) {
-  if (!pendingReveals.delete(box)) return;
-  revealObserver?.unobserve(box);
-  (box._items || [box]).forEach((el) => el.classList.add('is-in'));
-  box.dispatchEvent(new CustomEvent('revealed'));
-}
-function watchReveal(box) {
-  pendingReveals.add(box);
-  if (revealObserver) revealObserver.observe(box);
-  else reveal(box); // no IntersectionObserver: show everything straight away
-}
-// Safety net, once per frame while scrolling: a fast fling can carry a short block past
-// the viewport between two observer samples, so anything whose top has crossed the
-// trigger line is revealed; and short blocks at the very bottom, which may never reach
-// that line, show once the page bottoms out.
-let revealSweep = 0;
-window.addEventListener('scroll', () => {
-  if (!pendingReveals.size || revealSweep) return;
-  revealSweep = requestAnimationFrame(() => {
-    revealSweep = 0;
-    const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
-    const line = window.innerHeight * 0.9;
-    [...pendingReveals].forEach((box) => { if (atBottom || box.getBoundingClientRect().top < line) reveal(box); });
-  });
-}, { passive: true });
+function watchReveal(box) { if (box && revealObserver) revealObserver.observe(box); }
 
 REVEAL_GROUPS.forEach((sel) => {
   const box = document.querySelector(sel);
   if (!box) return;
   box._items = [...box.children];
-  // Light stagger, capped so long groups don't trail in.
-  box._items.forEach((el, i) => markReveal(el, Math.min(i, 3) * 60));
   watchReveal(box);
 });
-SINGLE_REVEALS.forEach((sel) => {
-  const el = document.querySelector(sel);
-  if (!el) return;
-  markReveal(el, 0);
-  watchReveal(el);
-});
+SINGLE_REVEALS.forEach((sel) => watchReveal(document.querySelector(sel)));
 
 // Wordmark: split into letters that rise in sequence.
 const wordmark = document.querySelector('.wordmark');
 wordmark.innerHTML = [...wordmark.textContent].map((ch, i) =>
   `<span class="ch" style="--d:${i * 40}ms">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('');
-watchReveal(wordmark);
+// the letters carry their own delays; the class just needs to outlast the last one
+if (revealObserver) {
+  const wmObserver = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    wmObserver.disconnect();
+    if (entry.boundingClientRect.top >= window.innerHeight) playOnce(wordmark, 'reveal-in', 0, 1000 + wordmark.children.length * 40);
+  }, { rootMargin: '0px 0px 12% 0px' });
+  wmObserver.observe(wordmark);
+}
 
 // Impact stats count up when they arrive (keeping each figure's decimals, e.g. 3.5, 1.75).
 document.querySelector('.stats').addEventListener('revealed', () => {

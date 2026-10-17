@@ -22,6 +22,7 @@ When the skills disagree, the existing design system wins. The site has a define
 - Breakpoints: 1100 / 1024 (tablet) / 899 (nav CTA hides so the links stay on one line) / 767 / 639 (phone). Both `prefers-reduced-motion` blocks must cover any new motion
 - Filled buttons use `--cta` / `--cta-deep` (white text at 4.8:1 / 6:1). Keep `--orange` for accents, rules and large numerals, not behind small white text
 - Text is 14px minimum (Thai script gets hard to read below that)
+- Motion is additive only: never hide content in a resting style (no `opacity: 0` waiting for JS or an observer). Entrance/scroll effects are one-shot CSS animations (styles.css "entrance and scroll motion", `playOnce` in main.js) that end at the visible state, with timeout watchdogs
 
 ## Content (from the company profile PDF, 2026-10-17)
 
