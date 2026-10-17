@@ -220,16 +220,17 @@ a, button, input, label { -webkit-tap-highlight-color: transparent; }
   align-items: center;
 }
 
+/* transparent mark straight on the header: white type over the hero, ink once the bar is stuck */
 .logo-chip {
   justify-self: start;
-  display: inline-flex; align-items: center; gap: 12px;
-  background: var(--white);
-  border-radius: 14px;
-  padding: 6px 16px 6px 6px;
-  color: var(--graphite);
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 4px;
+  margin: -4px;
+  border-radius: 12px;
+  color: var(--white);
 }
-.logo-chip img { height: 48px; width: auto; border-radius: 9px; }
-.logo-chip span { font-size: 15px; font-weight: 500; line-height: 1.2; }
+.logo-chip img { display: block; height: 48px; width: auto; object-fit: contain; filter: drop-shadow(0 1px 6px rgb(0 0 0 / .35)); }
+.logo-chip span { font-size: 15px; font-weight: 500; line-height: 1.2; text-shadow: 0 1px 10px rgb(0 0 0 / .35); }
 
 .nav-links {
   position: relative;
@@ -1066,7 +1067,9 @@ html.js .impact-panel.reveal.is-in video { transform: none; }
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
   animation: nav-drop .5s var(--ease);
 }
-.nav.is-stuck .logo-chip { padding-top: 2px; padding-bottom: 2px; }
+.nav.is-stuck .logo-chip { color: var(--ink); }
+.nav.is-stuck .logo-chip span { text-shadow: none; }
+.nav.is-stuck .logo-chip img { filter: none; }
 .nav.is-stuck .logo-chip img { height: 40px; }
 .nav.is-stuck .nav-links { background: var(--surface); border-color: transparent; }
 .nav.is-stuck .nav-links a { color: var(--ink-soft); }
@@ -1223,9 +1226,8 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
   .nav-links { justify-self: center; }
   .nav-links > a { padding: 8px 12px; font-size: 14px; }
   .nav-links a[href="#top"] { display: none; }   /* the logo already links home */
-  .logo-chip { padding: 5px; }
   .logo-chip span { display: none; }
-  .logo-chip img { height: 42px; }
+  .logo-chip img, .nav.is-stuck .logo-chip img { height: 40px; }
   .video-toggle { top: 84px; right: 16px; }
 
   /* hero is a column: content sits in flow under the bar */
@@ -1303,9 +1305,9 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
   .nav { grid-template-columns: 1fr auto; gap: 8px; }
   .menu-btn { display: grid; }
   .nav-actions > .theme-toggle { display: none; }
-  .logo-chip { gap: 10px; padding: 4px 12px 4px 4px; border-radius: 12px; }
+  .logo-chip { gap: 8px; }
   .logo-chip span { display: inline; font-size: 14px; }
-  .logo-chip img { height: 40px; }
+  .logo-chip img, .nav.is-stuck .logo-chip img { height: 36px; }
 
   .nav-links {
     position: absolute;
@@ -1425,7 +1427,7 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
   .pj-media { aspect-ratio: 16 / 10; }
   .logo-wall { margin-top: 44px; }
   .logos { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
-  .logos li { height: 72px; padding: 10px 12px; }
+  .logos li { height: 72px; padding: 12px 16px; }
   .logos--brands li { height: 64px; }
 
   .foot-legal { flex-direction: column; gap: 6px; }

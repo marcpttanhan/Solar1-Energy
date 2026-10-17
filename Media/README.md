@@ -3,6 +3,8 @@
 Images come from the company profile PDF (Solar1energy co.,ltd, 2026), cropped
 and converted to WebP (photos max 1200 px wide, logos max 200 px tall).
 
+- `logo-mark.png` transparent brand mark for the navbar (white background removed
+  from `logo-trim.png`, which the footer and admin still use)
 - `projects/` portfolio photos, one per installation (referenced from the
   `projects` content in js/content.js or the admin panel)
 - `clients/` client logos (transparent or white background; shown on white tiles)

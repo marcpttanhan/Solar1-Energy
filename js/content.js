@@ -285,16 +285,23 @@
     d = d && typeof d === 'object' ? d : {};
     const def = DEFAULTS.contact;
     const lines = Array.isArray(d.addressLines) ? d.addressLines.map((l) => str(l, '', 120)).filter(Boolean).slice(0, 6) : null;
+    // Social links must be absolute https; a bare TikTok handle ("@name") becomes its profile URL.
+    const social = (v) => { const u = safeUrl(v); return /^https:\/\//i.test(u) ? u : ''; };
+    const handle = typeof d.tiktok === 'string' ? d.tiktok.trim() : '';
+    // Rows written outside the admin panel may use phone_office / line instead.
+    let phone = str(d.phone, def.phone, 80);
+    const office = str(d.phone_office, '', 40);
+    if (office && !phone.includes(office)) phone = (phone ? `${phone}, ${office}` : office).slice(0, 80);
     return {
       addressLines: lines && lines.length ? lines : clone(def.addressLines),
-      phone: str(d.phone, def.phone, 80),
+      phone,
       email: str(d.email, def.email, 120),
       hours: str(d.hours, def.hours, 80),
-      lineId: str(d.lineId, def.lineId, 40),
-      facebook: safeUrl(d.facebook),
-      instagram: safeUrl(d.instagram),
-      youtube: safeUrl(d.youtube),
-      tiktok: safeUrl(d.tiktok),
+      lineId: str(d.lineId ?? d.line, def.lineId, 40),
+      facebook: social(d.facebook),
+      instagram: social(d.instagram),
+      youtube: social(d.youtube),
+      tiktok: /^@[\w.]{2,30}$/.test(handle) ? `https://www.tiktok.com/${handle}` : social(d.tiktok),
     };
   }
 
