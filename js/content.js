@@ -147,15 +147,15 @@
         { name: 'บ้านพักอาศัย', category: 'home', location: 'ย่านราชพฤกษ์', kw: 4.75, saving: 3000, savingUpTo: false, year: 2566, image: 'Media/projects/home-ratchaphruek-4kw.webp' },
       ],
       clients: [
-        { name: 'KVS Fresh Products', logo: 'Media/clients/kvs-fresh-products.webp' },
-        { name: 'Quality Chicken Farm (คิว ซี เอฟ)', logo: 'Media/clients/quality-chicken-farm.webp' },
-        { name: 'Big Food Group (บิ๊ก ฟู้ดส์ กรุ๊ป)', logo: 'Media/clients/big-food-group.webp' },
-        { name: 'เกษตรชล 2559', logo: 'Media/clients/kasetchon-2559.webp' },
-        { name: 'ศรีสุดาฟาร์ม และ กนกวรรณฟาร์ม', logo: 'Media/clients/srisuda-kanokwan-farm.webp' },
-        { name: 'เคลฟเวอร์ กู๊ดส์', logo: 'Media/clients/clever-goods.webp' },
-        { name: 'สถานีบริการ ปตท. ราชบุรี (ในเมือง)', logo: 'Media/clients/ptt-ratchaburi.webp' },
-        { name: 'ไทยซัพพลาย เทรดดิ้ง', logo: 'Media/clients/thai-supply-trading.webp' },
-        { name: 'เอื้ออารี ฟู้ด โปรดักท์', logo: 'Media/clients/aur-aree.webp' },
+        { name: 'KVS Fresh Products', logo: 'Media/clients/kvs-fresh-products.webp', w: 188, h: 200 },
+        { name: 'Quality Chicken Farm (คิว ซี เอฟ)', logo: 'Media/clients/quality-chicken-farm.webp', w: 278, h: 133 },
+        { name: 'Big Food Group (บิ๊ก ฟู้ดส์ กรุ๊ป)', logo: 'Media/clients/big-food-group.webp', w: 202, h: 200 },
+        { name: 'เกษตรชล 2559', logo: 'Media/clients/kasetchon-2559.webp', w: 207, h: 200 },
+        { name: 'ศรีสุดาฟาร์ม และ กนกวรรณฟาร์ม', logo: 'Media/clients/srisuda-kanokwan-farm.webp', w: 200, h: 200 },
+        { name: 'เคลฟเวอร์ กู๊ดส์', logo: 'Media/clients/clever-goods.webp', w: 158, h: 199 },
+        { name: 'สถานีบริการ ปตท. ราชบุรี (ในเมือง)', logo: 'Media/clients/ptt-ratchaburi.webp', w: 404, h: 200 },
+        { name: 'ไทยซัพพลาย เทรดดิ้ง', logo: 'Media/clients/thai-supply-trading.webp', w: 285, h: 200 },
+        { name: 'เอื้ออารี ฟู้ด โปรดักท์', logo: 'Media/clients/aur-aree.webp', w: 231, h: 200 },
       ],
     },
   };
@@ -330,7 +330,11 @@
         }).filter((p) => p.name)
       : clone(def.items);
     const clients = Array.isArray(d.clients)
-      ? d.clients.slice(0, 30).map((c) => ({ name: str(c && c.name, '', 80), logo: safeUrl(c && c.logo) })).filter((c) => c.logo)
+      ? d.clients.slice(0, 30).map((c) => {
+          c = c && typeof c === 'object' ? c : {};
+          // w/h: the logo file's pixel size, used as img width/height (optional)
+          return { name: str(c.name, '', 80), logo: safeUrl(c.logo), w: Math.round(num(c.w, 0, 0, 4000)), h: Math.round(num(c.h, 0, 0, 4000)) };
+        }).filter((c) => c.logo)
       : clone(def.clients);
     return { stats, items, clients };
   }

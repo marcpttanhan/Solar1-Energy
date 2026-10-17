@@ -43,7 +43,7 @@
 
   function brand() {
     return h('a', { class: 'brand', href: './', title: 'กลับหน้าเว็บไซต์' },
-      h('img', { src: 'Media/logo-trim.png', alt: '' }),
+      h('img', { src: 'Media/logo-footer.webp', width: 212, height: 192, alt: '' }),
       h('span', {}, 'Solar One Energy'));
   }
 

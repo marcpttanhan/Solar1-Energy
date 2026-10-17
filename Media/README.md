@@ -25,3 +25,15 @@ and nothing is requested from the server.
 
 With a package photo present, the photo shows by default and the drone clip
 plays over it on hover.
+
+## Sizes and caching
+
+- Portfolio photos also ship as 4:3 crops `<name>-480.webp` and `<name>-800.webp`;
+  package photos as `<slot>-640.webp` and `<slot>-800.webp`. The site picks one
+  with srcset and falls back to the original if a variant is missing, so a new
+  photo works without them (it just downloads the full file).
+- `logo-mark.webp` (navbar, PNG fallback) and `logo-footer.webp` are small copies
+  of the logos sized for where they appear.
+- vercel.json caches everything under Media/ and Font/ for a year (`immutable`),
+  except images.json. Browsers won't re-download a changed file at the same path,
+  so give a replaced image a new filename.

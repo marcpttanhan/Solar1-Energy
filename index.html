@@ -7,6 +7,8 @@
   <meta name="description" content="Solar One Energy สำนักงานใหญ่ นครปฐม ให้บริการติดตั้งโซลาร์เซลล์ทั่วประเทศไทย ออกแบบโดยทีมวิศวกร ตั้งแต่สำรวจหน้างาน ยื่นขออนุญาต จนถึงดูแลหลังการขาย">
   <meta name="theme-color" content="#F3F5F7">
   <link rel="preload" href="Font/Anuphan/Anuphan-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
+  <!-- the hero's first frame is the largest thing above the fold -->
+  <link rel="preload" href="Media/hero-poster.jpg" as="image" fetchpriority="high">
   <script>
     // Theme before first paint: stored choice, otherwise the OS preference.
     (function () {
@@ -48,7 +50,10 @@
 
     <nav class="nav" aria-label="เมนูหลัก" data-in style="--d:100ms">
       <a class="logo-chip" href="#top" aria-label="Solar One Energy หน้าแรก">
-        <img src="Media/logo-mark.png" width="267" height="240" alt="Solar One Energy">
+        <picture>
+          <source srcset="Media/logo-mark.webp" type="image/webp">
+          <img src="Media/logo-mark.png" width="160" height="144" fetchpriority="high" decoding="async" alt="Solar One Energy">
+        </picture>
         <span>Solar One<br>Energy</span>
       </a>
       <div class="nav-links" id="nav-links">
@@ -318,7 +323,7 @@
 
     <div class="foot-card">
       <div class="foot-brand">
-        <img src="Media/logo-trim.png" alt="Solar One Energy">
+        <img src="Media/logo-footer.webp" width="212" height="192" loading="lazy" decoding="async" alt="Solar One Energy">
         <p>บริษัทออกแบบและติดตั้งระบบโซลาร์เซลล์ครบวงจร สำหรับบ้านพักอาศัย ธุรกิจ และโรงงานอุตสาหกรรมทั่วประเทศไทย</p>
       </div>
       <div class="foot-col">

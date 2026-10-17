@@ -51,15 +51,34 @@ const num = (n, max = 2) => n.toLocaleString('th-TH', { maximumFractionDigits: m
 const kwParts = (kw) => (kw >= 1000 ? [num(kw / 1000), 'MW'] : [num(kw), 'kW']);
 const savingText = (p) => `${p.savingUpTo ? 'สูงสุด ' : ''}${num(p.saving, 0)} บาท/เดือน`;
 
-// A photo that fails to load is dropped, leaving the frame's line drawing.
-function dropBrokenImages(root) {
-  root.querySelectorAll('img').forEach((img) => img.addEventListener('error', () => img.remove(), { once: true }));
+// A failed responsive candidate falls back to the original file once; a photo
+// that still fails is dropped, leaving the frame's line drawing.
+function guardImage(img) {
+  img.addEventListener('error', () => {
+    if (img.srcset && img.dataset.full) {
+      img.removeAttribute('srcset');
+      img.removeAttribute('sizes');
+      img.src = img.dataset.full;
+      return;
+    }
+    img.remove();
+  });
 }
+function dropBrokenImages(root) { root.querySelectorAll('img').forEach(guardImage); }
 
-function projectImg(p) {
+// Built-in portfolio photos ship as 4:3 crops at 480 and 800 px (Media/projects/<name>-480.webp,
+// -800.webp) next to the full-size original; anything else (admin URLs) loads as given.
+const PJ_SIZES = '(max-width: 639px) calc(100vw - 32px), (max-width: 1024px) calc(50vw - 40px), 280px';
+const PJ_FEATURE_SIZES = '(max-width: 767px) calc(100vw - 48px), (max-width: 1100px) 55vw, 440px';
+const hasVariants = (src) => /^Media\/projects\/[\w-]+\.webp$/.test(src) && !/-(480|800)\.webp$/.test(src);
+
+function projectImg(p, sizes = PJ_SIZES) {
   if (!p.image) return '';
   const [k, unit] = kwParts(p.kw);
-  return `<img class="frame-img" src="${esc(p.image)}" alt="${esc(`ระบบโซลาร์ ${k} ${unit} ของ${p.name} ${p.location}`)}" loading="lazy" decoding="async">`;
+  const alt = esc(`ระบบโซลาร์ ${k} ${unit} ของ${p.name} ${p.location}`);
+  if (!hasVariants(p.image)) return `<img class="frame-img" src="${esc(p.image)}" alt="${alt}" loading="lazy" decoding="async">`;
+  const base = p.image.slice(0, -5);
+  return `<img class="frame-img" src="${base}-800.webp" srcset="${base}-480.webp 480w, ${base}-800.webp 800w" sizes="${sizes}" width="800" height="600" data-full="${esc(p.image)}" alt="${alt}" loading="lazy" decoding="async">`;
 }
 
 function renderFeature() {
@@ -69,7 +88,7 @@ function renderFeature() {
   const [k, unit] = kwParts(f.kw);
   const big = f.saving >= 1e6;
   pjFeature.innerHTML = `
-    <div class="pj-feature-media media-frame">${projectImg(f)}</div>
+    <div class="pj-feature-media media-frame">${projectImg(f, PJ_FEATURE_SIZES)}</div>
     <div class="pj-feature-body">
       <div>
         <p class="kicker">โครงการเด่น</p>
@@ -113,7 +132,7 @@ function renderProjects() {
 function renderClients() {
   const { clients } = content.projects;
   pjClients.innerHTML = clients.map((c) =>
-    `<li><img src="${esc(c.logo)}" alt="${esc(c.name)}" title="${esc(c.name)}" loading="lazy" decoding="async"></li>`).join('');
+    `<li><img src="${esc(c.logo)}"${c.w && c.h ? ` width="${c.w}" height="${c.h}"` : ''} alt="${esc(c.name)}" title="${esc(c.name)}" loading="lazy" decoding="async"></li>`).join('');
   pjClients.querySelectorAll('img').forEach((img) => img.addEventListener('error', () => img.parentElement.remove(), { once: true }));
   document.getElementById('pj-clients-wall').hidden = !clients.length;
 }
@@ -172,14 +191,28 @@ function initFrame(frame) {
     video.addEventListener('loadeddata', () => frame.classList.remove('is-loading'), { once: true });
     video.addEventListener('error', () => frame.classList.remove('is-loading'), { once: true });
   }
+  // The image goes into the frame straight away so the browser can lazy-load it;
+  // until it arrives the frame's line drawing shows through. Package slots also
+  // have 4:3 WebPs at 640 and 800 px (Media/packages/<slot>-640.webp, -800.webp)
+  // for the card size; the full JPEG is only the fallback.
   const placeImage = (src) => {
     const img = document.createElement('img');
     img.className = 'frame-img';
     img.alt = frame.dataset.alt || '';
+    img.loading = 'lazy';
     img.decoding = 'async';
-    // Only swap in once it has loaded; a broken URL leaves the line drawing.
-    img.addEventListener('load', () => { if (frame.isConnected) { frame.prepend(img); frame.classList.add('has-img'); } }, { once: true });
-    img.src = src;
+    const slot = /^Media\/packages\/[\w-]+\.jpg$/.test(src) ? src.slice(0, -4) : '';
+    if (slot) {
+      img.width = 640;
+      img.height = 480;
+      img.dataset.full = src;
+      img.sizes = '(max-width: 639px) calc(100vw - 32px), (max-width: 1024px) calc(50vw - 40px), 280px';
+      img.srcset = `${slot}-640.webp 640w, ${slot}-800.webp 800w`;
+    }
+    img.addEventListener('load', () => frame.classList.add('has-img'), { once: true });
+    guardImage(img);
+    img.src = slot ? `${slot}-640.webp` : src;
+    frame.prepend(img);
   };
   if (frame.dataset.imgSrc) return placeImage(frame.dataset.imgSrc);
   const src = frame.dataset.img;
