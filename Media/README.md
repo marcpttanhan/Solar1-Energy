@@ -23,8 +23,8 @@ and nothing is requested from the server.
 - Media/packages/factory-300kwp.jpg
 - Media/packages/factory-1mwp.jpg
 
-With a package photo present, the photo shows by default and the drone clip
-plays over it on hover.
+With a package photo present, it replaces the card's drone clip (the clip only
+shows for packages without a photo).
 
 ## Sizes and caching
 

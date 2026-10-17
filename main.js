@@ -196,6 +196,16 @@ function initFrame(frame) {
   // have 4:3 WebPs at 640 and 800 px (Media/packages/<slot>-640.webp, -800.webp)
   // for the card size; the full JPEG is only the fallback.
   const placeImage = (src) => {
+    // A package photo replaces the card's drone clip outright (no clip on hover);
+    // the frame shows its loading sweep until the photo arrives.
+    const clip = frame.closest('.pk') && frame.querySelector('video');
+    if (clip) {
+      clip.pause();
+      clip.removeAttribute('src');
+      clip.load(); // stop fetching the clip
+      clip.remove();
+      frame.classList.add('is-loading');
+    }
     const img = document.createElement('img');
     img.className = 'frame-img';
     img.alt = frame.dataset.alt || '';
@@ -209,7 +219,8 @@ function initFrame(frame) {
       img.sizes = '(max-width: 639px) calc(100vw - 32px), (max-width: 1024px) calc(50vw - 40px), 280px';
       img.srcset = `${slot}-640.webp 640w, ${slot}-800.webp 800w`;
     }
-    img.addEventListener('load', () => frame.classList.add('has-img'), { once: true });
+    img.addEventListener('load', () => { frame.classList.add('has-img'); frame.classList.remove('is-loading'); }, { once: true });
+    img.addEventListener('error', () => { if (!img.srcset) frame.classList.remove('is-loading'); });
     guardImage(img);
     img.src = slot ? `${slot}-640.webp` : src;
     frame.prepend(img);
@@ -412,16 +423,16 @@ document.querySelectorAll('.benefit button').forEach((btn) => {
 
 // ---------- Background video: autoplay, one shared pause control ----------
 // The hero and impact clips follow one preference: the visitor's last pause/play
-// choice, starting paused when the OS asks for reduced motion. Each clip only
-// plays while it is on screen and the tab is visible.
+// choice (the pause button satisfies WCAG 2.2.2). Each clip only plays while it is
+// on screen and the tab is visible.
 const hero = document.querySelector('.hero');
 const heroVideo = document.querySelector('.hero-video');
 const impactVideo = document.querySelector('.impact-video');
 const videoToggles = [...document.querySelectorAll('.video-toggle')];
 const onScreen = new Map([[heroVideo, true], [impactVideo, false]]);
-// Start paused under reduced motion or when the browser asks to save data.
+// Autoplay for everyone; only a browser that asks to save data starts paused.
 const saveData = navigator.connection?.saveData === true;
-let videosPaused = reduced() || saveData;
+let videosPaused = saveData;
 
 heroVideo.muted = true; // required for autoplay in every browser
 impactVideo.muted = true;
@@ -455,10 +466,14 @@ onScreen.forEach((_, v) => videoView.observe(v));
 
 heroVideo.addEventListener('canplay', syncVideos, { once: true });
 impactVideo.addEventListener('loadedmetadata', () => { impactVideo.playbackRate = 0.6; });
-// Some browsers hold autoplay until the first interaction (e.g. battery saver).
-['pointerdown', 'keydown', 'scroll'].forEach((ev) => window.addEventListener(ev, syncVideos, { once: true, passive: true }));
+// Some browsers block autoplay until the first interaction (iOS Low Power Mode,
+// battery savers): keep retrying on interaction until the hero clip is playing.
+// syncVideos swallows the play() rejection, so a refusal never breaks the page.
+const PLAY_RETRY_EVENTS = ['pointerdown', 'touchend', 'click', 'keydown', 'scroll'];
+PLAY_RETRY_EVENTS.forEach((ev) => window.addEventListener(ev, syncVideos, { passive: true }));
+heroVideo.addEventListener('playing', () => PLAY_RETRY_EVENTS.forEach((ev) => window.removeEventListener(ev, syncVideos)), { once: true });
+window.addEventListener('load', syncVideos, { once: true });
 document.addEventListener('visibilitychange', syncVideos);
-motionMQ.addEventListener('change', () => { videosPaused = reduced() || saveData; syncVideos(); });
 syncVideos();
 
 // ---------- Nav: sticks after the hero, highlights the section in view ----------
@@ -571,12 +586,14 @@ Promise.race([
 // ---------- Scroll reveal ----------
 const REVEAL_GROUPS = [
   '.impact-head', '.stats',
-  '.packages .split-left', '.pk-head', '.pk-grid', '.benefits',
+  '.packages .split-left', '.pk-head', '.benefits',
   '.calc-top', '.calc-inputs', '.calc-out',
   '.projects .split-left',
   '.foot-cta', '.foot-card',
 ];
-const SINGLE_REVEALS = ['.impact-panel', '.pk-note', '.pj-feature', '.pj-bar'];
+// Grids rendered later by JS (packages, portfolio) reveal as one block: their cards
+// don't exist yet when this runs, and they are re-rendered on filter/content changes.
+const SINGLE_REVEALS = ['.impact-panel', '.pk-grid', '.pk-note', '.pj-feature', '.pj-bar', '.pj-grid'];
 
 function markReveal(el, delay) {
   el.classList.add('reveal');
@@ -591,30 +608,40 @@ function markReveal(el, delay) {
   el.addEventListener('transitionend', done);
 }
 
-const revealObserver = new IntersectionObserver((entries) => {
+// threshold 0: a block reveals as soon as its top crosses 90% of the viewport, so
+// blocks taller than the screen (stacked cards on phones) can never miss the trigger.
+const revealObserver = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (!entry.isIntersecting) return;
     reveal(entry.target);
   });
-}, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
+}, { rootMargin: '0px 0px -10% 0px', threshold: 0 }) : null;
 
 const pendingReveals = new Set();
 function reveal(box) {
   if (!pendingReveals.delete(box)) return;
-  revealObserver.unobserve(box);
+  revealObserver?.unobserve(box);
   (box._items || [box]).forEach((el) => el.classList.add('is-in'));
   box.dispatchEvent(new CustomEvent('revealed'));
 }
 function watchReveal(box) {
   pendingReveals.add(box);
-  revealObserver.observe(box);
+  if (revealObserver) revealObserver.observe(box);
+  else reveal(box); // no IntersectionObserver: show everything straight away
 }
-// Short blocks at the very bottom may never cross the trigger line: show them once the page bottoms out.
+// Safety net, once per frame while scrolling: a fast fling can carry a short block past
+// the viewport between two observer samples, so anything whose top has crossed the
+// trigger line is revealed; and short blocks at the very bottom, which may never reach
+// that line, show once the page bottoms out.
+let revealSweep = 0;
 window.addEventListener('scroll', () => {
-  if (!pendingReveals.size) return;
-  if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
-    [...pendingReveals].forEach(reveal);
-  }
+  if (!pendingReveals.size || revealSweep) return;
+  revealSweep = requestAnimationFrame(() => {
+    revealSweep = 0;
+    const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+    const line = window.innerHeight * 0.9;
+    [...pendingReveals].forEach((box) => { if (atBottom || box.getBoundingClientRect().top < line) reveal(box); });
+  });
 }, { passive: true });
 
 REVEAL_GROUPS.forEach((sel) => {
