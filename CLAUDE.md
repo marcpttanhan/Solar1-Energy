@@ -6,7 +6,7 @@ Content can be overridden from Supabase through the admin panel.
 - `index.html`, `styles.css`, `main.js`: the public site (Thai, `lang="th"`, Anuphan variable font)
 - `admin.html`, `admin.css`, `js/admin.js`: Supabase-backed admin panel. `js/content.js` applies `data-c="…"` overrides
 - `supabase-config.js`: public URL + anon key only (never the service_role key). `supabase_schema.sql`: tables and RLS
-- Deploy: GitHub `marcpttanhan/Solar1-Energy` → Vercel auto-deploys `main` (live at solar1-energy.vercel.app). `.vercelignore` keeps `.claude/`, `deploy/` and the SQL files out of the build
+- Deploy: GitHub `marcpttanhan/Solar1-Energy` → Vercel auto-deploys `main` (live at solar1-energy.vercel.app). `.vercelignore` keeps `.claude/`, `deploy/` and the SQL files out of the build. The repo root is the web root: `robots.txt`, `sitemap.xml`, `favicon.*` live there. Don't add a `public/` folder (Vercel would deploy only that folder). Security headers are set for every path in `vercel.json`
 - Local preview: `.claude/launch.json` has `solar1` (port 8080, attaches to `python3 .claude/serve.py 8080`) and `solar1-node` (port 8081, runs `node .claude/serve.mjs`, for machines without Python such as the Windows VPS). Both support Range requests for video seeking
 
 ## Design skills (project-local, in `.claude/skills/`)
@@ -28,13 +28,14 @@ When the skills disagree, the existing design system wins. The site has a define
 
 - Site sections, in order: hero, เกี่ยวกับเรา (`#impact`, four figures), แพ็กเกจ, คำนวณความคุ้มค่า, ผลงาน (`#projects`), footer/contact. The old placeholder reviews section was replaced by the real portfolio.
 - `site_content` keys: `hero`, `packages`, `roi`, `contact`, `projects`. `projects` holds `stats` (exactly 4), `items` (portfolio; the first `featured` item gets the large card; `year` is Buddhist-era, 0 = hidden; `savingUpTo` shows the top of a range as "สูงสุด") and `clients` (logos). Built-in defaults in `js/content.js` mirror the PDF; `supabase_content_seed.sql` loads them into Supabase.
+- SEO: `index.html` has static LocalBusiness JSON-LD and Open Graph tags. Crawlers don't run the Supabase overrides, so the static HTML, the JSON-LD and the `js/content.js` defaults must match what Supabase serves (hero subtitle, contact, hours Mon–Sat 08:00–17:00). Change all three together. The JSON-LD `geo` is approximate (Central Salaya); replace it with the exact HQ pin when known.
 - Private customers are listed as "บ้านพักอาศัย" with district/province only (no names or house numbers), even though the PDF shows them.
 - Images: `Media/projects/` (WebP ≤1200 px), `Media/clients/`, `Media/brands/`, `Media/certs/`, `Media/awards/`, and slot photos in `Media/packages/` (listed in `Media/images.json`). See `Media/README.md`.
-- Not in the PDF, so still placeholders: package prices and specs, the 3-day survey promise in the footer, opening hours, Facebook URL (the PDF gives only the page name).
+- Not in the PDF, so still placeholders: package prices and specs, the 3-day survey promise in the footer, Facebook URL (the PDF gives only the page name).
 
 ## Supabase and admin sign-in
 
-- Admin sign-in is Supabase Auth. Typing the username `admin` (or `solar1`) on `admin.html` signs in as `adminEmail` from `supabase-config.js` (`admin@solar1energy.co.th`). The password lives only in Supabase, never in the repo.
+- Admin sign-in is Supabase Auth. There is no link to it from the public site. Open `/admin.html` directly. Typing the username `admin` (or `solar1`) there signs in as `adminEmail` from `supabase-config.js` (`admin@solar1energy.co.th`). The password lives only in Supabase, never in the repo.
 - Write access is enforced by RLS in `supabase_schema.sql`: only a JWT with that email can insert, update or delete `site_content`. If you change the admin email, change it in both files. There is no `admin_users` table or `is_admin()` anymore.
 - Public sign-ups must stay off (Authentication → Sign In / Providers).
 - The live project had a mismatched `site_content` table. `supabase_fix.sql` was run on 2026-10-16: the old table is kept as `site_content_legacy_*`, and the live table and policies now match `supabase_schema.sql`. Admin sign-in and saving were verified end to end (a calculator change showed on solar1-energy.vercel.app). The old `admin_users` / `*_legacy*` tables are unused and can be dropped.
@@ -42,7 +43,7 @@ When the skills disagree, the existing design system wins. The site has a define
 ## UX/design audit (2026-10-16)
 
 Fixed: CTA contrast (`--cta`), 12–13px text raised to 14px, skip link to `#content`, footer `h5` changed to `h3`,
-`.admin-dot` given a 24px hit area, benefit numbering removed, `XX` placeholders replaced with confirmed-only fallbacks
+benefit numbering removed, `XX` placeholders replaced with confirmed-only fallbacks
 (street address and phone are set from the admin panel), the privacy-policy line removed until a page exists, and the hero video
 gets `preload="metadata"` plus `Media/hero-poster.jpg` (JS starts playback, so reduced-motion/save-data visitors
 download only the 86 KB poster).

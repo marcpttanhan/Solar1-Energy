@@ -6,6 +6,9 @@
   <title>Solar One Energy | ติดตั้งโซลาร์เซลล์ทั่วประเทศ สำหรับบ้าน ธุรกิจ และโรงงาน</title>
   <meta name="description" content="Solar One Energy สำนักงานใหญ่ นครปฐม ให้บริการติดตั้งโซลาร์เซลล์ทั่วประเทศไทย ออกแบบโดยทีมวิศวกร ตั้งแต่สำรวจหน้างาน ยื่นขออนุญาต จนถึงดูแลหลังการขาย">
   <meta name="theme-color" content="#F3F5F7">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="canonical" href="https://solar1-energy.vercel.app/">
   <!-- link previews (Facebook, LINE): absolute URLs, JPEG image -->
   <meta property="og:type" content="website">
@@ -20,7 +23,8 @@
   <meta property="og:image:height" content="720">
   <meta property="og:image:alt" content="แผงโซลาร์เซลล์บนดาดฟ้าอาคาร ติดตั้งโดย Solar One Energy">
   <meta name="twitter:card" content="summary_large_image">
-  <!-- Static on purpose: crawlers don't run the Supabase overrides. Keep in step with the contact defaults in js/content.js -->
+  <!-- Static on purpose: crawlers don't run the Supabase overrides. Keep in step with the contact defaults in js/content.js.
+       geo is approximate (Central Salaya, the landmark in the address); replace with the exact HQ pin when known -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -34,6 +38,10 @@
     "logo": "https://solar1-energy.vercel.app/Media/logo-mark.png",
     "image": "https://solar1-energy.vercel.app/Media/hero-poster.jpg",
     "telephone": "+66-82-416-9619",
+    "contactPoint": [
+      { "@type": "ContactPoint", "contactType": "sales", "telephone": "+66-82-416-9619", "areaServed": "TH", "availableLanguage": ["th"] },
+      { "@type": "ContactPoint", "contactType": "customer service", "telephone": "+66-98-453-3655", "areaServed": "TH", "availableLanguage": ["th"] }
+    ],
     "email": "solar1.ceo@gmail.com",
     "address": {
       "@type": "PostalAddress",
@@ -43,6 +51,13 @@
       "postalCode": "73210",
       "addressCountry": "TH"
     },
+    "geo": { "@type": "GeoCoordinates", "latitude": 13.788, "longitude": 100.277 },
+    "openingHoursSpecification": [{
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "08:00",
+      "closes": "17:00"
+    }],
     "areaServed": [
       { "@type": "AdministrativeArea", "name": "Nakhon Pathom" },
       { "@type": "AdministrativeArea", "name": "Bangkok" },
@@ -153,7 +168,7 @@
         </h1>
       </div>
       <div class="hero-copy">
-        <p data-in style="--d:520ms" data-c="hero.subtitle">Solar One Energy ออกแบบและติดตั้งระบบโซลาร์เซลล์สำหรับบ้าน ธุรกิจ และโรงงานทั่วประเทศไทย ทีมวิศวกรจากสำนักงานใหญ่ที่นครปฐมดูแลตั้งแต่สำรวจหลังคา คำนวณโครงสร้าง ยื่นขออนุญาตกับการไฟฟ้า จนถึงบำรุงรักษาหลังติดตั้ง</p>
+        <p data-in style="--d:520ms" data-c="hero.subtitle">ผู้นำด้านพลังงานแสงอาทิตย์ครบวงจร ด้วยเทคโนโลยีระดับโลก SolarEdge &amp; Q CELLS</p>
         <div class="hero-actions">
           <a class="btn btn--orange" href="#calculator" data-in style="--d:600ms"><span data-c="hero.ctaPrimary">คำนวณความคุ้มค่า</span> <span class="btn-ico"><svg><use href="#i-arrow"/></svg></span></a>
           <a class="btn btn--white btn--plain" href="#packages" data-in style="--d:660ms"><span data-c="hero.ctaSecondary">ดูแพ็กเกจ</span></a>
@@ -388,9 +403,9 @@
       </div>
       <div class="foot-col">
         <h3>ติดต่อ</h3>
-        <ul id="foot-contact"><li><a href="tel:0824169619">082-416-9619</a></li><li><a href="tel:0984533655">098-453-3655</a></li><li><a href="mailto:solar1.ceo@gmail.com">solar1.ceo@gmail.com</a></li><li>จันทร์–เสาร์ 08:30–17:30 น.</li></ul>
+        <ul id="foot-contact"><li><a href="tel:0824169619">082-416-9619</a></li><li><a href="tel:0984533655">098-453-3655</a></li><li><a href="mailto:solar1.ceo@gmail.com">solar1.ceo@gmail.com</a></li><li>จันทร์ - เสาร์: 08:00 - 17:00 น.</li><li><a href="https://line.me/R/ti/p/%40519qvafb" target="_blank" rel="noopener">LINE @519qvafb</a></li><li><a href="https://www.tiktok.com/@solar1.ceo" target="_blank" rel="noopener">TikTok</a></li></ul>
       </div>
-      <div class="foot-legal"><span>© 2569 Solar One Energy สงวนลิขสิทธิ์<a class="admin-dot" href="admin.html" rel="nofollow" title="ผู้ดูแลระบบ" aria-label="ผู้ดูแลระบบ"></a></span><span>สำนักงานใหญ่ นครปฐม — ให้บริการครอบคลุมทั่วประเทศไทย</span></div>
+      <div class="foot-legal"><span>© 2569 Solar One Energy สงวนลิขสิทธิ์</span><span>สำนักงานใหญ่ นครปฐม — ให้บริการครอบคลุมทั่วประเทศไทย</span></div>
     </div>
 
     <div class="wordmark" aria-hidden="true">Solar One</div>

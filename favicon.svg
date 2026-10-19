@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- the house from the Solar 1 logo, in brand orange -->
+  <path d="M5 14.5 16 5l11 9.5V27H5z" fill="none" stroke="#FC571F" stroke-width="3" stroke-linejoin="miter"/>
+  <rect x="15" y="15.5" width="8.5" height="10" fill="#FC571F"/>
+</svg>

@@ -1101,21 +1101,6 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
 
 .foot-col a { transition: color .2s; }
 
-/* admin entry: a quiet dot after the copyright line */
-.admin-dot {
-  position: relative;
-  display: inline-block;
-  width: 6px; height: 6px;
-  margin-left: 8px;
-  vertical-align: middle;
-  border-radius: 50%;
-  background: var(--line-strong);
-  transition: background-color .2s, transform .2s;
-}
-.admin-dot:hover, .admin-dot:focus-visible { background: var(--orange); transform: scale(1.4); }
-/* the dot stays small; the hit area meets the 24×24 px target size (WCAG 2.2) */
-.admin-dot::before { content: ""; position: absolute; inset: -9px; }
-
 .bar i { transition: top .5s var(--ease), height .5s var(--ease), background-color .4s; }
 
 /* ---------- reduced motion: fades only ---------- */
