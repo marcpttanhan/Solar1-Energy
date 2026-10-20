@@ -15,6 +15,9 @@ const vm = require('vm');
 
 const ROOT = path.join(__dirname, '..');
 const SITE = 'https://solar1-energy.vercel.app';
+// Draft: crawlers ignore the pages while the UI is polished. When they go live, set this to
+// false, re-run, and add the four URLs back to sitemap.xml.
+const DRAFT = true;
 
 // ---------- data ----------
 const ctx = { window: {}, console, URL };
@@ -272,7 +275,7 @@ function page({ route, title, desc, image, jsonld, body }) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(desc)}">
-  <meta name="theme-color" content="#F3F5F7">
+${DRAFT ? '  <meta name="robots" content="noindex, nofollow">\n' : ''}  <meta name="theme-color" content="#F3F5F7">
   <link rel="canonical" href="${url}">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
