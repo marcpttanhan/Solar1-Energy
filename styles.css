@@ -897,6 +897,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var
   border-top: 1px solid var(--line);
   padding-top: 18px;
 }
+.foot-legal a { text-decoration: underline; text-underline-offset: 3px; }
+.foot-legal a:hover { color: var(--orange); }
 
 .wordmark {
   font-size: clamp(64px, 22vw, 300px);
