@@ -597,6 +597,60 @@ Promise.race([
   }), 1700);
 });
 
+// ---------- EPC workflow ----------
+// Progressive enhancement: the HTML shows every step. Here the rail becomes a tab
+// list (arrow keys, Home/End), one panel shows at a time, and the line fills up to
+// the chosen step. Next/back buttons move through the steps and keep focus in place.
+const flow = document.getElementById('flow');
+if (flow) {
+  const rail = flow.querySelector('.flow-rail');
+  const flowLine = flow.querySelector('.flow-line');
+  const tabs = [...flow.querySelectorAll('.flow-tab')];
+  const panels = [...flow.querySelectorAll('.flow-panel')];
+  rail.setAttribute('role', 'tablist');
+  rail.querySelectorAll('li').forEach((li) => li.setAttribute('role', 'presentation'));
+  tabs.forEach((t) => t.setAttribute('role', 'tab'));
+  panels.forEach((p) => { p.setAttribute('role', 'tabpanel'); p.querySelector('.flow-title').tabIndex = -1; });
+
+  const selectStep = (i, { focusTab = false, animate = true } = {}) => {
+    tabs.forEach((t, k) => {
+      t.setAttribute('aria-selected', String(k === i));
+      t.tabIndex = k === i ? 0 : -1;
+      t.classList.toggle('is-done', k < i);
+    });
+    panels.forEach((p, k) => { p.hidden = k !== i; });
+    flow.style.setProperty('--p', String(i / (tabs.length - 1)));
+    if (animate) playOnce(panels[i], 'flow-in', 0, 700);
+    if (focusTab) tabs[i].focus();
+  };
+
+  tabs.forEach((t, k) => t.addEventListener('click', () => selectStep(k)));
+  rail.addEventListener('keydown', (e) => {
+    const k = tabs.indexOf(document.activeElement);
+    if (k < 0) return;
+    const last = tabs.length - 1;
+    const to = { ArrowRight: k + 1, ArrowDown: k + 1, ArrowLeft: k - 1, ArrowUp: k - 1, Home: 0, End: last }[e.key];
+    if (to === undefined) return;
+    e.preventDefault();
+    selectStep((to + tabs.length) % tabs.length, { focusTab: true });
+  });
+  // Next/back: the clicked button leaves with its panel, so focus moves to the new
+  // step's title, and the rail scrolls back into view if it has gone above the fold.
+  flow.addEventListener('click', (e) => {
+    const go = e.target.closest('[data-go]');
+    if (!go) return;
+    const i = Number(go.dataset.go) - 1;
+    selectStep(i);
+    panels[i].querySelector('.flow-title').focus({ preventScroll: true });
+    if (flow.getBoundingClientRect().top < 0) flow.scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' });
+  });
+
+  flow.classList.add('is-interactive');
+  selectStep(0, { animate: false });
+  // the section's one orchestrated moment: the line draws in up to the current step
+  flow.addEventListener('revealed', () => playOnce(flowLine, 'rail-draw', 0, 1500));
+}
+
 // ---------- Scroll reveal ----------
 // Purely additive: every block is visible at all times. Shortly before a block
 // scrolls into view (observer margin 12% below the viewport) it plays a one-shot
@@ -606,14 +660,16 @@ Promise.race([
 // everything shows.
 const REVEAL_GROUPS = [
   '.impact-head', '.stats',
+  '.process-head', '.epc',
   '.packages .split-left', '.pk-head', '.benefits',
   '.calc-top', '.calc-inputs', '.calc-out',
   '.projects .split-left',
+  '.standards .split-left', '.std-list',
   '.foot-cta', '.foot-card',
 ];
 // Grids rendered by JS (packages, portfolio) animate as one block: their cards are
 // re-rendered on filter/content changes.
-const SINGLE_REVEALS = ['.impact-panel', '.pk-grid', '.pk-note', '.pj-feature', '.pj-bar', '.pj-grid'];
+const SINGLE_REVEALS = ['.impact-panel', '.flow', '.pk-grid', '.pk-note', '.pj-feature', '.pj-bar', '.pj-grid'];
 
 const revealObserver = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
