@@ -223,10 +223,10 @@ const footer = ({ map = true } = {}) => `
 <footer class="foot-shell" id="contact">
   <div class="foot">
     <div class="foot-cta">
-      <h2 class="h2">ให้วิศวกรของเราประเมินหลังคาคุณ<br>ก่อนตัดสินใจลงทุน</h2>
+      <h2 class="h2"><span>เปลี่ยนหลังคา</span> <span>ให้เป็นโรงไฟฟ้า</span> <br><span>ที่คืนทุนได้จริง</span></h2>
       <div class="foot-cta-actions">
         <a class="btn btn--orange" href="${tel(phones[0])}">นัดสำรวจหน้างาน ${ARROW}</a>
-        <a class="btn btn--ink" href="${LINE_URL}" target="_blank" rel="noopener noreferrer">แชตทาง LINE ${ARROW}</a>
+        <a class="btn btn--line" href="${LINE_URL}" target="_blank" rel="noopener noreferrer"><span class="btn-ico"><svg aria-hidden="true"><use href="#i-line-brand"/></svg></span>แชตทาง LINE</a>
       </div>
     </div>
 

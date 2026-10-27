@@ -14,6 +14,10 @@
   --cta: #CC4410;             /* 4.8:1 with white */
   --cta-deep: #B33A0D;        /* 6:1 with white, hover */
   --accent-text: #B33A0D;     /* orange for small units on light surfaces (5:1 on --surface) */
+  /* LINE chat button: brand green for the logo, a deeper green behind white text */
+  --line-brand: #06C755;
+  --line-fill: #00873C;       /* 4.6:1 with white */
+  --line-fill-deep: #00732F;  /* 6:1 with white, hover */
 
   /* graphite ink */
   --ink: #22272C;
@@ -180,6 +184,13 @@ a, button, input, label { -webkit-tap-highlight-color: transparent; }
 .btn--ink { background: var(--ink); color: var(--on-ink); }
 .btn--ink .btn-ico { background: var(--cta); color: var(--white); }
 .btn--ink:hover { background: var(--ink-deep); }
+
+/* LINE chat: the logo leads, so the round slot sits on the left */
+.btn--line { padding: 0 22px 0 8px; background: var(--line-fill); color: var(--white); }
+.btn--line .btn-ico { background: var(--white); color: var(--line-brand); }
+.btn--line .btn-ico svg { width: 20px; height: 20px; }
+.btn--line:hover { background: var(--line-fill-deep); }
+.btn.btn--line:hover .btn-ico svg { transform: none; }  /* the logo stays upright */
 
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); flex: none; }
 
@@ -1086,6 +1097,8 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var
   padding: 8px 8px 40px;
 }
 .foot-cta .h2 { max-width: 640px; }
+/* Thai has no spaces inside phrases: wrap only between them */
+.foot-cta .h2 span { display: inline-block; }
 .foot-cta-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .foot-cta-actions .btn[hidden] { display: none; }
 
@@ -1141,8 +1154,6 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var
   border-top: 1px solid var(--line);
   padding-top: 18px;
 }
-.foot-legal a { text-decoration: underline; text-underline-offset: 3px; }
-.foot-legal a:hover { color: var(--orange); }
 
 .wordmark {
   font-size: clamp(64px, 22vw, 300px);
