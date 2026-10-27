@@ -32,6 +32,12 @@ const contact = C.normalize('contact', D.contact);
 const index = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').replace(/\r\n/g, '\n');
 const THEME = index.match(/  <script>\n[\s\S]*?<\/script>\n/)[0];
 const BUSINESS_LD = index.match(/  <script type="application\/ld\+json">\n[\s\S]*?<\/script>\n/)[0];
+// Icon sprite, social pills and the HQ map card are copied from the homepage.
+const SPRITE = index.match(/<svg width="0" height="0"[\s\S]*?<\/svg>\n/)[0];
+const SOCIAL = index.match(/<ul class="social" id="foot-social"[\s\S]*?<\/ul>/)[0].replace(' id="foot-social"', '');
+const MAP_CARD = index.match(/      <div class="foot-map">\n[\s\S]*?\n      <\/div>\n(?=      <div class="foot-legal">)/)[0];
+const MAPS_URL = index.match(/"hasMap": "([^"]+)"/)[1];
+const MAP_EMBED = MAP_CARD.match(/<iframe[^>]*><\/iframe>/)[0];
 
 // ---------- helpers (formatting mirrors main.js) ----------
 const esc = C.esc;
@@ -40,7 +46,7 @@ const kwParts = (kw) => (kw >= 1000 ? [num(kw / 1000), 'MW'] : [num(kw), 'kW']);
 const savingText = (p) => `${p.savingUpTo ? 'สูงสุด ' : ''}${num(p.saving, 0)} บาท/เดือน`;
 const phones = contact.phone.split(',').map((p) => p.trim()).filter(Boolean);
 const tel = (p) => `tel:${p.replace(/[^\d+]/g, '')}`;
-const LINE_URL = `https://line.me/R/ti/p/${encodeURIComponent(contact.lineId)}`;
+const LINE_URL = C.lineUrl(contact.lineId);
 const ARROW = '<span class="btn-ico"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
 const ARROW_SM = '<svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
@@ -206,25 +212,29 @@ function hero({ crumbs, kicker, title, lede, image }) {
       <p class="lede">${lede}</p>
       <div class="pg-cta">
         <a class="btn btn--orange" href="${tel(phones[0])}">นัดสำรวจหน้างาน ${ARROW}</a>
-        <a class="btn btn--ink" href="${LINE_URL}" target="_blank" rel="noopener">LINE ${esc(contact.lineId)} ${ARROW}</a>
+        <a class="btn btn--ink" href="${LINE_URL}" target="_blank" rel="noopener noreferrer">LINE ${esc(contact.lineId)} ${ARROW}</a>
       </div>
     </div>
     <div class="pg-hero-media media-frame">${projectImg(image, SIZES.hero, { eager: true })}</div>
   </div>`;
 }
 
-const footer = () => `
+const footer = ({ map = true } = {}) => `
 <footer class="foot-shell" id="contact">
   <div class="foot">
     <div class="foot-cta">
       <h2 class="h2">ให้วิศวกรของเราประเมินหลังคาคุณ<br>ก่อนตัดสินใจลงทุน</h2>
-      <a class="btn btn--orange" href="${tel(phones[0])}">นัดสำรวจหน้างาน ${ARROW}</a>
+      <div class="foot-cta-actions">
+        <a class="btn btn--orange" href="${tel(phones[0])}">นัดสำรวจหน้างาน ${ARROW}</a>
+        <a class="btn btn--ink" href="${LINE_URL}" target="_blank" rel="noopener noreferrer">แชตทาง LINE ${ARROW}</a>
+      </div>
     </div>
 
     <div class="foot-card">
       <div class="foot-brand">
         <img src="${asset('Media/logo-footer.webp')}" width="212" height="192" loading="lazy" decoding="async" alt="Solar One Energy">
         <p>ผู้รับเหมา EPC ด้านโซลาร์เซลล์ ออกแบบ จัดหาอุปกรณ์ และติดตั้งแบบ Turnkey สำหรับบ้านพักอาศัย ธุรกิจ และโรงงานอุตสาหกรรมทั่วประเทศไทย</p>
+        ${SOCIAL}
       </div>
       <div class="foot-col">
         <h3>เมนู</h3>
@@ -240,9 +250,9 @@ const footer = () => `
       </div>
       <div class="foot-col">
         <h3>ติดต่อ</h3>
-        <ul>${phones.map((p) => `<li><a href="${tel(p)}">${esc(p)}</a></li>`).join('')}<li><a href="mailto:${esc(contact.email)}">${esc(contact.email)}</a></li><li>${esc(contact.hours)}</li><li><a href="${LINE_URL}" target="_blank" rel="noopener">LINE ${esc(contact.lineId)}</a></li>${contact.tiktok ? `<li><a href="${esc(contact.tiktok)}" target="_blank" rel="noopener">TikTok</a></li>` : ''}</ul>
+        <ul>${phones.map((p) => `<li><a href="${tel(p)}">${esc(p)}</a></li>`).join('')}<li><a href="mailto:${esc(contact.email)}">${esc(contact.email)}</a></li><li>${esc(contact.hours)}</li></ul>
       </div>
-      <div class="foot-legal"><span>© 2569 Solar One Energy สงวนลิขสิทธิ์</span><span>สำนักงานใหญ่ นครปฐม — ให้บริการครอบคลุมทั่วประเทศไทย</span></div>
+${map ? MAP_CARD : ''}      <div class="foot-legal"><span>© 2569 Solar One Energy สงวนลิขสิทธิ์</span><span>สำนักงานใหญ่ นครปฐม — ให้บริการครอบคลุมทั่วประเทศไทย</span></div>
     </div>
 
     <div class="wordmark" aria-hidden="true">Solar One</div>
@@ -296,7 +306,7 @@ ${jsonld}${THEME}  <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/pages.css">
 </head>
 <body>
-<a class="skip-link" href="#content">ข้ามไปยังเนื้อหา</a>
+${SPRITE}<a class="skip-link" href="#content">ข้ามไปยังเนื้อหา</a>
 <header class="wrap pg-top">
   <a class="pg-logo" href="/" aria-label="Solar One Energy หน้าแรก"><picture><source srcset="/Media/logo-mark.webp" type="image/webp"><img src="${asset('Media/logo-mark.png')}" width="160" height="144" alt="Solar One Energy"></picture></a>
   <a class="btn btn--orange" href="${tel(phones[0])}">โทร ${esc(phones[0])} ${ARROW}</a>
@@ -304,7 +314,7 @@ ${jsonld}${THEME}  <link rel="stylesheet" href="/styles.css">
 <main id="content" class="wrap" tabindex="-1">
 ${body}
 </main>
-${footer()}
+${footer({ map: route !== 'locations/nakhon-pathom' })}
 </body>
 </html>
 `;
@@ -472,17 +482,21 @@ ${head('สำนักงานใหญ่', '<span id="hq-title">ติดต
           <div><dt>เวลาทำการ</dt><dd>${esc(contact.hours)}</dd></div>
           <div><dt>พื้นที่ให้บริการ</dt><dd>นครปฐมและทั่วประเทศ</dd></div>
         </dl>
-        <p class="pg-note pg-inline"><a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent('81/22 หมู่ 2 ตำบลบางเตย อำเภอสามพราน นครปฐม 73210')}" target="_blank" rel="noopener">เปิดแผนที่ใน Google Maps</a></p>
+        <a class="btn btn--ink pg-directions" href="${MAPS_URL}" target="_blank" rel="noopener noreferrer">นำทางด้วย Google Maps ${ARROW}</a>
       </div>
       <div class="pg-hq-card">
         <h3>ช่องทางติดต่อ</h3>
         <ul class="pg-contact">${phones.map((p) => `
           <li><a href="${tel(p)}"><span>โทร</span><strong>${esc(p)}</strong>${ARROW}</a></li>`).join('')}
-          <li><a href="${LINE_URL}" target="_blank" rel="noopener"><span>LINE</span><strong>${esc(contact.lineId)}</strong>${ARROW}</a></li>
+          <li><a href="${LINE_URL}" target="_blank" rel="noopener noreferrer"><span>LINE</span><strong>${esc(contact.lineId)}</strong>${ARROW}</a></li>${contact.facebook ? `
+          <li><a href="${esc(contact.facebook)}" target="_blank" rel="noopener noreferrer"><span>Facebook</span><strong>Solar 1 Energy</strong>${ARROW}</a></li>` : ''}
           <li><a href="mailto:${esc(contact.email)}"><span>อีเมล</span><strong>${esc(contact.email)}</strong>${ARROW}</a></li>${contact.tiktok ? `
-          <li><a href="${esc(contact.tiktok)}" target="_blank" rel="noopener"><span>TikTok</span><strong>${esc(contact.tiktok.replace(/^https:\/\/www\.tiktok\.com\//, ''))}</strong>${ARROW}</a></li>` : ''}
+          <li><a href="${esc(contact.tiktok)}" target="_blank" rel="noopener noreferrer"><span>TikTok</span><strong>${esc(contact.tiktok.replace(/^https:\/\/www\.tiktok\.com\//, ''))}</strong>${ARROW}</a></li>` : ''}
         </ul>
       </div>
+    </div>
+    <div class="pg-map media-frame">
+      ${MAP_EMBED}
     </div>
   </section>
 

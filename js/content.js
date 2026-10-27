@@ -83,8 +83,8 @@
       phone: '082-416-9619, 098-453-3655',
       email: 'solar1.ceo@gmail.com',
       hours: 'จันทร์ - เสาร์: 08:00 - 17:00 น.',
-      lineId: '@519qvafb',
-      facebook: '',
+      lineId: 'Solar1energy',
+      facebook: 'https://www.facebook.com/share/1FhEmbRb5u/',
       instagram: '',
       youtube: '',
       tiktok: 'https://www.tiktok.com/@solar1.ceo',
@@ -171,6 +171,14 @@
 
   // Accepts https/http URLs and same-site relative paths ("Media/x.jpg").
   // Anything else (javascript:, data:, protocol-relative //host) is rejected.
+  // LINE add-friend link. Official-account IDs start with "@" (R/ti/p/%40id);
+  // personal-style IDs use the "~" form, e.g. https://line.me/ti/p/~Solar1energy.
+  function lineUrl(id) {
+    const s = String(id ?? '').trim();
+    if (!s) return '';
+    return s.startsWith('@') ? `https://line.me/R/ti/p/${encodeURIComponent(s)}` : `https://line.me/ti/p/~${encodeURIComponent(s)}`;
+  }
+
   function safeUrl(value) {
     const s = String(value ?? '').trim();
     if (!s) return '';
@@ -405,6 +413,7 @@
 
   window.SolarContent = {
     SECTIONS,
+    lineUrl,
     defaults: () => clone(DEFAULTS),
     normalize: (key, data) => NORMALIZE[key](data),
     resolve,

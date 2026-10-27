@@ -56,6 +56,30 @@
   <link rel="stylesheet" href="/pages.css">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 12 12"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 14 14"><path d="M4.5 2.5v9M9.5 2.5v9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 14 14"><path d="M4 2.6v8.8a.5.5 0 0 0 .76.43l7-4.4a.5.5 0 0 0 0-.86l-7-4.4A.5.5 0 0 0 4 2.6z" fill="currentColor"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 18 18"><path d="M3 5.5h12M3 12.5h12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-close" viewBox="0 0 18 18"><path d="M4.5 4.5l9 9M13.5 4.5l-9 9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 18 18"><path d="M2.5 15.5h13M4.5 12.5l3.2-3.6 2.6 2.1 3.9-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14.2" cy="6" r="1.3" fill="currentColor"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 18 18"><circle cx="9" cy="9" r="3.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9 1.8v1.6M9 14.6v1.6M1.8 9h1.6M14.6 9h1.6M3.9 3.9l1.1 1.1M13 13l1.1 1.1M3.9 14.1 5 13M13 5l1.1-1.1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 18 18"><path d="M14.8 11.2A6.3 6.3 0 0 1 6.8 3.2a6.3 6.3 0 1 0 8 8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 2.5 5.5 13.5h6l-1 8 8-11h-6l1-8z"/></g></symbol>
+  <symbol id="i-square" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3.5v17h17z"/><path d="M8 12.5v4.5h4.5zM4 8h2M4 12h2M4 16h2"/></g></symbol>
+  <symbol id="i-tower" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 7.5 21.5M12 2.5l4.5 19M6 21.5h12M4.5 7.5h15M7 7.5 12 12l5-4.5M9 16.5l3-4.5 3 4.5M8.6 14.5h6.8"/></g></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8 5 5.6v5.6c0 4.5 2.9 8.3 7 9.9 4.1-1.6 7-5.4 7-9.9V5.6z"/><path d="m8.8 12.2 2.3 2.3 4.3-4.6"/></g></symbol>
+  <symbol id="i-medal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5.5"/><path d="m8.6 13.4-1.6 8.1 5-2.7 5 2.7-1.6-8.1"/><path d="m10 9 1.4 1.4L14 7.8"/></g></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.2"/><path d="M9 15.5l2-2.6 2 1.5 2.2-3.2M10.5 18.5h3"/></g></symbol>
+  <symbol id="i-check" viewBox="0 0 14 14"><path d="M3 7.4 5.9 10.2 11 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-line" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.2c-5 0-9 3.2-9 7.1 0 3.5 3.1 6.4 7.4 7l-.3 2.5 3.6-2.4c4.2-.5 7.3-3.5 7.3-7.1 0-3.9-4-7.1-9-7.1z"/><path d="M7.5 9.6v3.4h2M11.6 9.6V13M13.8 13V9.6l2.7 3.4V9.6"/></g></symbol>
+  <symbol id="i-facebook" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.6 21v-7.4h2.6l.4-3.1h-3V8.6c0-.9.3-1.5 1.6-1.5h1.6V4.3a21 21 0 0 0-2.4-.1c-2.4 0-4 1.4-4 4.1v2.2H8.7v3.1h2.7V21"/></g></symbol>
+  <symbol id="i-tiktok" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.2 3.2v11.5a3.7 3.7 0 1 1-3.7-3.7"/><path d="M14.2 3.2c.4 2.6 2.2 4.4 5 4.6"/></g></symbol>
+  <symbol id="i-instagram" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".4"/></g></symbol>
+  <symbol id="i-youtube" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.6" y="5.6" width="18.8" height="12.8" rx="4"/><path d="m10.2 9.4 4.6 2.6-4.6 2.6z"/></g></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.2s-6.6-6.2-6.6-11.2a6.6 6.6 0 0 1 13.2 0c0 5-6.6 11.2-6.6 11.2z"/><circle cx="12" cy="10" r="2.4"/></g></symbol>
+  <symbol id="i-chev" viewBox="0 0 14 14"><path d="M5 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
 <a class="skip-link" href="#content">ข้ามไปยังเนื้อหา</a>
 <header class="wrap pg-top">
   <a class="pg-logo" href="/" aria-label="Solar One Energy หน้าแรก"><picture><source srcset="/Media/logo-mark.webp" type="image/webp"><img src="/Media/logo-mark.png" width="160" height="144" alt="Solar One Energy"></picture></a>
@@ -71,7 +95,7 @@
       <p class="lede">ตัวอย่างระบบที่ทีมของเราออกแบบและติดตั้ง 43 โครงการ ตั้งแต่บ้านพักอาศัยไปจนถึงโรงงานขนาด 3.5 เมกะวัตต์ ตัวเลขค่าไฟที่ลดได้มาจากข้อมูลของแต่ละโครงการ</p>
       <div class="pg-cta">
         <a class="btn btn--orange" href="tel:0824169619">นัดสำรวจหน้างาน <span class="btn-ico"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <a class="btn btn--ink" href="https://line.me/R/ti/p/%40519qvafb" target="_blank" rel="noopener">LINE @519qvafb <span class="btn-ico"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="btn btn--ink" href="https://line.me/ti/p/~Solar1energy" target="_blank" rel="noopener noreferrer">LINE Solar1energy <span class="btn-ico"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
       </div>
     </div>
     <div class="pg-hero-media media-frame"><img class="frame-img" src="/Media/projects/srisuda-farm-1mw-800.webp" srcset="/Media/projects/srisuda-farm-1mw-480.webp 480w, /Media/projects/srisuda-farm-1mw-800.webp 800w" sizes="(max-width: 1024px) calc(100vw - 32px), 620px" width="800" height="600" alt="ระบบโซลาร์ 1 MW ของบริษัท ศรีสุดาฟาร์ม จำกัด เมืองนครสวรรค์, นครสวรรค์" fetchpriority="high" decoding="async"></div>
@@ -607,13 +631,17 @@
   <div class="foot">
     <div class="foot-cta">
       <h2 class="h2">ให้วิศวกรของเราประเมินหลังคาคุณ<br>ก่อนตัดสินใจลงทุน</h2>
-      <a class="btn btn--orange" href="tel:0824169619">นัดสำรวจหน้างาน <span class="btn-ico"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+      <div class="foot-cta-actions">
+        <a class="btn btn--orange" href="tel:0824169619">นัดสำรวจหน้างาน <span class="btn-ico"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="btn btn--ink" href="https://line.me/ti/p/~Solar1energy" target="_blank" rel="noopener noreferrer">แชตทาง LINE <span class="btn-ico"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+      </div>
     </div>
 
     <div class="foot-card">
       <div class="foot-brand">
         <img src="/Media/logo-footer.webp" width="212" height="192" loading="lazy" decoding="async" alt="Solar One Energy">
         <p>ผู้รับเหมา EPC ด้านโซลาร์เซลล์ ออกแบบ จัดหาอุปกรณ์ และติดตั้งแบบ Turnkey สำหรับบ้านพักอาศัย ธุรกิจ และโรงงานอุตสาหกรรมทั่วประเทศไทย</p>
+        <ul class="social" aria-label="ช่องทางโซเชียล"><li><a href="https://line.me/ti/p/~Solar1energy" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-line"/></svg><span>LINE Solar1energy</span></a></li><li><a href="https://www.facebook.com/share/1FhEmbRb5u/" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-facebook"/></svg><span>Facebook</span></a></li><li><a href="https://www.tiktok.com/@solar1.ceo" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-tiktok"/></svg><span>TikTok</span></a></li></ul>
       </div>
       <div class="foot-col">
         <h3>เมนู</h3>
@@ -629,7 +657,19 @@
       </div>
       <div class="foot-col">
         <h3>ติดต่อ</h3>
-        <ul><li><a href="tel:0824169619">082-416-9619</a></li><li><a href="tel:0984533655">098-453-3655</a></li><li><a href="mailto:solar1.ceo@gmail.com">solar1.ceo@gmail.com</a></li><li>จันทร์ - เสาร์: 08:00 - 17:00 น.</li><li><a href="https://line.me/R/ti/p/%40519qvafb" target="_blank" rel="noopener">LINE @519qvafb</a></li><li><a href="https://www.tiktok.com/@solar1.ceo" target="_blank" rel="noopener">TikTok</a></li></ul>
+        <ul><li><a href="tel:0824169619">082-416-9619</a></li><li><a href="tel:0984533655">098-453-3655</a></li><li><a href="mailto:solar1.ceo@gmail.com">solar1.ceo@gmail.com</a></li><li>จันทร์ - เสาร์: 08:00 - 17:00 น.</li></ul>
+      </div>
+      <div class="foot-map">
+        <div class="foot-map-info">
+          <div>
+            <h3><svg aria-hidden="true"><use href="#i-pin"/></svg>แผนที่สำนักงานใหญ่</h3>
+            <p>Solar 1 Energy สามพราน ถนนบรมราชชนนี ใกล้ห้างเซ็นทรัล ศาลายา อ.สามพราน จ.นครปฐม</p>
+          </div>
+          <a class="btn btn--ink" href="https://maps.app.goo.gl/a4HXT5cZNxeLnpW88" target="_blank" rel="noopener noreferrer">นำทางด้วย Google Maps <span class="btn-ico"><svg><use href="#i-arrow"/></svg></span></a>
+        </div>
+        <div class="foot-map-frame media-frame">
+          <iframe src="https://www.google.com/maps/embed?origin=mfe&amp;pb=!1m4!3m2!1m1!4s17011833708677579948!6i16!3m1!1sth!5m1!1sth" title="แผนที่ Google Maps ของสำนักงานใหญ่ Solar 1 Energy" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
       </div>
       <div class="foot-legal"><span>© 2569 Solar One Energy สงวนลิขสิทธิ์</span><span>สำนักงานใหญ่ นครปฐม — ให้บริการครอบคลุมทั่วประเทศไทย</span></div>
     </div>

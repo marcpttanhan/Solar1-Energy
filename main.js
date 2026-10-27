@@ -753,8 +753,6 @@ const telHref = (phone) => {
   const digits = phone.replace(/[^\d+]/g, '');
   return /^\+?\d{9,15}$/.test(digits) ? `tel:${digits}` : '';
 };
-// LINE official accounts start with "@"; personal IDs need the "~" form.
-const lineHref = (id) => `https://line.me/R/ti/p/${id.startsWith('@') ? encodeURIComponent(id) : `~${encodeURIComponent(id)}`}`;
 const phonesOf = (phone) => phone.split(',').map((p) => p.trim()).filter(Boolean);
 const mailHref = (email) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? `mailto:${email}` : '');
 
@@ -764,7 +762,7 @@ function listItem(text, href) {
     const a = document.createElement('a');
     a.href = href;
     a.textContent = text;
-    if (/^https?:/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
+    if (/^https?:/.test(href)) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
     li.append(a);
   } else {
     li.textContent = text;
@@ -778,11 +776,21 @@ function applyContact(c) {
   phonesOf(c.phone).forEach((p) => items.push(listItem(p, telHref(p))));
   if (c.email) items.push(listItem(c.email, mailHref(c.email)));
   if (c.hours) items.push(listItem(c.hours));
-  if (c.lineId) items.push(listItem(`LINE ${c.lineId}`, lineHref(c.lineId)));
-  [['Facebook', c.facebook], ['Instagram', c.instagram], ['YouTube', c.youtube], ['TikTok', c.tiktok]]
-    .forEach(([label, url]) => { if (url) items.push(listItem(label, url)); });
   document.getElementById('foot-contact').replaceChildren(...items);
   document.getElementById('foot-cta-btn').href = telHref(phonesOf(c.phone)[0] || '') || mailHref(c.email) || '#contact';
+
+  // social channels as labelled pills (same markup as the static HTML)
+  const line = SolarContent.lineUrl(c.lineId);
+  const socials = [
+    ['line', line && `LINE ${c.lineId}`, line],
+    ['facebook', 'Facebook', c.facebook], ['instagram', 'Instagram', c.instagram],
+    ['youtube', 'YouTube', c.youtube], ['tiktok', 'TikTok', c.tiktok],
+  ].filter(([, , url]) => url);
+  document.getElementById('foot-social').innerHTML = socials.map(([icon, label, url]) =>
+    `<li><a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-${icon}"/></svg><span>${esc(label)}</span></a></li>`).join('');
+  const lineBtn = document.getElementById('foot-line-btn');
+  lineBtn.hidden = !line;
+  if (line) lineBtn.href = line;
 }
 
 // Applies a complete content object. Sections that did not change are left
