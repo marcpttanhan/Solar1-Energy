@@ -1,6 +1,5 @@
 .claude/
 deploy/
-Media/README.md
-supabase_schema.sql
-supabase_fix.sql
-supabase_content_seed.sql
+# never deploy docs or SQL, whatever their name
+*.md
+*.sql

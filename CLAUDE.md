@@ -48,6 +48,14 @@ When the skills disagree, the existing design system wins. The site has a define
 - Public sign-ups must stay off (Authentication → Sign In / Providers).
 - The live project had a mismatched `site_content` table. `supabase_fix.sql` was run on 2026-10-16: the old table is kept as `site_content_legacy_*`, and the live table and policies now match `supabase_schema.sql`. Admin sign-in and saving were verified end to end (a calculator change showed on solar1-energy.vercel.app). The old `admin_users` / `*_legacy*` tables are unused and can be dropped.
 
+## Security (audit 2026-10-28)
+
+- Only the public anon key is in the repo, in current files and the whole git history. The admin page loads supabase-js 2.47.10 pinned with SRI (`integrity`) and allowed by exact path in the CSP. That bundle's auth-js has one LOW advisory (CVE-2025-48370) in admin-only functions this site never calls. Upgrade it once Supabase is back and the admin panel can be tested end to end. There is no npm; nothing else is third-party code.
+- XSS: every `innerHTML` template escapes text with `esc()`, and every admin-supplied URL goes through `safeUrl()` in `js/content.js` (no `javascript:` / `data:`). Social links must be https. Keep both when rendering new content fields. `js/admin.js` builds the DOM with text nodes.
+- `.vercelignore` drops `*.md` and `*.sql` everywhere, so this file and the SQL scripts are never served. Headers add COOP `same-origin`, a wider Permissions-Policy and CSP `upgrade-insecure-requests`. Vercel adds HSTS (preload).
+- After Supabase is restored, run `supabase_security_audit.sql` (read-only), then `supabase_hardening.sql`. The hardening script enables RLS everywhere and closes the legacy `site_content_legacy_*` / `admin_users` tables and `is_admin()` to the API roles. It also stops new tables being public by default. It has an optional block that pins writes to the admin user id. Then in the dashboard: sign-ups and anonymous sign-ins off, leaked-password protection on, MFA for the admin.
+- `node .claude/security-check.mjs` probes the live headers, the files that must not be served, and what the anon key can do (RLS/grants; read-only probes) plus the Auth sign-up settings. Vercel's bot protection challenges Node's fetch and briefly rate-limits bursts from one IP (403 with `Retry-After`), so the site checks go through curl. Re-run after a pause if everything is 403.
+
 ## UX/design audit (2026-10-16)
 
 Fixed: CTA contrast (`--cta`), 12–13px text raised to 14px, skip link to `#content`, footer `h5` changed to `h3`,

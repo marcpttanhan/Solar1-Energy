@@ -238,7 +238,7 @@
         h('span', { class: 'topbar-title' }, 'จัดการเนื้อหา'),
         h('span', { class: 'spacer' }),
         h('span', { class: 'muted small user' }, user.email),
-        h('a', { class: 'btn btn--ghost', href: './', target: '_blank', rel: 'noopener' }, 'ดูหน้าเว็บ'),
+        h('a', { class: 'btn btn--ghost', href: './', target: '_blank', rel: 'noopener noreferrer' }, 'ดูหน้าเว็บ'),
         h('button', {
           class: 'btn', type: 'button',
           onclick: () => {
