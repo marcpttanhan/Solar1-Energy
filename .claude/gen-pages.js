@@ -15,9 +15,11 @@ const vm = require('vm');
 
 const ROOT = path.join(__dirname, '..');
 const SITE = 'https://solar1-energy.vercel.app';
-// Draft: crawlers ignore the pages while the UI is polished. When they go live, set this to
-// false, re-run, and add the four URLs back to sitemap.xml.
+// Draft: crawlers ignore the pages while the UI is polished. LIVE lists the routes already
+// published for search (indexable, and listed in sitemap.xml). When the rest go live, set
+// DRAFT to false (or add them to LIVE), re-run, and add their URLs to sitemap.xml.
 const DRAFT = true;
+const LIVE = new Set(['locations/nakhon-pathom']);
 
 // ---------- data ----------
 const ctx = { window: {}, console, URL };
@@ -286,7 +288,7 @@ function page({ route, title, desc, image, jsonld, body }) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(desc)}">
-${DRAFT ? '  <meta name="robots" content="noindex, nofollow">\n' : ''}  <meta name="theme-color" content="#F3F5F7">
+${DRAFT && !LIVE.has(route) ? '  <meta name="robots" content="noindex, nofollow">\n' : ''}  <meta name="theme-color" content="#F3F5F7">
   <link rel="canonical" href="${url}">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
