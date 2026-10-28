@@ -35,6 +35,8 @@ console.log(`\nSite: ${SITE}`);
 try {
   const res = curl(`${SITE}/`);
   const h = res.headers;
+  // Vercel's firewall briefly challenges an IP after a burst of requests: not a site fault.
+  if (h.get('x-vercel-mitigated') === 'challenge') throw Object.assign(new Error('challenge'), { challenge: true });
   const want = {
     'strict-transport-security': /max-age=\d{7,}/,
     'content-security-policy': /frame-ancestors 'none'/,
@@ -53,7 +55,10 @@ try {
     const r = curl(`${SITE}/${p}`);
     (r.status >= 400 ? ok : bad)(`/${p} not served (${r.status})`);
   }
-} catch (e) { bad(`site unreachable: ${e.message}`); }
+} catch (e) {
+  if (e.challenge) note('Vercel is challenging this IP (bot protection); site checks skipped, re-run in a few minutes');
+  else bad(`site unreachable: ${e.message}`);
+}
 
 console.log(`\nSupabase: ${URL_}`);
 const api = (path, init = {}) => get(`${URL_}${path}`, { ...init, headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, ...(init.headers || {}) } });
