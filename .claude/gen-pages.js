@@ -158,26 +158,26 @@ const brandsWall = () => {
 
 const award = () => `
       <figure class="award">
-        <img src="${asset('Media/awards/solaredge-award-of-excellence.webp')}" width="245" height="361" loading="lazy" decoding="async" alt="ถ้วยรางวัล SolarEdge Award of Excellence ที่มอบให้ Solar1Energy Co., Ltd.">
+        <img src="${asset('Media/awards/solaredge-award-of-excellence.webp')}" width="245" height="361" loading="lazy" decoding="async" alt="ถ้วยรางวัล SolarEdge Award of Excellence ที่มอบให้ Solar 1 Energy">
         <figcaption>
           <strong>SolarEdge Award of Excellence</strong>
-          <span>รางวัลจาก SolarEdge ประเทศไทย ในฐานะผู้ติดตั้งที่มีจำนวนไซต์งาน SolarEdge มากที่สุดในไทย</span>
+          <span>รางวัลจาก SolarEdge ประเทศไทย มอบให้ผู้ติดตั้งที่มีจำนวนโครงการ SolarEdge มากที่สุดในประเทศ</span>
         </figcaption>
       </figure>`;
 
 // Copy shared with the homepage (index.html packages and benefits sections).
-const PK_LEDE = 'ทุกแพ็กเกจเป็นราคาแบบ Turnkey ใช้แผงระดับ Tier 1 จาก Q CELLS หรือ Jinko Solar คู่กับอินเวอร์เตอร์และ Optimizer ของ SolarEdge รวมค่าสำรวจ งานติดตั้ง เอกสารขออนุญาต และวิศวกรเซ็นรับรองโครงสร้าง';
+const PK_LEDE = 'ทุกแพ็กเกจเป็นราคาแบบ Turnkey ใช้แผงระดับ Tier 1 จาก Q CELLS หรือ JinkoSolar คู่กับอินเวอร์เตอร์และ Optimizer ของ SolarEdge รวมค่าสำรวจ งานติดตั้ง เอกสารขออนุญาต และการลงนามรับรองโครงสร้างโดยวิศวกร';
 const BENEFITS = [
-  ['ค่าไฟลดลงตั้งแต่รอบบิลแรก', 'ไฟที่ผลิตได้ช่วงกลางวันถูกใช้ในอาคารทันที ลดหน่วยที่ต้องซื้อจากการไฟฟ้าตั้งแต่วันที่ระบบเริ่มเดินเครื่อง'],
-  ['ล็อกต้นทุนพลังงานยาว 25 ปี', 'เมื่อจ่ายค่าระบบครั้งเดียว ต้นทุนไฟจากหลังคาจะคงที่ไปตลอดอายุแผง ไม่ว่าค่า Ft จะปรับขึ้นอีกกี่รอบ'],
-  ['ระบบทำงานเอง ตรวจสอบผ่านแอปได้', 'ไม่ต้องเปิดปิดเอง ระบบแจ้งเตือนเมื่อผลผลิตต่ำกว่าปกติ และทีมบริการของเราเข้าตรวจล้างแผงตามรอบที่กำหนด'],
+  ['ค่าไฟลดลงตั้งแต่รอบบิลแรก', 'อาคารใช้ไฟที่ผลิตได้ช่วงกลางวันได้ทันที จึงซื้อไฟจากการไฟฟ้าน้อยลงตั้งแต่วันแรกที่ระบบเริ่มทำงาน'],
+  ['ล็อกต้นทุนค่าไฟได้ยาว 25 ปี', 'ลงทุนครั้งเดียว ต้นทุนไฟจากหลังคาคงที่ตลอดอายุแผง ไม่ว่าค่า Ft จะปรับขึ้นอีกกี่ครั้ง'],
+  ['ระบบทำงานอัตโนมัติ ติดตามผ่านแอปได้', 'ไม่ต้องเปิดปิดเอง ระบบแจ้งเตือนเมื่อผลิตไฟได้ต่ำกว่าปกติ และทีมบริการของเราเข้าตรวจเช็กและล้างแผงตามรอบที่กำหนด'],
 ];
 const STEPS = [
   // Same four steps as the homepage EPC workflow (index.html #process).
-  ['สำรวจหน้างาน', 'วิศวกรเข้าตรวจหลังคา ทิศทางแดด เงาบัง และระบบไฟฟ้าในอาคาร พร้อมดูบิลค่าไฟย้อนหลัง'],
-  ['ออกแบบและตรวจสอบโครงสร้าง', 'ออกแบบผังแผงและระบบไฟฟ้า คำนวณน้ำหนักที่เพิ่มขึ้นบนหลังคา และวิศวกรเซ็นรับรองโครงสร้าง'],
-  ['ยื่นขออนุญาต PEA / MEA', 'ยื่นขออนุญาตเชื่อมต่อระบบกับการไฟฟ้าส่วนภูมิภาค (PEA) หรือการไฟฟ้านครหลวง (MEA) ตามพื้นที่ติดตั้ง รวมอยู่ในราคาแพ็กเกจ'],
-  ['ทดสอบระบบและส่งมอบ', 'ทีมของเราติดตั้งเอง ทดสอบระบบก่อนจ่ายไฟ แล้วส่งมอบพร้อมแอปตรวจสอบผลผลิตและแผนบำรุงรักษา'],
+  ['สำรวจหน้างาน', 'วิศวกรเข้าสำรวจสภาพหลังคา ทิศทางรับแดด เงาบดบัง และระบบไฟฟ้าในอาคาร พร้อมวิเคราะห์บิลค่าไฟย้อนหลัง'],
+  ['ออกแบบและตรวจสอบโครงสร้าง', 'ออกแบบผังแผงและระบบไฟฟ้า คำนวณน้ำหนักที่เพิ่มขึ้นบนหลังคา และวิศวกรโยธาลงนามรับรองโครงสร้าง'],
+  ['ยื่นขออนุญาต PEA / MEA', 'ยื่นขออนุญาตขนานไฟกับการไฟฟ้าส่วนภูมิภาค (PEA) หรือการไฟฟ้านครหลวง (MEA) ตามพื้นที่ติดตั้ง รวมอยู่ในราคาแพ็กเกจ'],
+  ['ทดสอบระบบและส่งมอบ', 'ทีมของเราติดตั้งเอง ทดสอบระบบก่อนจ่ายไฟ แล้วส่งมอบพร้อมแอปติดตามการผลิตไฟและแผนบำรุงรักษา'],
 ];
 const steps = () => `
     <ol class="pg-steps">${STEPS.map(([t, p]) => `
@@ -188,14 +188,14 @@ const ROUTES = {
   residential: ['ติดตั้งโซลาร์เซลล์บ้านพักอาศัย', 'แพ็กเกจบ้าน 5 kWp และไฮบริด 10 kWp พร้อมผลงานบ้านจริง'],
   commercial: ['ติดตั้งโซลาร์เซลล์โรงงานและธุรกิจ', 'ระบบ 30 kWp ถึง 1 MWp ทางเลือก PPA และผลงานโรงงาน'],
   projects: ['ผลงานการติดตั้งทั้งหมด', `${projects.items.length} โครงการ บ้าน ธุรกิจ และโรงงานทั่วประเทศ`],
-  'locations/nakhon-pathom': ['รับติดตั้งโซลาร์เซลล์ นครปฐม', 'สำนักงานใหญ่สามพราน ใกล้เซ็นทรัลศาลายา'],
+  'locations/nakhon-pathom': ['รับติดตั้งโซลาร์เซลล์ นครปฐม', 'สำนักงานใหญ่สามพราน ใกล้เซ็นทรัล ศาลายา'],
 };
 const related = (self) => `
   <section class="pg-section" aria-labelledby="related-title">
     <h2 class="pg-sub" id="related-title">บริการและข้อมูลอื่น</h2>
     <ul class="pg-links">${Object.entries(ROUTES).filter(([r]) => r !== self).map(([r, [t, d]]) => `
       <li><a href="/${r}"><div><strong>${t}</strong><br><span>${d}</span></div>${ARROW}</a></li>`).join('')}
-      <li><a href="/#calculator"><div><strong>คำนวณความคุ้มค่า</strong><br><span>ประเมินขนาดระบบ งบลงทุน และระยะคืนทุนจากบิลค่าไฟของคุณ</span></div>${ARROW}</a></li>
+      <li><a href="/#calculator"><div><strong>คำนวณความคุ้มค่า</strong><br><span>ประเมินขนาดระบบ งบลงทุน และระยะเวลาคืนทุนจากบิลค่าไฟของคุณ</span></div>${ARROW}</a></li>
     </ul>
   </section>`;
 
@@ -232,7 +232,7 @@ const footer = ({ map = true } = {}) => `
 
     <div class="foot-card">
       <div class="foot-brand">
-        <img src="${asset('Media/logo-footer.webp')}" width="212" height="192" loading="lazy" decoding="async" alt="Solar One Energy">
+        <img src="${asset('Media/logo-footer.webp')}" width="212" height="192" loading="lazy" decoding="async" alt="Solar 1 Energy">
         <p>ผู้รับเหมา EPC ด้านโซลาร์เซลล์ ออกแบบ จัดหาอุปกรณ์ และติดตั้งแบบ Turnkey สำหรับบ้านพักอาศัย ธุรกิจ และโรงงานอุตสาหกรรมทั่วประเทศไทย</p>
         ${SOCIAL}
       </div>
@@ -252,10 +252,10 @@ const footer = ({ map = true } = {}) => `
         <h3>ติดต่อ</h3>
         <ul>${phones.map((p) => `<li><a href="${tel(p)}">${esc(p)}</a></li>`).join('')}<li><a href="mailto:${esc(contact.email)}">${esc(contact.email)}</a></li><li>${esc(contact.hours)}</li></ul>
       </div>
-${map ? MAP_CARD : ''}      <div class="foot-legal"><span>© 2569 Solar One Energy สงวนลิขสิทธิ์</span><span>สำนักงานใหญ่ นครปฐม — ให้บริการครอบคลุมทั่วประเทศไทย</span></div>
+${map ? MAP_CARD : ''}      <div class="foot-legal"><span>© 2569 Solar 1 Energy สงวนลิขสิทธิ์</span><span>สำนักงานใหญ่ นครปฐม — ให้บริการครอบคลุมทั่วประเทศไทย</span></div>
     </div>
 
-    <div class="wordmark" aria-hidden="true">Solar One</div>
+    <div class="wordmark" aria-hidden="true">Solar 1</div>
   </div>
 </footer>`;
 
@@ -293,7 +293,7 @@ ${DRAFT ? '  <meta name="robots" content="noindex, nofollow">\n' : ''}  <meta na
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/Font/Anuphan/Anuphan-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Solar One Energy">
+  <meta property="og:site_name" content="Solar 1 Energy">
   <meta property="og:locale" content="th_TH">
   <meta property="og:url" content="${url}">
   <meta property="og:title" content="${esc(title)}">
@@ -308,7 +308,7 @@ ${jsonld}${THEME}  <link rel="stylesheet" href="/styles.css">
 <body>
 ${SPRITE}<a class="skip-link" href="#content">ข้ามไปยังเนื้อหา</a>
 <header class="wrap pg-top">
-  <a class="pg-logo" href="/" aria-label="Solar One Energy หน้าแรก"><picture><source srcset="/Media/logo-mark.webp" type="image/webp"><img src="${asset('Media/logo-mark.png')}" width="160" height="144" alt="Solar One Energy"></picture></a>
+  <a class="pg-logo" href="/" aria-label="Solar 1 Energy หน้าแรก"><picture><source srcset="/Media/logo-mark.webp" type="image/webp"><img src="${asset('Media/logo-mark.png')}" width="160" height="144" alt="Solar 1 Energy"></picture></a>
   <a class="btn btn--orange" href="${tel(phones[0])}">โทร ${esc(phones[0])} ${ARROW}</a>
 </header>
 <main id="content" class="wrap" tabindex="-1">
@@ -337,15 +337,15 @@ const statRow = (s) => [num(s.value), esc(s.small.trim()), esc(s.label)];
 const PAGES = [
   {
     route: 'residential',
-    title: 'ติดตั้งโซลาร์เซลล์บ้านพักอาศัย แพ็กเกจและผลงานจริง | Solar One Energy',
-    desc: 'ติดตั้งโซลาร์เซลล์บ้าน แพ็กเกจ 5 kWp และไฮบริด 10 kWp พร้อมแบตเตอรี่ แผง Tier 1 จาก Q CELLS หรือ Jinko คู่กับ SolarEdge ติดตั้งให้บ้านพักอาศัยแล้วกว่า 100 หลัง โดยทีมวิศวกร Solar One Energy',
+    title: 'ติดตั้งโซลาร์เซลล์บ้านพักอาศัย แพ็กเกจและผลงานจริง | Solar 1 Energy',
+    desc: 'ติดตั้งโซลาร์เซลล์บ้าน แพ็กเกจ 5 kWp และไฮบริด 10 kWp พร้อมแบตเตอรี่ แผง Tier 1 จาก Q CELLS หรือ JinkoSolar คู่กับ SolarEdge ติดตั้งให้บ้านพักอาศัยแล้วกว่า 100 หลัง โดยทีมวิศวกร Solar 1 Energy',
     jsonld: () => breadcrumbs([['ติดตั้งโซลาร์เซลล์บ้านพักอาศัย', `${SITE}/residential`]])
       + service('ติดตั้งโซลาร์เซลล์บ้านพักอาศัย', 'ออกแบบและติดตั้งระบบโซลาร์เซลล์สำหรับบ้านพักอาศัย ออนกริดและไฮบริดพร้อมแบตเตอรี่', `${SITE}/residential`, { '@type': 'Country', name: 'Thailand' }),
     body: () => `${hero({
       crumbs: [['ติดตั้งโซลาร์เซลล์บ้าน']],
       kicker: 'บ้านพักอาศัย',
       title: 'ติดตั้งโซลาร์เซลล์<br>บ้านพักอาศัย',
-      lede: 'ทีมวิศวกรของเราออกแบบระบบให้พอดีกับการใช้ไฟของบ้านคุณ ดูแลตั้งแต่สำรวจหลังคา คำนวณโครงสร้าง ยื่นขออนุญาตกับการไฟฟ้า จนถึงบำรุงรักษาหลังติดตั้ง และตรวจสอบผลผลิตไฟได้แบบเรียลไทม์ผ่านแอป',
+      lede: 'ทีมวิศวกรของเราออกแบบระบบให้พอดีกับการใช้ไฟของบ้านคุณ ดูแลตั้งแต่สำรวจหลังคา คำนวณโครงสร้าง ยื่นขออนุญาตกับการไฟฟ้า จนถึงบำรุงรักษาหลังติดตั้ง และติดตามการผลิตไฟได้แบบเรียลไทม์ผ่านแอป',
       image: projects.items.find((p) => p.image.includes('home-thonburi')),
     })}
 ${stats([statRow(stat[1]), statRow(stat[0]), [`${num(maxHomeSaving, 0)}`, 'บาท', 'ค่าไฟต่อเดือนที่ลดได้สูงสุดจากผลงานบ้านของเรา']])}
@@ -383,8 +383,8 @@ ${related('residential')}`,
   },
   {
     route: 'commercial',
-    title: 'ติดตั้งโซลาร์เซลล์โรงงานและธุรกิจ 30 kWp ถึง 1 MWp และ PPA | Solar One Energy',
-    desc: 'ติดตั้งโซลาร์เซลล์โรงงาน ฟาร์ม อาคาร และธุรกิจ ตั้งแต่ 30 kWp ถึง 1 MWp ทางเลือกสัญญาซื้อขายไฟ (PPA) ผลงานจริงถึง 3.5 MW ลดค่าไฟได้ 1.75 ล้านบาทต่อเดือน โดย Solar One Energy',
+    title: 'ติดตั้งโซลาร์เซลล์โรงงานและธุรกิจ 30 kWp ถึง 1 MWp และ PPA | Solar 1 Energy',
+    desc: 'ติดตั้งโซลาร์เซลล์โรงงาน ฟาร์ม อาคาร และธุรกิจ ตั้งแต่ 30 kWp ถึง 1 MWp ทางเลือกสัญญาซื้อขายไฟ (PPA) ผลงานจริงถึง 3.5 MW ลดค่าไฟได้ 1.75 ล้านบาทต่อเดือน โดย Solar 1 Energy',
     jsonld: () => breadcrumbs([['ติดตั้งโซลาร์เซลล์โรงงานและธุรกิจ', `${SITE}/commercial`]])
       + service('ติดตั้งโซลาร์เซลล์โรงงานและธุรกิจ', 'ออกแบบและติดตั้งระบบโซลาร์เซลล์สำหรับโรงงาน ฟาร์ม และอาคารธุรกิจ ตั้งแต่ 30 kWp ถึงระดับเมกะวัตต์ พร้อมทางเลือกสัญญาซื้อขายไฟ (PPA)', `${SITE}/commercial`, { '@type': 'Country', name: 'Thailand' }),
     body: () => `${hero({
@@ -404,13 +404,13 @@ ${head('แพ็กเกจ', '<span id="pk-title">ระบบสำหรั
   </section>
 
   <section class="pg-section" aria-labelledby="roi-title">
-${head('ความคุ้มค่า', '<span id="roi-title">คืนทุนเร็ว เพราะธุรกิจใช้ไฟช่วงกลางวัน</span>', 'ไฟที่ผลิตได้ช่วงกลางวันถูกใช้ในอาคารทันที โรงงานและสำนักงานที่เดินเครื่องช่วงกลางวันจึงลดหน่วยที่ต้องซื้อจากการไฟฟ้าได้มาก และคืนทุนได้เร็วกว่าบ้านพักอาศัย')}
+${head('ความคุ้มค่า', '<span id="roi-title">คืนทุนเร็ว เพราะธุรกิจใช้ไฟช่วงกลางวัน</span>', 'อาคารใช้ไฟที่ผลิตได้ช่วงกลางวันได้ทันที โรงงานและสำนักงานที่เดินเครื่องช่วงกลางวันจึงลดหน่วยที่ต้องซื้อจากการไฟฟ้าได้มาก และคืนทุนได้เร็วกว่าบ้านพักอาศัย')}
 ${cards([
-  ['คืนทุนประมาณ 3.2–3.5 ปี', 'ตัวอย่างจากแพ็กเกจโรงงาน 100 kWp และ 300 kWp ที่ผลิตไฟเฉลี่ย 11,000 และ 33,000 หน่วยต่อเดือน ระยะคืนทุนจริงขึ้นกับค่าไฟต่อหน่วยและสัดส่วนการใช้ไฟกลางวัน'],
+  ['คืนทุนประมาณ 3.2–3.5 ปี', 'ตัวอย่างจากแพ็กเกจโรงงาน 100 kWp และ 300 kWp ที่ผลิตไฟเฉลี่ย 11,000 และ 33,000 หน่วยต่อเดือน ระยะเวลาคืนทุนจริงขึ้นอยู่กับค่าไฟต่อหน่วยและสัดส่วนการใช้ไฟกลางวัน'],
   BENEFITS[1],
   ['ไม่ต้องลงทุนเองด้วยสัญญา PPA', esc(packages.factory.note)],
 ])}
-    <p class="pg-note">ตัวเลขเป็นการประเมินเบื้องต้นจากค่าเฉลี่ยผลผลิตไฟในประเทศไทย ราคาจริงขึ้นกับสภาพหลังคา ทิศทางแผง และระบบไฟฟ้าในอาคาร ซึ่งวิศวกรจะยืนยันหลังสำรวจหน้างาน <a href="/#calculator">ลองคำนวณจากบิลค่าไฟของคุณ</a></p>
+    <p class="pg-note">ตัวเลขนี้ประเมินเบื้องต้นจากค่าเฉลี่ยการผลิตไฟฟ้าของระบบโซลาร์ในประเทศไทย ราคาและผลตอบแทนจริงขึ้นอยู่กับสภาพหลังคา ทิศทางแผง และระบบไฟฟ้าในอาคาร ซึ่งวิศวกรจะยืนยันหลังสำรวจหน้างาน <a href="/#calculator">ลองคำนวณจากบิลค่าไฟของคุณ</a></p>
   </section>
 
   <section class="pg-section" aria-labelledby="work-title">
@@ -427,8 +427,8 @@ ${related('commercial')}`,
   },
   {
     route: 'projects',
-    title: `ผลงานติดตั้งโซลาร์เซลล์ ${projects.items.length} โครงการ บ้าน ธุรกิจ และโรงงาน | Solar One Energy`,
-    desc: `รวมผลงานติดตั้งโซลาร์เซลล์ของ Solar One Energy ${projects.items.length} โครงการทั่วประเทศ ตั้งแต่บ้านพักอาศัยถึงโรงงาน 3.5 MW พร้อมขนาดระบบ ค่าไฟที่ลดได้ และปีที่ติดตั้ง`,
+    title: `ผลงานติดตั้งโซลาร์เซลล์ ${projects.items.length} โครงการ บ้าน ธุรกิจ และโรงงาน | Solar 1 Energy`,
+    desc: `รวมผลงานติดตั้งโซลาร์เซลล์ของ Solar 1 Energy ${projects.items.length} โครงการทั่วประเทศ ตั้งแต่บ้านพักอาศัยถึงโรงงาน 3.5 MW พร้อมขนาดระบบ ค่าไฟที่ลดได้ และปีที่ติดตั้ง`,
     jsonld: () => breadcrumbs([['ผลงานการติดตั้ง', `${SITE}/projects`]]),
     body: () => `${hero({
       crumbs: [['ผลงานการติดตั้ง']],
@@ -460,15 +460,15 @@ ${related('projects')}`,
   },
   {
     route: 'locations/nakhon-pathom',
-    title: 'รับติดตั้งโซลาร์เซลล์ นครปฐม สำนักงานใหญ่สามพราน | Solar One Energy',
-    desc: 'รับติดตั้งโซลาร์เซลล์ในนครปฐม บ้าน ธุรกิจ และโรงงาน โดย Solar One Energy สำนักงานใหญ่ 81/22 หมู่ 2 ต.บางเตย อ.สามพราน ใกล้ห้างเซ็นทรัลศาลายา โทร 082-416-9619',
+    title: 'รับติดตั้งโซลาร์เซลล์ นครปฐม สำนักงานใหญ่สามพราน | Solar 1 Energy',
+    desc: 'รับติดตั้งโซลาร์เซลล์ในนครปฐม บ้าน ธุรกิจ และโรงงาน โดย Solar 1 Energy สำนักงานใหญ่ 81/22 หมู่ 2 ต.บางเตย อ.สามพราน ใกล้เซ็นทรัล ศาลายา โทร 082-416-9619',
     jsonld: () => BUSINESS_LD + breadcrumbs([['พื้นที่ให้บริการ', null], ['นครปฐม', `${SITE}/locations/nakhon-pathom`]])
       + service('ติดตั้งโซลาร์เซลล์ นครปฐม', 'ออกแบบและติดตั้งระบบโซลาร์เซลล์สำหรับบ้าน ธุรกิจ และโรงงานในจังหวัดนครปฐม จากสำนักงานใหญ่ที่อำเภอสามพราน', `${SITE}/locations/nakhon-pathom`, { '@type': 'AdministrativeArea', name: 'Nakhon Pathom' }),
     body: () => `${hero({
       crumbs: [['พื้นที่ให้บริการ'], ['นครปฐม']],
       kicker: 'พื้นที่ให้บริการ',
       title: 'รับติดตั้งโซลาร์เซลล์<br>นครปฐม',
-      lede: 'สำนักงานใหญ่ของเราอยู่ที่อำเภอสามพราน ใกล้ห้างเซ็นทรัลศาลายา ทีมวิศวกรจึงเข้าสำรวจหน้างานในนครปฐมและจังหวัดใกล้เคียงได้สะดวก และดูแลระบบหลังติดตั้งได้ใกล้ชิด ทั้งบ้านพักอาศัย ธุรกิจ และโรงงาน',
+      lede: 'สำนักงานใหญ่ของเราอยู่ที่อำเภอสามพราน ใกล้เซ็นทรัล ศาลายา ทีมวิศวกรจึงเข้าสำรวจหน้างานในนครปฐมและจังหวัดใกล้เคียงได้สะดวก และดูแลระบบหลังติดตั้งได้ใกล้ชิด ทั้งบ้านพักอาศัย ธุรกิจ และโรงงาน',
       image: projects.items.find((p) => p.image.includes('home-krisda-nakhon')),
     })}
 
@@ -510,7 +510,7 @@ ${head('บริการ', '<span id="pk-title">ระบบโซลาร์
     <ul class="pg-links">
       <li><a href="/residential"><div><strong>บ้านพักอาศัย</strong><br><span>${homePackages.map((p) => esc(p.name)).join(' และ')} ราคาเริ่มต้น ${num(Math.min(...homePackages.map((p) => p.price)), 0)} บาท รวมติดตั้ง</span></div>${ARROW}</a></li>
       <li><a href="/commercial"><div><strong>ธุรกิจและโรงงาน</strong><br><span>ระบบ 30 kWp ถึง 1 MWp และทางเลือกสัญญาซื้อขายไฟ (PPA)</span></div>${ARROW}</a></li>
-      <li><a href="/#calculator"><div><strong>คำนวณความคุ้มค่า</strong><br><span>ประเมินขนาดระบบ งบลงทุน และระยะคืนทุนจากบิลค่าไฟของคุณ</span></div>${ARROW}</a></li>
+      <li><a href="/#calculator"><div><strong>คำนวณความคุ้มค่า</strong><br><span>ประเมินขนาดระบบ งบลงทุน และระยะเวลาคืนทุนจากบิลค่าไฟของคุณ</span></div>${ARROW}</a></li>
     </ul>
   </section>
 
