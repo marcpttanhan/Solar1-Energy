@@ -597,10 +597,13 @@ Promise.race([
   }), 1700);
 });
 
+// iOS Safari only applies :active (button press states) when the page listens for touches.
+document.addEventListener('touchstart', () => {}, { passive: true });
+
 // ---------- EPC workflow ----------
-// Progressive enhancement: the HTML shows every step. Here the rail becomes a tab
-// list (arrow keys, Home/End), one panel shows at a time, and the line fills up to
-// the chosen step. Next/back buttons move through the steps and keep focus in place.
+// Progressive enhancement: the HTML shows every phase. Here the cards become a tab
+// list (arrow keys, Home/End), one panel shows at a time, and the bar fills up to
+// the chosen phase. Next/back buttons move through the phases and keep focus in place.
 const flow = document.getElementById('flow');
 if (flow) {
   const rail = flow.querySelector('.flow-rail');
@@ -619,8 +622,11 @@ if (flow) {
       t.classList.toggle('is-done', k < i);
     });
     panels.forEach((p, k) => { p.hidden = k !== i; });
-    flow.style.setProperty('--p', String(i / (tabs.length - 1)));
-    if (animate) playOnce(panels[i], 'flow-in', 0, 700);
+    flow.style.setProperty('--p', String((i + 1) / tabs.length));
+    if (animate) {
+      playOnce(panels[i], 'flow-in', 0, 1000);
+      playOnce(tabs[i].querySelector('.flow-badge'), 'badge-pop', 0, 800);
+    }
     if (focusTab) tabs[i].focus();
   };
 
@@ -647,20 +653,22 @@ if (flow) {
 
   flow.classList.add('is-interactive');
   selectStep(0, { animate: false });
-  // the section's one orchestrated moment: the line draws in up to the current step
-  flow.addEventListener('revealed', () => playOnce(flowLine, 'rail-draw', 0, 1500));
+  // the section's one orchestrated moment: the cards rise in, then the bar draws up to the current phase
+  rail.addEventListener('revealed', () => playOnce(flowLine, 'rail-draw', 0, 1700));
 }
 
 // ---------- Scroll reveal ----------
-// Purely additive: every block is visible at all times. Shortly before a block
-// scrolls into view (observer margin 12% below the viewport) it plays a one-shot
-// rise-in. A block that is already on screen when first observed (page load,
-// reload mid-page, jump links, scrolling back up) is left alone: it's visible, so
-// animating it would only flash. No IntersectionObserver: nothing animates,
-// everything shows.
+// Purely additive: every block is visible at all times. A block plays a one-shot
+// rise-in as it crosses into view: the observer fires when its top passes 94% of the
+// viewport height, so the visitor watches it arrive. (It used to fire 12% below the
+// viewport, so at reading speed the animation was over before the block appeared.)
+// Left alone: blocks already on screen when first observed (page load, reload
+// mid-page), and blocks already well inside the viewport when reported (a fast fling
+// or a jump link past them), since animating those would only flash.
+// No IntersectionObserver: nothing animates, everything shows.
 const REVEAL_GROUPS = [
   '.impact-head', '.stats',
-  '.process-head', '.epc',
+  '.process-head', '.flow-rail',
   '.packages .split-left', '.pk-head', '.benefits',
   '.calc-top', '.calc-inputs', '.calc-out',
   '.projects .split-left',
@@ -669,19 +677,21 @@ const REVEAL_GROUPS = [
 ];
 // Grids rendered by JS (packages, portfolio) animate as one block: their cards are
 // re-rendered on filter/content changes.
-const SINGLE_REVEALS = ['.impact-panel', '.flow', '.pk-grid', '.pk-note', '.pj-feature', '.pj-bar', '.pj-grid'];
+const SINGLE_REVEALS = ['.impact-panel', '.flow-panels', '.pk-grid', '.pk-note', '.pj-feature', '.pj-bar', '.pj-grid'];
 
+const revealSeen = new WeakSet();
 const revealObserver = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
-    if (!entry.isIntersecting) return;
     const box = entry.target;
+    const first = !revealSeen.has(box);
+    revealSeen.add(box);
+    if (!entry.isIntersecting) return;
     revealObserver.unobserve(box);
-    // Only animate what is still below the visible area; anything on screen stays as is.
-    if (entry.boundingClientRect.top < window.innerHeight) return;
-    (box._items || [box]).forEach((el, i) => playOnce(el, 'reveal-in', box._items ? Math.min(i, 3) * 60 : 0));
+    if (first || entry.boundingClientRect.top < window.innerHeight * 0.6) return;
+    (box._items || [box]).forEach((el, i) => playOnce(el, 'reveal-in', box._items ? Math.min(i, 4) * 80 : 0));
     box.dispatchEvent(new CustomEvent('revealed'));
   });
-}, { rootMargin: '0px 0px 12% 0px', threshold: 0 }) : null;
+}, { rootMargin: '0px 0px -6% 0px', threshold: 0 }) : null;
 
 function watchReveal(box) { if (box && revealObserver) revealObserver.observe(box); }
 

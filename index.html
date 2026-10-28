@@ -105,6 +105,10 @@
   <symbol id="i-medal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5.5"/><path d="m8.6 13.4-1.6 8.1 5-2.7 5 2.7-1.6-8.1"/><path d="m10 9 1.4 1.4L14 7.8"/></g></symbol>
   <symbol id="i-monitor" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.2"/><path d="M9 15.5l2-2.6 2 1.5 2.2-3.2M10.5 18.5h3"/></g></symbol>
   <symbol id="i-check" viewBox="0 0 14 14"><path d="M3 7.4 5.9 10.2 11 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-setsquare" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16h16z"/><path d="M8 11.5V16h4.5z"/><path d="M4 8h2M4 12h2M4 16h1.5"/></g></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 20 7.3v9.4L12 21l-8-4.3V7.3z"/><path d="m4 7.3 8 4.3 8-4.3M12 11.6V21M8 5.2l8 4.3"/></g></symbol>
+  <symbol id="i-helmet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16a7.5 7.5 0 0 1 15 0"/><path d="M3 16h18v2.5H3z"/><path d="M10 9V5.5h4V9"/></g></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15.5" r="4"/><path d="m10.9 12.6 8.6-8.6M16.5 7l2.5 2.5M14.2 9.3l1.8 1.8"/></g></symbol>
   <symbol id="i-line" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.2c-5 0-9 3.2-9 7.1 0 3.5 3.1 6.4 7.4 7l-.3 2.5 3.6-2.4c4.2-.5 7.3-3.5 7.3-7.1 0-3.9-4-7.1-9-7.1z"/><path d="M7.5 9.6v3.4h2M11.6 9.6V13M13.8 13V9.6l2.7 3.4V9.6"/></g></symbol>
   <symbol id="i-line-brand" viewBox="0 0 24 24"><path fill="currentColor" d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></symbol>
   <symbol id="i-facebook" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.6 21v-7.4h2.6l.4-3.1h-3V8.6c0-.9.3-1.5 1.6-1.5h1.6V4.3a21 21 0 0 0-2.4-.1c-2.4 0-4 1.4-4 4.1v2.2H8.7v3.1h2.7V21"/></g></symbol>
@@ -227,76 +231,63 @@
     <div class="process-head">
       <div>
         <p class="kicker">บริการ EPC แบบ Turnkey</p>
-        <h2 class="h2" id="process-title">ทีมเดียวดูแลครบ<br>ตั้งแต่สำรวจถึงส่งมอบ</h2>
+        <h2 class="h2" id="process-title">ทีมเดียวดูแลครบ<br>ตั้งแต่ออกแบบถึงส่งมอบ</h2>
       </div>
-      <p class="lede">EPC คือการรวมงานออกแบบทางวิศวกรรม (Engineering) จัดหาอุปกรณ์ (Procurement) และติดตั้ง (Construction) ไว้ในสัญญาเดียว คุณประสานงานกับทีมเดียวตลอดโครงการ และได้รับระบบที่พร้อมใช้งานในวันส่งมอบ</p>
+      <p class="lede">EPC คือการรวมงานออกแบบทางวิศวกรรม (Engineering) จัดหาอุปกรณ์ (Procurement) และติดตั้ง (Construction) ไว้ในสัญญาเดียว แล้วปิดท้ายด้วยการทดสอบและส่งมอบระบบที่พร้อมใช้งาน คุณประสานงานกับทีมเดียวตลอดโครงการ</p>
     </div>
 
-    <ul class="epc">
-      <li><span class="epc-l" aria-hidden="true">E</span><div><strong>Engineering</strong><span>ออกแบบระบบไฟฟ้าและคำนวณโครงสร้างโดยวิศวกร</span></div></li>
-      <li><span class="epc-l" aria-hidden="true">P</span><div><strong>Procurement</strong><span>จัดหาแผง Tier 1 จาก Q CELLS หรือ JinkoSolar และอินเวอร์เตอร์ SolarEdge</span></div></li>
-      <li><span class="epc-l" aria-hidden="true">C</span><div><strong>Construction</strong><span>ติดตั้ง ทดสอบ และส่งมอบโดยทีมช่างของเราเอง</span></div></li>
-    </ul>
-
     <div class="flow" id="flow">
-      <ol class="flow-rail" aria-label="ขั้นตอนการทำงาน 4 ขั้น">
-          <li><button class="flow-tab" type="button" id="flow-tab-1" aria-controls="flow-1">
-            <span class="flow-num">1</span>
-            <span class="flow-name"><span class="flow-name-full">สำรวจหน้างาน</span><span class="flow-name-short">สำรวจ</span></span>
-            <span class="flow-en">Survey</span>
-          </button></li>
-          <li><button class="flow-tab" type="button" id="flow-tab-2" aria-controls="flow-2">
-            <span class="flow-num">2</span>
-            <span class="flow-name"><span class="flow-name-full">ออกแบบและตรวจสอบโครงสร้าง</span><span class="flow-name-short">ออกแบบ</span></span>
-            <span class="flow-en">Design & Structural Check</span>
-          </button></li>
-          <li><button class="flow-tab" type="button" id="flow-tab-3" aria-controls="flow-3">
-            <span class="flow-num">3</span>
-            <span class="flow-name"><span class="flow-name-full">ยื่นขออนุญาต PEA / MEA</span><span class="flow-name-short">ขออนุญาต</span></span>
-            <span class="flow-en">Permit Application</span>
-          </button></li>
-          <li><button class="flow-tab" type="button" id="flow-tab-4" aria-controls="flow-4">
-            <span class="flow-num">4</span>
-            <span class="flow-name"><span class="flow-name-full">ทดสอบระบบและส่งมอบ</span><span class="flow-name-short">ส่งมอบ</span></span>
-            <span class="flow-en">Commissioning & Handover</span>
-          </button></li>
+      <ol class="flow-rail" aria-label="4 ระยะของงาน EPC">
+        <li><button class="flow-tab" type="button" id="flow-tab-1" aria-controls="flow-1">
+          <span class="flow-badge"><svg aria-hidden="true"><use href="#i-setsquare"/></svg></span>
+          <span class="flow-letter" aria-hidden="true">E</span>
+          <span class="flow-en">Engineering</span>
+          <span class="flow-name"><span class="flow-name-full">ออกแบบทางวิศวกรรม</span><span class="flow-name-short">ออกแบบ</span></span>
+          <span class="flow-sum">สำรวจหน้างาน ออกแบบระบบ และลงนามรับรองโครงสร้าง</span>
+        </button></li>
+        <li><button class="flow-tab" type="button" id="flow-tab-2" aria-controls="flow-2">
+          <span class="flow-badge"><svg aria-hidden="true"><use href="#i-box"/></svg></span>
+          <span class="flow-letter" aria-hidden="true">P</span>
+          <span class="flow-en">Procurement</span>
+          <span class="flow-name"><span class="flow-name-full">จัดหาอุปกรณ์และขออนุญาต</span><span class="flow-name-short">จัดหา</span></span>
+          <span class="flow-sum">อุปกรณ์ Tier 1 และการขออนุญาตขนานไฟ PEA / MEA</span>
+        </button></li>
+        <li><button class="flow-tab" type="button" id="flow-tab-3" aria-controls="flow-3">
+          <span class="flow-badge"><svg aria-hidden="true"><use href="#i-helmet"/></svg></span>
+          <span class="flow-letter" aria-hidden="true">C</span>
+          <span class="flow-en">Construction</span>
+          <span class="flow-name"><span class="flow-name-full">ติดตั้งหน้างาน</span><span class="flow-name-short">ติดตั้ง</span></span>
+          <span class="flow-sum">ทีมช่างของเราติดตั้งเองทั้งหมด ไม่จ้างช่วง</span>
+        </button></li>
+        <li><button class="flow-tab" type="button" id="flow-tab-4" aria-controls="flow-4">
+          <span class="flow-badge"><svg aria-hidden="true"><use href="#i-key"/></svg></span>
+          <span class="flow-letter" aria-hidden="true">D</span>
+          <span class="flow-en">Delivery</span>
+          <span class="flow-name"><span class="flow-name-full">ทดสอบและส่งมอบ</span><span class="flow-name-short">ส่งมอบ</span></span>
+          <span class="flow-sum">ทดสอบทุกจุด ส่งมอบ และดูแลระบบต่อเนื่อง</span>
+        </button></li>
       </ol>
       <div class="flow-line" aria-hidden="true"><i></i></div>
       <div class="flow-panels">
         <div class="flow-panel" id="flow-1" aria-labelledby="flow-tab-1">
           <div class="flow-main">
             <p class="flow-count">ขั้นที่ 1 จาก 4</p>
-            <h3 class="flow-title">สำรวจหน้างาน</h3>
-            <p class="flow-desc">วิศวกรเข้าสำรวจสภาพหลังคา ทิศทางรับแดด เงาบดบัง และระบบไฟฟ้าในอาคาร พร้อมวิเคราะห์บิลค่าไฟย้อนหลัง เพื่อกำหนดขนาดระบบที่คุ้มค่าที่สุดสำหรับการใช้ไฟของคุณ</p>
+            <h3 class="flow-title">ออกแบบทางวิศวกรรม</h3>
+            <p class="flow-desc">วิศวกรเข้าสำรวจสภาพหลังคา ทิศทางรับแดด เงาบดบัง และระบบไฟฟ้าในอาคาร วิเคราะห์บิลค่าไฟย้อนหลังเพื่อกำหนดขนาดระบบที่คุ้มค่าที่สุด จากนั้นออกแบบผังแผงและระบบไฟฟ้า พร้อมคำนวณน้ำหนักที่เพิ่มขึ้นบนหลังคา</p>
           </div>
           <div class="flow-get">
             <h4>สิ่งที่คุณได้รับ</h4>
-            <ul><li><svg aria-hidden="true"><use href="#i-check"/></svg>ข้อมูลหลังคาและระบบไฟฟ้าจากหน้างานจริง</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>ขนาดระบบที่แนะนำพร้อมใบเสนอราคา</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>ประมาณการค่าไฟที่ลดได้และระยะเวลาคืนทุน</li></ul>
+            <ul><li><svg aria-hidden="true"><use href="#i-check"/></svg>ขนาดระบบที่แนะนำพร้อมใบเสนอราคา</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>ประมาณการค่าไฟที่ลดได้และระยะเวลาคืนทุน</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>แบบผังแผงและแบบระบบไฟฟ้า</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>รายการคำนวณโครงสร้างที่วิศวกรโยธาลงนาม</li></ul>
           </div>
           <div class="flow-nav"><span></span>
-            <button class="btn btn--ink flow-next" type="button" data-go="2">ถัดไป: ออกแบบ <span class="btn-ico"><svg><use href="#i-chev"/></svg></span></button>
+            <button class="btn btn--ink flow-next" type="button" data-go="2">ถัดไป: จัดหาอุปกรณ์ <span class="btn-ico"><svg><use href="#i-chev"/></svg></span></button>
           </div>
         </div>
         <div class="flow-panel" id="flow-2" aria-labelledby="flow-tab-2">
           <div class="flow-main">
             <p class="flow-count">ขั้นที่ 2 จาก 4</p>
-            <h3 class="flow-title">ออกแบบและตรวจสอบโครงสร้าง</h3>
-            <p class="flow-desc">ออกแบบผังแผงและระบบไฟฟ้า คำนวณน้ำหนักที่เพิ่มขึ้นบนหลังคา และวิศวกรโยธาลงนามรับรองโครงสร้างก่อนเริ่มงานติดตั้ง</p>
-          </div>
-          <div class="flow-get">
-            <h4>สิ่งที่คุณได้รับ</h4>
-            <ul><li><svg aria-hidden="true"><use href="#i-check"/></svg>แบบผังแผงและแบบระบบไฟฟ้า</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>รายการคำนวณโครงสร้างที่วิศวกรลงนาม</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>รายการอุปกรณ์ Tier 1 ที่จะติดตั้งจริง</li></ul>
-          </div>
-          <div class="flow-nav">
-            <button class="flow-prev" type="button" data-go="1"><svg aria-hidden="true"><use href="#i-chev"/></svg>ย้อนกลับ</button>
-            <button class="btn btn--ink flow-next" type="button" data-go="3">ถัดไป: ขออนุญาต <span class="btn-ico"><svg><use href="#i-chev"/></svg></span></button>
-          </div>
-        </div>
-        <div class="flow-panel" id="flow-3" aria-labelledby="flow-tab-3">
-          <div class="flow-main">
-            <p class="flow-count">ขั้นที่ 3 จาก 4</p>
-            <h3 class="flow-title">ยื่นขออนุญาต PEA / MEA</h3>
-            <p class="flow-desc">เราเตรียมแบบและเอกสาร แล้วยื่นขออนุญาตขนานไฟ (เชื่อมต่อระบบ) กับการไฟฟ้าตามพื้นที่ติดตั้ง ค่าดำเนินการรวมอยู่ในราคาแพ็กเกจแล้ว</p>
+            <h3 class="flow-title">จัดหาอุปกรณ์และขออนุญาต</h3>
+            <p class="flow-desc">จัดหาแผง Tier 1 จาก Q CELLS หรือ JinkoSolar คู่กับอินเวอร์เตอร์และ Optimizer ของ SolarEdge ตามรายการในแบบ พร้อมยื่นขออนุญาตขนานไฟ (เชื่อมต่อระบบ) กับการไฟฟ้าตามพื้นที่ติดตั้ง ค่าดำเนินการรวมอยู่ในราคาแพ็กเกจแล้ว</p>
             <ul class="flow-auth">
               <li><strong>PEA</strong><span>การไฟฟ้าส่วนภูมิภาค</span><small>พื้นที่ต่างจังหวัด</small></li>
               <li><strong>MEA</strong><span>การไฟฟ้านครหลวง</span><small>กรุงเทพฯ นนทบุรี และสมุทรปราการ</small></li>
@@ -304,7 +295,22 @@
           </div>
           <div class="flow-get">
             <h4>สิ่งที่คุณได้รับ</h4>
-            <ul><li><svg aria-hidden="true"><use href="#i-check"/></svg>เอกสารยื่นขออนุญาตขนานไฟครบชุด</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>ประสานงานกับการไฟฟ้าจนได้รับอนุญาต</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>ออกแบบตามข้อกำหนดการเชื่อมต่อของการไฟฟ้า</li></ul>
+            <ul><li><svg aria-hidden="true"><use href="#i-check"/></svg>รายการอุปกรณ์ Tier 1 ที่จะติดตั้งจริง</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>เอกสารยื่นขออนุญาตขนานไฟครบชุด</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>ประสานงานกับการไฟฟ้าจนได้รับอนุญาต</li></ul>
+          </div>
+          <div class="flow-nav">
+            <button class="flow-prev" type="button" data-go="1"><svg aria-hidden="true"><use href="#i-chev"/></svg>ย้อนกลับ</button>
+            <button class="btn btn--ink flow-next" type="button" data-go="3">ถัดไป: ติดตั้ง <span class="btn-ico"><svg><use href="#i-chev"/></svg></span></button>
+          </div>
+        </div>
+        <div class="flow-panel" id="flow-3" aria-labelledby="flow-tab-3">
+          <div class="flow-main">
+            <p class="flow-count">ขั้นที่ 3 จาก 4</p>
+            <h3 class="flow-title">ติดตั้งหน้างาน</h3>
+            <p class="flow-desc">ทีมช่างของเราติดตั้งเองทั้งหมด ไม่จ้างช่วง ทั้งโครงยึด แผง Optimizer และอินเวอร์เตอร์ ตามแบบที่วิศวกรลงนามรับรอง และตามข้อกำหนดการเชื่อมต่อของการไฟฟ้า</p>
+          </div>
+          <div class="flow-get">
+            <h4>สิ่งที่คุณได้รับ</h4>
+            <ul><li><svg aria-hidden="true"><use href="#i-check"/></svg>งานติดตั้งโดยทีมช่างของบริษัทเอง</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>ติดตั้งตามแบบที่วิศวกรลงนามรับรอง</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>ระบบตรงตามข้อกำหนดการเชื่อมต่อของการไฟฟ้า</li></ul>
           </div>
           <div class="flow-nav">
             <button class="flow-prev" type="button" data-go="2"><svg aria-hidden="true"><use href="#i-chev"/></svg>ย้อนกลับ</button>
@@ -314,8 +320,8 @@
         <div class="flow-panel" id="flow-4" aria-labelledby="flow-tab-4">
           <div class="flow-main">
             <p class="flow-count">ขั้นที่ 4 จาก 4</p>
-            <h3 class="flow-title">ทดสอบระบบและส่งมอบ</h3>
-            <p class="flow-desc">ทีมช่างของเราติดตั้งเอง ทดสอบการทำงานทุกจุดก่อนจ่ายไฟเข้าอาคาร จากนั้นส่งมอบระบบพร้อมแอปติดตามการผลิตไฟ และเข้าตรวจเช็กและล้างแผงตามรอบที่กำหนด</p>
+            <h3 class="flow-title">ทดสอบและส่งมอบ</h3>
+            <p class="flow-desc">ทดสอบการทำงานทุกจุดก่อนจ่ายไฟเข้าอาคาร ส่งมอบระบบพร้อมแอปติดตามการผลิตไฟ และทีมของเราเข้าตรวจเช็กและล้างแผงตามรอบที่กำหนด</p>
           </div>
           <div class="flow-get">
             <h4>สิ่งที่คุณได้รับ</h4>

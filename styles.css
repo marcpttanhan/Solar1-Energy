@@ -41,6 +41,12 @@
   --card-rgb: 255 255 255;
   --on-ink: #FFFFFF;          /* text on --ink fills (segmented thumb, ink button) */
   --hover: rgb(16 20 24 / .06);
+  --orange-rgb: 252 87 31;
+  /* frosted glass (EPC flow): translucent card colour over the lit stage */
+  --glass: rgb(var(--card-rgb) / .62);
+  --glass-strong: rgb(var(--card-rgb) / .84);
+  --glass-line: rgb(255 255 255 / .8);
+  --glass-shadow: inset 0 1px 0 rgb(255 255 255 / .7), 0 18px 40px -28px rgb(var(--shade) / .4);
   --sweep: rgb(255 255 255 / .5);
   --graphite: #22272C;        /* fixed dark text on always-white chips */
   --frame-art: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 110' fill='none' stroke='%2322272C' stroke-opacity='.26' stroke-width='1.2' stroke-linejoin='round'%3E%3Cpath d='M30 78 58 40h74l-28 38z'/%3E%3Cpath d='M48.5 78 76.5 40M67 78 95 40M85.5 78 113.5 40M39.3 65.3h74M48.7 52.7h74'/%3E%3Cpath d='M44 78v14M96 78v14M20 92h120' stroke-dasharray='3 3'/%3E%3Ccircle cx='132' cy='20' r='7'/%3E%3C/svg%3E");
@@ -81,6 +87,8 @@
   --card-rgb: 30 34 43;
   --on-ink: #0D0F12;
   --hover: rgb(255 255 255 / .06);
+  --glass-line: rgb(255 255 255 / .09);
+  --glass-shadow: inset 0 1px 0 rgb(255 255 255 / .06), 0 18px 40px -28px rgb(0 0 0 / .8);
   --sweep: rgb(255 255 255 / .07);
   --frame-art: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 110' fill='none' stroke='%23F2F4F6' stroke-opacity='.22' stroke-width='1.2' stroke-linejoin='round'%3E%3Cpath d='M30 78 58 40h74l-28 38z'/%3E%3Cpath d='M48.5 78 76.5 40M67 78 95 40M85.5 78 113.5 40M39.3 65.3h74M48.7 52.7h74'/%3E%3Cpath d='M44 78v14M96 78v14M20 92h120' stroke-dasharray='3 3'/%3E%3Ccircle cx='132' cy='20' r='7'/%3E%3C/svg%3E");
   color-scheme: dark;
@@ -878,8 +886,9 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var
 .logo-note { margin-top: 12px; max-width: 640px; font-size: 14px; line-height: 1.6; color: var(--muted); }
 
 /* ---------- EPC workflow ---------- */
-/* Without JS all four step panels show in order. main.js adds .is-interactive and
-   turns the rail into tabs: one panel at a time, the line fills to the chosen step. */
+/* Four phases, E → P → C → D, as frosted-glass cards on a lit drafting stage.
+   Without JS all four phase panels show in order. main.js adds .is-interactive and
+   turns the cards into tabs: one panel at a time, the bar fills to the chosen phase. */
 
 .process { padding: var(--section-gap) 0 0; }
 .process-head {
@@ -891,88 +900,131 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var
 .process-head .h2 { margin-top: 10px; }
 .process-head .lede { max-width: 560px; }
 
-/* E / P / C: what the one contract covers */
-.epc {
-  list-style: none;
-  margin-top: 40px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--line);
+/* the stage: drafting grid under two soft sun glows, so the glass has light to catch */
+.flow {
+  position: relative;
+  margin-top: 48px;
+  padding: clamp(12px, 2vw, 24px);
+  border: 1px solid var(--line);
+  border-radius: calc(var(--r-panel) + 8px);
+  background:
+    radial-gradient(55% 70% at 8% 0%, rgb(var(--orange-rgb) / .2), transparent 70%),
+    radial-gradient(45% 60% at 100% 100%, rgb(var(--orange-rgb) / .12), transparent 70%),
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 32px 32px,
+    var(--surface);
+  scroll-margin-top: 96px;
+  isolation: isolate;
 }
-.epc li { display: flex; gap: 16px; align-items: flex-start; padding: 20px 24px 0 0; }
-.epc li + li { padding-left: 24px; border-left: 1px solid var(--line); }
-.epc-l { flex: none; width: 34px; font-size: 44px; font-weight: 300; line-height: .95; color: var(--orange); }
-.epc strong { display: block; font-size: 16px; font-weight: 500; line-height: 1.4; }
-.epc li div > span { display: block; margin-top: 4px; font-size: 14px; line-height: 1.6; color: var(--muted); }
 
-.flow { position: relative; margin-top: 56px; scroll-margin-top: 96px; }
 .flow-rail {
   list-style: none;
-  position: relative; z-index: 1;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
+.flow-rail li { display: flex; }
 .flow-tab {
-  width: 100%; min-height: 44px;
-  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
-  padding: 0 8px 4px 0;
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "badge letter" "en en" "name name" "sum sum";
+  align-content: start;
+  gap: 2px 12px;
+  min-height: 44px;
+  padding: 18px 18px 20px;
   text-align: left;
-  border-radius: var(--r-card);
+  border: 1px solid var(--glass-line);
+  border-radius: var(--r-panel);
+  background: var(--glass);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .3s, background-color .3s;
 }
-.flow-num {
+.flow-badge {
+  grid-area: badge;
   width: 44px; height: 44px;
-  margin-bottom: 10px;
-  border-radius: 50%;
+  border-radius: var(--r-card);
   display: grid; place-items: center;
-  font-size: 17px; font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-soft);
-  background: var(--paper);
-  border: 1.5px solid var(--line-strong);
-  transition: background-color .3s, border-color .3s, color .3s, box-shadow .3s var(--ease);
+  color: var(--accent-text);
+  background: var(--orange-tint);
+  transition: background .35s, color .35s, box-shadow .4s var(--ease), transform .4s var(--ease);
 }
-.flow-name { font-size: 16px; font-weight: 500; line-height: 1.4; color: var(--ink-soft); transition: color .2s; }
+.flow-badge svg { width: 22px; height: 22px; }
+/* E / P / C / D: large orange letters, the section's accent */
+.flow-letter {
+  grid-area: letter;
+  justify-self: end;
+  font-size: 46px; font-weight: 300; line-height: .9;
+  background: linear-gradient(180deg, var(--orange) 10%, rgb(var(--orange-rgb) / .22) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: transform .4s var(--ease);
+}
+.flow-en { grid-area: en; margin-top: 16px; font-size: 14px; color: var(--muted); }
+.flow-name { grid-area: name; font-size: 17px; font-weight: 500; line-height: 1.4; color: var(--ink); }
 .flow-name-short { display: none; }
-.flow-en { font-size: 14px; color: var(--muted); }
+.flow-sum { grid-area: sum; margin-top: 6px; font-size: 14px; line-height: 1.6; color: var(--muted); }
 
-/* the line runs from the first node's centre to the last one's */
+/* the chosen phase: lifted, orange edge and glow, badge filled */
+.flow:not(.is-interactive) .flow-badge,
+.flow-tab[aria-selected="true"] .flow-badge {
+  color: var(--white);
+  background: linear-gradient(135deg, var(--orange), var(--cta-deep));
+  box-shadow: 0 8px 18px -8px rgb(var(--orange-rgb) / .7);
+}
+.flow-tab[aria-selected="true"] {
+  transform: translate3d(0, -3px, 0);
+  border-color: rgb(var(--orange-rgb) / .55);
+  background: var(--glass-strong);
+  box-shadow: var(--glass-shadow), 0 0 0 1px rgb(var(--orange-rgb) / .3), 0 24px 48px -28px rgb(var(--orange-rgb) / .75);
+}
+.flow-tab.is-done .flow-badge { color: var(--cta); }
+.is-interactive .flow-tab { cursor: pointer; }
+@media (hover: hover) {
+  .flow-tab:hover:not([aria-selected="true"]) {
+    transform: translate3d(0, -3px, 0) scale(1.015);
+    border-color: rgb(var(--orange-rgb) / .3);
+    box-shadow: var(--glass-shadow), 0 20px 40px -28px rgb(var(--orange-rgb) / .6);
+  }
+  .flow-tab:hover .flow-badge { transform: rotate(-6deg); }
+  .flow-tab:hover .flow-letter { transform: translate3d(0, -2px, 0); }
+}
+.is-interactive .flow-tab:active { transform: scale(.98); transition-duration: .12s; }
+.flow-tab:focus-visible { outline-offset: 4px; }
+
+/* progress: fills to the end of the chosen phase */
 .flow-line {
-  position: absolute; z-index: 0;
-  top: 21px; left: 22px;
-  right: calc((100% - 36px) / 4 - 22px);
-  height: 2px;
-  background: var(--line-strong);
+  position: relative;
+  margin: 14px 4px 0;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--line);
+  overflow: hidden;
 }
 .flow-line i {
   position: absolute; inset: 0;
-  background: var(--orange);
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--orange), var(--cta));
   transform-origin: left center;
   transform: scaleX(var(--p, 1));
   transition: transform .6s var(--ease);
 }
 
-/* reached steps fill; the current one gets a ring */
-.flow:not(.is-interactive) .flow-num,
-.flow-tab.is-done .flow-num,
-.flow-tab[aria-selected="true"] .flow-num { background: var(--cta); border-color: var(--cta); color: var(--white); }
-.flow-tab[aria-selected="true"] .flow-num { box-shadow: 0 0 0 6px var(--orange-tint); }
-.flow-tab[aria-selected="true"] .flow-name,
-.flow:not(.is-interactive) .flow-name { color: var(--ink); }
-.is-interactive .flow-tab { cursor: pointer; }
-.flow-tab:hover:not([aria-selected="true"]) .flow-num { border-color: var(--ink); color: var(--ink); }
-.flow-tab:hover .flow-name { color: var(--ink); }
-.flow-tab:focus-visible { outline-offset: 4px; }
-
-.flow-panels { margin-top: 28px; }
+.flow-panels { margin-top: 14px; }
 .flow-panel {
   display: grid;
   grid-template-columns: 1.3fr 1fr;
   gap: 24px 48px;
   padding: clamp(24px, 3vw, 40px);
-  background: var(--card);
-  border: 1px solid var(--line);
+  border: 1px solid var(--glass-line);
   border-radius: var(--r-panel);
+  background: var(--glass-strong);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
 }
 .flow-panel + .flow-panel { margin-top: 12px; }
 .flow-panel[hidden] { display: none; }
@@ -983,8 +1035,14 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var
 
 /* the two grid authorities, named in full */
 .flow-auth { list-style: none; margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 560px; }
-.flow-auth li { display: grid; gap: 2px; padding: 14px 16px; border-radius: var(--r-card); background: var(--surface); }
-.flow-auth strong { font-size: 20px; font-weight: 600; line-height: 1.3; }
+.flow-auth li {
+  display: grid; gap: 2px;
+  padding: 14px 16px;
+  border: 1px solid rgb(var(--orange-rgb) / .22);
+  border-radius: var(--r-card);
+  background: linear-gradient(135deg, rgb(var(--orange-rgb) / .1), rgb(var(--orange-rgb) / .02));
+}
+.flow-auth strong { font-size: 20px; font-weight: 600; line-height: 1.3; color: var(--accent-text); }
 .flow-auth span { font-size: 15px; line-height: 1.5; }
 .flow-auth small { font-size: 14px; line-height: 1.5; color: var(--muted); }
 
@@ -1008,14 +1066,25 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var
   font-size: 15px; color: var(--ink-soft);
   transition: background-color .2s, color .2s;
 }
-.flow-prev:hover { background: var(--surface); color: var(--ink); }
+.flow-prev:hover { background: var(--hover); color: var(--ink); }
 .flow-prev svg { width: 14px; height: 14px; transform: rotate(180deg); }
 
-/* one-shot: the line draws in when the section arrives; a chosen step's panel settles in */
+/* One-shot moments (main.js, playOnce): the bar draws in after the cards arrive; a
+   chosen phase's badge pops and its panel settles in, checklist items following. */
 @keyframes rail-draw { from { transform: scaleX(0); } }
-@keyframes flow-in { from { opacity: 0; transform: translate3d(0, 8px, 0); } }
-.flow-line.rail-draw i { animation: rail-draw 1.1s var(--ease) .15s backwards; }
-.flow-panel.flow-in { animation: flow-in .45s var(--ease) backwards; }
+@keyframes flow-in { from { opacity: 0; transform: translate3d(0, 12px, 0) scale(.985); } }
+@keyframes badge-pop {
+  from { transform: scale(.82); box-shadow: 0 0 0 0 rgb(var(--orange-rgb) / .55); }
+  60% { box-shadow: 0 0 0 12px rgb(var(--orange-rgb) / 0); }
+}
+.flow-line.rail-draw i { animation: rail-draw 1.1s var(--ease) .35s backwards; }
+.flow-badge.badge-pop { animation: badge-pop .6s var(--ease); }
+.flow-panel.flow-in { animation: flow-in .5s var(--ease) backwards; }
+.flow-panel.flow-in .flow-get li,
+.flow-panel.flow-in .flow-auth li { animation: rise-in .5s var(--ease) backwards; animation-delay: calc(120ms + var(--i, 0) * 70ms); }
+.flow-get li:nth-child(2), .flow-auth li:nth-child(2) { --i: 1; }
+.flow-get li:nth-child(3) { --i: 2; }
+.flow-get li:nth-child(4) { --i: 3; }
 
 /* ---------- engineering standards ---------- */
 
@@ -1058,22 +1127,31 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var
   .process-head { grid-template-columns: 1fr; gap: 16px; }
   .flow-panel { grid-template-columns: 1fr; }
   .flow-get { padding: 20px 0 0; border-left: 0; border-top: 1px solid var(--line); }
+  .flow-sum { display: none; }
+  .flow-letter { font-size: 40px; }
 }
+/* phones and small tablets: four compact cards, badge over a short name, letter in the corner */
 @media (max-width: 767px) {
-  .epc { grid-template-columns: 1fr; }
-  .epc li { padding: 16px 0 0; }
-  .epc li + li { padding-left: 0; border-left: 0; }
-  .flow { margin-top: 40px; }
+  .flow { margin-top: 36px; }
   .flow-rail { gap: 8px; }
-  .flow-tab { align-items: center; padding: 0 0 4px; text-align: center; }
-  .flow-num { width: 40px; height: 40px; margin-bottom: 6px; }
-  .flow-name { font-size: 15px; }
-  .flow-name-full, .flow-en { display: none; }
+  .flow-tab {
+    position: relative;
+    grid-template-columns: 1fr;
+    grid-template-areas: "badge" "name";
+    justify-items: center;
+    gap: 10px;
+    padding: 16px 6px 12px;
+    text-align: center;
+    border-radius: var(--r-card);
+  }
+  .flow-letter { position: absolute; top: 6px; right: 8px; font-size: 18px; font-weight: 500; }
+  .flow-en, .flow-name-full { display: none; }
   .flow-name-short { display: inline; }
-  /* nodes are centred in their columns here */
-  .flow-line { top: 19px; left: calc((100% - 24px) / 8); right: calc((100% - 24px) / 8); }
+  .flow-name { font-size: 15px; }
+  .flow-badge { width: 40px; height: 40px; }
 }
 @media (max-width: 639px) {
+  .flow { padding: 8px; border-radius: var(--r-panel); }
   .flow-panel { padding: 22px 20px; }
   .flow-auth { grid-template-columns: 1fr; }
   .flow-nav .btn { padding-left: 18px; }
@@ -1249,7 +1327,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var
    start from the offset and end at the element's own style (no fill-forwards).
    If JS, IntersectionObserver or animations don't run, everything simply shows. */
 
-@keyframes rise-in { from { opacity: 0; transform: translate3d(0, 14px, 0); } }
+@keyframes rise-in { from { opacity: 0; transform: translate3d(0, 24px, 0); } }
 @keyframes drop-in { from { opacity: 0; transform: translate3d(0, -10px, 0); } }
 @keyframes line-up { from { transform: translate3d(0, 108%, 0); } }
 @keyframes video-in { from { opacity: 0; transform: scale(1.06); } }
@@ -1265,7 +1343,7 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var
 .hero h1 .line > span { animation: line-up .9s var(--ease) var(--d, 0ms) backwards; }
 
 /* scroll reveal: main.js adds .reveal-in just before a block enters the viewport */
-.reveal-in { animation: rise-in .6s var(--ease) var(--d, 0ms) backwards; }
+.reveal-in { animation: rise-in .8s var(--ease) var(--d, 0ms) backwards; }
 .impact-panel.reveal-in { animation: aperture 1.1s var(--ease) backwards; }
 .impact-panel.reveal-in video { animation: settle 1.4s var(--ease) backwards; }
 .wordmark.reveal-in { animation: none; }
@@ -1368,7 +1446,9 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
   /* motion becomes a short fade; nothing is held hidden */
   .hero-video, .hero [data-in], .hero .nav[data-in], .hero h1 .line > span,
   .reveal-in, .impact-panel.reveal-in, .wordmark.reveal-in .ch,
-  .flow-panel.flow-in, .flow-line.rail-draw i { animation-name: fade-in; }
+  .flow-panel.flow-in, .flow-line.rail-draw i,
+  .flow-panel.flow-in .flow-get li, .flow-panel.flow-in .flow-auth li { animation-name: fade-in; }
+  .flow-badge.badge-pop { animation: none; }
   .impact-panel.reveal-in video { animation: none; }
   .nav.is-stuck { animation: nav-fade .4s ease; }
   .pk:hover .pk-media video, .pk:hover .pk-media .frame-img { transform: none; }
@@ -1638,6 +1718,8 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
 
 @media (prefers-reduced-motion: reduce) {
   .media-frame.is-loading::after { animation: none; }
-  .flow-line i, .flow-num, .flow-prev { transition-duration: .01s; }
+  .flow-line i, .flow-tab, .flow-badge, .flow-letter, .flow-prev { transition-duration: .01s; }
+  .flow-tab[aria-selected="true"], .flow-tab:hover:not([aria-selected="true"]), .is-interactive .flow-tab:active,
+  .flow-tab:hover .flow-badge, .flow-tab:hover .flow-letter { transform: none; }
   .nav-links, .nav.is-open .nav-links { transform: none; transition-duration: .01s; }
 }
