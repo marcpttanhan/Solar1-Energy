@@ -47,12 +47,17 @@ createServer((req, res) => {
   if (path.endsWith('/')) path += 'index.html';
   let file = normalize(join(ROOT, path));
   if (!file.startsWith(normalize(ROOT + sep))) { res.writeHead(403).end(); return; }
+  // Like Vercel: a path with no file gets /404.html with status 404.
+  const notFound = () => {
+    try { res.writeHead(404, { ...extra, 'Content-Type': TYPES['.html'], 'Cache-Control': 'no-cache' }).end(readFileSync(join(ROOT, '404.html'))); }
+    catch { res.writeHead(404).end('Not found'); }
+  };
   let stat;
   try {
     stat = statSync(file);
     if (stat.isDirectory()) { file = join(file, 'index.html'); stat = statSync(file); }
-  } catch { res.writeHead(404).end('Not found'); return; }
-  if (!stat.isFile()) { res.writeHead(404).end('Not found'); return; }
+  } catch { notFound(); return; }
+  if (!stat.isFile()) { notFound(); return; }
 
   const headers = { 'Cache-Control': 'no-cache', ...extra, 'Content-Type': TYPES[extname(file).toLowerCase()] || 'application/octet-stream', 'Accept-Ranges': 'bytes' };
   headers['Cache-Control'] = 'no-cache'; // local edits should always show

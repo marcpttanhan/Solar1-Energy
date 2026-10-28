@@ -536,4 +536,51 @@ for (const p of PAGES) {
   fs.writeFileSync(out, html);
   console.log(`wrote /${p.route} (${Math.round(Buffer.byteLength(html) / 1024)} KB)`);
 }
+// ---------- 404 ----------
+// Vercel serves /404.html (status 404) for any path with no file, at any depth, so every
+// link and asset is absolute. Same theme script as the homepage (keeps the CSP hash valid);
+// noindex so the error page never shows up in search.
+const notFound = `<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ไม่พบหน้าที่คุณต้องการ | Solar 1 Energy</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#F3F5F7">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="/Font/Anuphan/Anuphan-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
+${THEME}  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/pages.css">
+</head>
+<body>
+<main id="content" class="nf">
+  <div class="nf-stage">
+    <a class="nf-logo" href="/" aria-label="Solar 1 Energy หน้าแรก"><picture><source srcset="/Media/logo-mark.webp" type="image/webp"><img src="${asset('Media/logo-mark.png')}" width="160" height="144" alt="Solar 1 Energy"></picture></a>
+    <div class="nf-card">
+      <p class="nf-code" aria-hidden="true">404</p>
+      <h1 class="nf-title">ไม่พบหน้าที่คุณต้องการ</h1>
+      <p class="nf-text">ลิงก์นี้อาจพิมพ์ผิด ถูกย้าย หรือไม่มีอยู่แล้ว กลับไปที่หน้าแรกเพื่อดูบริการติดตั้งโซลาร์เซลล์ของเรา หรือเลือกหัวข้อที่สนใจด้านล่าง</p>
+      <div class="nf-actions">
+        <a class="btn btn--orange" href="/">กลับหน้าแรก ${ARROW}</a>
+        <a class="btn btn--plain nf-ghost" href="/#contact">ติดต่อเรา</a>
+      </div>
+      <nav class="nf-links" aria-label="หัวข้อแนะนำ">
+        <a href="/#process">บริการ EPC</a>
+        <a href="/#packages">แพ็กเกจ</a>
+        <a href="/#calculator">คำนวณความคุ้มค่า</a>
+        <a href="/#projects">ผลงาน</a>
+      </nav>
+    </div>
+    <p class="nf-foot">© 2569 Solar 1 Energy</p>
+  </div>
+</main>
+</body>
+</html>
+`;
+fs.writeFileSync(path.join(ROOT, '404.html'), notFound);
+console.log(`wrote /404.html (${Math.round(Buffer.byteLength(notFound) / 1024)} KB)`);
+
 if (missing.length) { console.error('missing assets:\n  ' + [...new Set(missing)].join('\n  ')); process.exit(1); }
