@@ -81,10 +81,10 @@
     contact: {
       addressLines: ['บริษัท โซล่าร์ 1 เอ็นเนอร์ยี่ จำกัด', '81/22 หมู่ 2 ต.บางเตย อ.สามพราน', 'จ.นครปฐม 73210', 'ใกล้เซ็นทรัล ศาลายา', 'ให้บริการติดตั้งทั่วประเทศ'],
       phone: '082-416-9619, 098-453-3655',
-      email: 'solar1.ceo@gmail.com',
+      email: 'Solar1.ceo@gmail.com',
       hours: 'จันทร์–เสาร์ 08:00–17:00 น.',
-      lineId: 'Solar1energy',
-      facebook: 'https://www.facebook.com/share/1FhEmbRb5u/',
+      lineId: 'solar1.korat',
+      facebook: 'https://www.facebook.com/share/19szTP2P9t/',
       instagram: '',
       youtube: '',
       tiktok: 'https://www.tiktok.com/@solar1.ceo',
@@ -94,6 +94,8 @@
     // kw is the system size in kW; saving is the reduction in baht per month
     // (savingUpTo: the profile gives a range, shown as "up to" its top figure);
     // year is the Buddhist-era year the installation was completed (0 = not stated).
+    // planned: designed but not yet handed over (quotation QT260224, 2569). Its image is a
+    // 3D render and its saving an estimate, and the cards say so; year is the design year.
     projects: {
       stats: [
         { value: 10, small: '+ ปี', label: 'ประสบการณ์ของทีมสถาปนิกและวิศวกร' },
@@ -102,7 +104,8 @@
         { value: 1.75, small: 'ล้านบาท', label: 'ค่าไฟที่ระบบนี้ลดได้ต่อเดือน' },
       ],
       items: [
-        { name: 'บริษัท เควีเอส เฟรชโปรดักส์ จำกัด', category: 'industry', location: 'เก้าเลี้ยว นครสวรรค์', kw: 3500, saving: 1750000, savingUpTo: false, year: 2568, image: 'Media/projects/kvs-fresh-products-3-5mw.webp', featured: true },
+        { name: 'บริษัท เอี่ยมเฮง โมดิฟาย สตาร์ช จำกัด', category: 'industry', location: 'หนองบุญมาก นครราชสีมา', kw: 3045, saving: 1522500, savingUpTo: false, year: 2569, image: 'Media/projects/eiamheng-modify-starch-3mw.webp', featured: true, planned: true },
+        { name: 'บริษัท เควีเอส เฟรชโปรดักส์ จำกัด', category: 'industry', location: 'เก้าเลี้ยว นครสวรรค์', kw: 3500, saving: 1750000, savingUpTo: false, year: 2568, image: 'Media/projects/kvs-fresh-products-3-5mw.webp' },
         { name: 'บริษัท เควีเอส เฟรชโปรดักส์ จำกัด', category: 'industry', location: 'เก้าเลี้ยว นครสวรรค์', kw: 1000, saving: 500000, savingUpTo: false, year: 2568, image: 'Media/projects/kvs-fresh-products-1mw.webp' },
         { name: 'บริษัท ศรีสุดาฟาร์ม จำกัด', category: 'industry', location: 'เมืองนครสวรรค์ นครสวรรค์', kw: 1000, saving: 500000, savingUpTo: false, year: 2568, image: 'Media/projects/srisuda-farm-1mw.webp' },
         { name: 'บริษัท เคลฟเวอร์ กู๊ดส์ จำกัด', category: 'industry', location: 'เก้าเลี้ยว นครสวรรค์', kw: 500, saving: 250000, savingUpTo: false, year: 2568, image: 'Media/projects/clever-goods-500kw.webp' },
@@ -172,7 +175,7 @@
   // Accepts https/http URLs and same-site relative paths ("Media/x.jpg").
   // Anything else (javascript:, data:, protocol-relative //host) is rejected.
   // LINE add-friend link. Official-account IDs start with "@" (R/ti/p/%40id);
-  // personal-style IDs use the "~" form, e.g. https://line.me/ti/p/~Solar1energy.
+  // personal-style IDs use the "~" form, e.g. https://line.me/ti/p/~solar1.korat.
   function lineUrl(id) {
     const s = String(id ?? '').trim();
     if (!s) return '';
@@ -334,6 +337,7 @@
             year: Math.round(num(p.year, 0, 0, 3000)),
             image: safeUrl(p.image),
             featured: p.featured === true,
+            planned: p.planned === true,
           };
         }).filter((p) => p.name)
       : clone(def.items);

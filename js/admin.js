@@ -673,7 +673,8 @@
         field('ค่าไฟที่ลดได้ (บาท/เดือน)', number(p, 'saving', { min: 0, step: 100 }), 'ใส่ 0 เพื่อซ่อน')),
       h('div', { class: 'checks' },
         checkbox(p, 'savingUpTo', 'แสดงค่าไฟเป็น "สูงสุด" (กรณีข้อมูลเป็นช่วง)'),
-        checkbox(p, 'featured', 'แสดงเป็นโครงการเด่น (การ์ดใหญ่ ใช้รายการแรกที่เลือก)')),
+        checkbox(p, 'featured', 'แสดงเป็นโครงการเด่น (การ์ดใหญ่ ใช้รายการแรกที่เลือก)'),
+        checkbox(p, 'planned', 'ยังไม่ส่งมอบ: รูปเป็นภาพจำลอง ค่าไฟเป็นค่าประมาณ และปีคือปีที่ออกแบบ')),
       media(p, 'image', 'image', 'รูปผลงาน', 'เช่น Media/projects/ชื่อไฟล์.webp หรือลิงก์ https://')));
 
     const clientRows = d.clients.map((c, i) => h('div', { class: 'card' },
@@ -695,7 +696,7 @@
           ? h('button', {
               class: 'btn btn--dashed', type: 'button',
               onclick: () => {
-                d.items.push({ name: '', category: 'business', location: '', kw: 0, saving: 0, savingUpTo: false, year: 0, image: '', featured: false });
+                d.items.push({ name: '', category: 'business', location: '', kw: 0, saving: 0, savingUpTo: false, year: 0, image: '', featured: false, planned: false });
                 renderEditor();
               },
             }, 'เพิ่มผลงาน')

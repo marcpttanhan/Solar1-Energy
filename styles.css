@@ -463,6 +463,49 @@ a, button, input, label { -webkit-tap-highlight-color: transparent; }
 .stat-num small { font-size: 26px; color: var(--orange); margin-left: 4px; font-weight: 400; }
 .stat-label { font-size: 14px; color: var(--ink-soft); }
 
+/* branch network: the HQ is the one filled card, the branches are quiet outlines.
+   Nothing here is a link, so there are no hover states. */
+.branches {
+  margin-top: clamp(40px, 5vw, 64px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+  gap: clamp(24px, 3vw, 48px);
+  align-items: start;
+}
+.branches-title { font-size: clamp(22px, 1vw + 16px, 28px); font-weight: 400; line-height: 1.3; }
+.branches-title span { display: inline-block; }
+.branches-head p { margin-top: 12px; max-width: 360px; font-size: 15px; line-height: 1.7; color: var(--ink-soft); }
+.branch-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.branch {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 10px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--card);
+}
+.branch svg { grid-row: span 2; width: 22px; height: 22px; margin-top: 2px; color: var(--muted); }
+.branch strong { font-size: 18px; font-weight: 500; line-height: 1.4; }
+.branch span { font-size: 14px; line-height: 1.5; color: var(--muted); }
+.branch--hq {
+  grid-row: span 2;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr auto auto;
+  padding: 20px;
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+.branch--hq svg { grid-row: auto; width: 28px; height: 28px; margin: 0 0 24px; color: var(--orange); }
+.branch--hq strong { font-size: 26px; font-weight: 400; }
+.branch--hq span { color: var(--on-ink); opacity: .8; }
+
 /* ---------- packages ---------- */
 
 .packages { padding: var(--section-gap) 0 0; }
@@ -820,6 +863,21 @@ input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var
 }
 .pj-feature-stats small { margin-left: 4px; font-size: 24px; font-weight: 400; letter-spacing: 0; color: var(--accent-text); }
 .pj-feature-stats span { display: block; margin-top: 6px; font-size: 14px; line-height: 1.5; color: var(--muted); }
+
+/* labels a 3D render (a project not yet handed over) so it isn't read as a site photo */
+.pj-chip {
+  position: absolute; z-index: 1;
+  top: 12px; left: 12px;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  font-size: 14px; line-height: 1.4;
+  color: var(--ink);
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+}
 
 .pj-bar {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
@@ -1534,6 +1592,13 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
   }
   .stat:nth-child(n) { height: auto; min-height: 150px; gap: 16px; }
 
+  /* branches: copy above, HQ across the top, branches three to a row */
+  .branches { grid-template-columns: 1fr; gap: 20px; }
+  .branches-head p { max-width: 560px; }
+  .branch-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .branch--hq { grid-column: 1 / -1; grid-row: auto; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: none; column-gap: 12px; }
+  .branch--hq svg { grid-row: span 2; margin: 2px 0 0; }
+
   /* packages: two columns; an odd last card spans both with photo beside text */
   .pk-grid { grid-template-columns: 1fr 1fr; gap: 36px 16px; }
   .pk-fit { min-height: 0; }
@@ -1591,6 +1656,12 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
   .logo-chip { gap: 8px; }
   .logo-chip span { display: inline; font-size: 14px; }
   .logo-chip img, .nav.is-stuck .logo-chip img { height: 36px; }
+
+  .branch-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .branch { padding: 14px; column-gap: 8px; }
+  .branch svg { width: 20px; height: 20px; }
+  .branch--hq { padding: 16px; }
+  .branch--hq strong { font-size: 22px; }
 
   .nav-links {
     position: absolute;

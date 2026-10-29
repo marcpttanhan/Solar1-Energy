@@ -44,8 +44,10 @@ const MAP_EMBED = MAP_CARD.match(/<iframe[^>]*><\/iframe>/)[0];
 // ---------- helpers (formatting mirrors main.js) ----------
 const esc = C.esc;
 const num = (n, max = 2) => n.toLocaleString('th-TH', { maximumFractionDigits: max });
-const kwParts = (kw) => (kw >= 1000 ? [num(kw / 1000), 'MW'] : [num(kw), 'kW']);
+const kwParts = (kw) => (kw >= 1000 ? [num(kw / 1000, 3), 'MW'] : [num(kw), 'kW']);
 const savingText = (p) => `${p.savingUpTo ? 'สูงสุด ' : ''}${num(p.saving, 0)} บาท/เดือน`;
+// planned items (designed, not yet handed over): 3D render + estimated saving
+const RENDER_CHIP = '<span class="pj-chip">ภาพจำลอง 3 มิติ</span>';
 const phones = contact.phone.split(',').map((p) => p.trim()).filter(Boolean);
 const tel = (p) => `tel:${p.replace(/[^\d+]/g, '')}`;
 const LINE_URL = C.lineUrl(contact.lineId);
@@ -70,7 +72,7 @@ const SIZES = {
 function projectImg(p, sizes, { eager = false } = {}) {
   const base = p.image.replace(/\.webp$/, '');
   const [k, unit] = kwParts(p.kw);
-  const alt = esc(`ระบบโซลาร์ ${k} ${unit} ของ${p.name} ${p.location}`);
+  const alt = esc(`${p.planned ? 'ภาพจำลอง' : ''}ระบบโซลาร์ ${k} ${unit} ของ${p.name} ${p.location}`.trim());
   asset(p.image);
   return `<img class="frame-img" src="${asset(`${base}-800.webp`)}" srcset="${asset(`${base}-480.webp`)} 480w, /${base}-800.webp 800w" sizes="${sizes}" width="800" height="600" alt="${alt}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
 }
@@ -79,13 +81,13 @@ function pjCard(p) {
   const [k, unit] = kwParts(p.kw);
   return `
         <article class="pj">
-          <div class="pj-media media-frame">${projectImg(p, SIZES.pj)}</div>
+          <div class="pj-media media-frame">${projectImg(p, SIZES.pj)}${p.planned ? RENDER_CHIP : ''}</div>
           <h3 class="pj-name">${esc(p.name)}</h3>
           <p class="pj-loc">${esc(p.location)}</p>
           <dl class="pj-specs">
             <div><dt>ขนาดระบบ</dt><dd>${k} ${unit}</dd></div>${p.saving ? `
-            <div><dt>ลดค่าไฟ</dt><dd>${savingText(p)}</dd></div>` : ''}${p.year ? `
-            <div><dt>ติดตั้งปี</dt><dd>${p.year}</dd></div>` : ''}
+            <div><dt>${p.planned ? 'คาดว่าลดค่าไฟ' : 'ลดค่าไฟ'}</dt><dd>${savingText(p)}</dd></div>` : ''}${p.year ? `
+            <div><dt>${p.planned ? 'ออกแบบปี' : 'ติดตั้งปี'}</dt><dd>${p.year}</dd></div>` : ''}
           </dl>
         </article>`;
 }
@@ -96,18 +98,20 @@ const pjGrid = (items) => `
 function pjFeature(f) {
   const [k, unit] = kwParts(f.kw);
   const big = f.saving >= 1e6;
+  const when = f.planned ? 'ภาพจำลองระบบที่ทีมของเราออกแบบ' : f.year ? `ติดตั้งแล้วเสร็จปี ${f.year}` : '';
+  const savedLabel = f.planned ? 'ค่าไฟที่คาดว่าจะลดได้ต่อเดือน' : `ค่าไฟที่ลด${f.savingUpTo ? 'ได้สูงสุด' : 'ได้'}ต่อเดือน`;
   return `
       <article class="pj-feature">
-        <div class="pj-feature-media media-frame">${projectImg(f, SIZES.feature)}</div>
+        <div class="pj-feature-media media-frame">${projectImg(f, SIZES.feature)}${f.planned ? RENDER_CHIP : ''}</div>
         <div class="pj-feature-body">
           <div>
-            <p class="kicker">โครงการเด่น</p>
+            <p class="kicker">${f.planned ? `โครงการใหม่${f.year ? ` ปี ${f.year}` : ''}` : 'โครงการเด่น'}</p>
             <h3>${esc(f.name)}</h3>
-            <p class="pj-loc">${esc(f.location)}${f.year ? `<br>ติดตั้งแล้วเสร็จปี ${f.year}` : ''}</p>
+            <p class="pj-loc">${[esc(f.location), when].filter(Boolean).join('<br>')}</p>
           </div>
           <div class="pj-feature-stats">
             <div><strong>${k}<small>${unit}</small></strong><span>ขนาดระบบ</span></div>
-            <div><strong>${big ? num(f.saving / 1e6) : num(f.saving, 0)}<small>${big ? 'ล้านบาท' : 'บาท'}</small></strong><span>ค่าไฟที่ลด${f.savingUpTo ? 'ได้สูงสุด' : 'ได้'}ต่อเดือน</span></div>
+            <div><strong>${big ? num(f.saving / 1e6) : num(f.saving, 0)}<small>${big ? 'ล้านบาท' : 'บาท'}</small></strong><span>${savedLabel}</span></div>
           </div>
         </div>
       </article>`;
@@ -240,7 +244,7 @@ const footer = ({ map = true } = {}) => `
       </div>
       <div class="foot-col">
         <h3>เมนู</h3>
-        <ul><li><a href="/">หน้าแรก</a></li><li><a href="/#impact">เกี่ยวกับเรา</a></li><li><a href="/#packages">แพ็กเกจ</a></li><li><a href="/#calculator">คำนวณความคุ้มค่า</a></li><li><a href="/projects">ผลงาน</a></li></ul>
+        <ul><li><a href="/">หน้าแรก</a></li><li><a href="/#impact">เกี่ยวกับเรา</a></li><li><a href="/#branches">สาขา</a></li><li><a href="/#packages">แพ็กเกจ</a></li><li><a href="/#calculator">คำนวณความคุ้มค่า</a></li><li><a href="/projects">ผลงาน</a></li></ul>
       </div>
       <div class="foot-col">
         <h3>บริการ</h3>

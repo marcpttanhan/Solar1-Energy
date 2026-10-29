@@ -73,8 +73,11 @@ let pjFilter = 'all';
 let pjExpanded = false;
 
 const num = (n, max = 2) => n.toLocaleString('th-TH', { maximumFractionDigits: max });
-const kwParts = (kw) => (kw >= 1000 ? [num(kw / 1000), 'MW'] : [num(kw), 'kW']);
+const kwParts = (kw) => (kw >= 1000 ? [num(kw / 1000, 3), 'MW'] : [num(kw), 'kW']);
 const savingText = (p) => `${p.savingUpTo ? 'สูงสุด ' : ''}${num(p.saving, 0)} บาท/เดือน`;
+// A planned item (designed, not yet handed over) shows a 3D render and an estimated
+// saving, so its card is labelled as a render and its figures as estimates.
+const RENDER_CHIP = '<span class="pj-chip">ภาพจำลอง 3 มิติ</span>';
 
 // A failed responsive candidate falls back to the original file once; a photo
 // that still fails is dropped, leaving the frame's line drawing.
@@ -100,7 +103,7 @@ const hasVariants = (src) => /^Media\/projects\/[\w-]+\.webp$/.test(src) && !/-(
 function projectImg(p, sizes = PJ_SIZES) {
   if (!p.image) return '';
   const [k, unit] = kwParts(p.kw);
-  const alt = esc(`ระบบโซลาร์ ${k} ${unit} ของ${p.name} ${p.location}`);
+  const alt = esc(`${p.planned ? 'ภาพจำลอง' : ''}ระบบโซลาร์ ${k} ${unit} ของ${p.name} ${p.location}`.trim());
   if (!hasVariants(p.image)) return `<img class="frame-img" src="${esc(p.image)}" alt="${alt}" loading="lazy" decoding="async">`;
   const base = p.image.slice(0, -5);
   return `<img class="frame-img" src="${base}-800.webp" srcset="${base}-480.webp 480w, ${base}-800.webp 800w" sizes="${sizes}" width="800" height="600" data-full="${esc(p.image)}" alt="${alt}" loading="lazy" decoding="async">`;
@@ -112,17 +115,19 @@ function renderFeature() {
   if (!f) return null;
   const [k, unit] = kwParts(f.kw);
   const big = f.saving >= 1e6;
+  const when = f.planned ? 'ภาพจำลองระบบที่ทีมของเราออกแบบ' : f.year ? `ติดตั้งแล้วเสร็จปี ${f.year}` : '';
+  const savedLabel = f.planned ? 'ค่าไฟที่คาดว่าจะลดได้ต่อเดือน' : `ค่าไฟที่ลด${f.savingUpTo ? 'ได้สูงสุด' : 'ได้'}ต่อเดือน`;
   pjFeature.innerHTML = `
-    <div class="pj-feature-media media-frame">${projectImg(f, PJ_FEATURE_SIZES)}</div>
+    <div class="pj-feature-media media-frame">${projectImg(f, PJ_FEATURE_SIZES)}${f.planned && f.image ? RENDER_CHIP : ''}</div>
     <div class="pj-feature-body">
       <div>
-        <p class="kicker">โครงการเด่น</p>
+        <p class="kicker">${f.planned ? `โครงการใหม่${f.year ? ` ปี ${f.year}` : ''}` : 'โครงการเด่น'}</p>
         <h3>${esc(f.name)}</h3>
-        <p class="pj-loc">${esc(f.location)}${f.year ? `<br>ติดตั้งแล้วเสร็จปี ${f.year}` : ''}</p>
+        <p class="pj-loc">${[esc(f.location), when].filter(Boolean).join('<br>')}</p>
       </div>
       <div class="pj-feature-stats">
         <div><strong>${k}<small>${unit}</small></strong><span>ขนาดระบบ</span></div>
-        ${f.saving ? `<div><strong>${big ? num(f.saving / 1e6) : num(f.saving, 0)}<small>${big ? 'ล้านบาท' : 'บาท'}</small></strong><span>ค่าไฟที่ลด${f.savingUpTo ? 'ได้สูงสุด' : 'ได้'}ต่อเดือน</span></div>` : ''}
+        ${f.saving ? `<div><strong>${big ? num(f.saving / 1e6) : num(f.saving, 0)}<small>${big ? 'ล้านบาท' : 'บาท'}</small></strong><span>${savedLabel}</span></div>` : ''}
       </div>
     </div>`;
   dropBrokenImages(pjFeature);
@@ -137,13 +142,13 @@ function renderProjects() {
     const [k, unit] = kwParts(p.kw);
     return `
     <article class="pj">
-      <div class="pj-media media-frame">${projectImg(p)}</div>
+      <div class="pj-media media-frame">${projectImg(p)}${p.planned && p.image ? RENDER_CHIP : ''}</div>
       <h3 class="pj-name">${esc(p.name)}</h3>
       <p class="pj-loc">${esc(p.location)}</p>
       <dl class="pj-specs">
         <div><dt>ขนาดระบบ</dt><dd>${k} ${unit}</dd></div>
-        ${p.saving ? `<div><dt>ลดค่าไฟ</dt><dd>${savingText(p)}</dd></div>` : ''}
-        ${p.year ? `<div><dt>ติดตั้งปี</dt><dd>${p.year}</dd></div>` : ''}
+        ${p.saving ? `<div><dt>${p.planned ? 'คาดว่าลดค่าไฟ' : 'ลดค่าไฟ'}</dt><dd>${savingText(p)}</dd></div>` : ''}
+        ${p.year ? `<div><dt>${p.planned ? 'ออกแบบปี' : 'ติดตั้งปี'}</dt><dd>${p.year}</dd></div>` : ''}
       </dl>
     </article>`;
   }).join('');
@@ -667,7 +672,7 @@ if (flow) {
 // or a jump link past them), since animating those would only flash.
 // No IntersectionObserver: nothing animates, everything shows.
 const REVEAL_GROUPS = [
-  '.impact-head', '.stats',
+  '.impact-head', '.stats', '.branches-head', '.branch-list',
   '.process-head', '.flow-rail',
   '.packages .split-left', '.pk-head', '.benefits',
   '.calc-top', '.calc-inputs', '.calc-out',
