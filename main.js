@@ -794,10 +794,10 @@ function applyContact(c) {
   document.getElementById('foot-contact').replaceChildren(...items);
   document.getElementById('foot-cta-btn').href = telHref(phonesOf(c.phone)[0] || '') || mailHref(c.email) || '#contact';
 
-  // social channels as labelled pills (same markup as the static HTML)
+  // social channels as labelled pills (same markup as the static HTML). LINE is
+  // left out: the green "แชตทาง LINE" button in the footer CTA already carries it.
   const line = SolarContent.lineUrl(c.lineId);
   const socials = [
-    ['line', line && `LINE ${c.lineId}`, line],
     ['facebook', 'Facebook', c.facebook], ['instagram', 'Instagram', c.instagram],
     ['youtube', 'YouTube', c.youtube], ['tiktok', 'TikTok', c.tiktok],
   ].filter(([, , url]) => url);
