@@ -370,7 +370,23 @@
     return /^https:\/\/[^/]+$/.test(url) && anonKey ? { url, anonKey, adminEmail } : null;
   }
 
-  // Resolves to { section: data } for every row, {} when nothing is stored.
+  // Built-in content that is newer than what Supabase may hold. A row last saved
+  // before its date predates that update (e.g. the 2026-10-29 LINE / Facebook
+  // change), so the defaults win until the row is saved again (admin panel or
+  // supabase_content_seed.sql). Bump a date whenever that section's defaults change.
+  const DEFAULTS_UPDATED = {
+    hero: '2026-10-28T00:00:00+07:00',
+    contact: '2026-10-29T00:00:00+07:00',
+    projects: '2026-10-29T00:00:00+07:00',
+  };
+  function isStale(key, updatedAt) {
+    const since = DEFAULTS_UPDATED[key];
+    if (!since) return false;
+    const t = Date.parse(updatedAt || '');
+    return !(t >= Date.parse(since));
+  }
+
+  // Resolves to { section: data } for every current row, {} when nothing is stored.
   // Rejects on network/HTTP errors or after timeoutMs.
   async function fetchRemote(timeoutMs = 4000) {
     const cfg = config();
@@ -382,7 +398,7 @@
       // publishable keys (sb_publishable_…) are not JWTs and only work as apikey.
       const headers = { apikey: cfg.anonKey, Accept: 'application/json' };
       if (cfg.anonKey.startsWith('eyJ')) headers.Authorization = `Bearer ${cfg.anonKey}`;
-      const res = await fetch(`${cfg.url}/rest/v1/site_content?select=key,data`, {
+      const res = await fetch(`${cfg.url}/rest/v1/site_content?select=key,data,updated_at`, {
         headers,
         signal: ctrl.signal,
         cache: 'no-store',
@@ -390,7 +406,7 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const rows = await res.json();
       const out = {};
-      if (Array.isArray(rows)) rows.forEach((r) => { if (r && SECTIONS.includes(r.key)) out[r.key] = r.data; });
+      if (Array.isArray(rows)) rows.forEach((r) => { if (r && SECTIONS.includes(r.key) && !isStale(r.key, r.updated_at)) out[r.key] = r.data; });
       return out;
     } finally {
       clearTimeout(timer);
@@ -398,7 +414,12 @@
   }
 
   // Last good remote content, so repeat visits render it without waiting.
-  const CACHE_KEY = 'solar1:content:v1';
+  // v1 entries were written before stale rows were filtered out and can hold the
+  // retired LINE ID / Facebook page, so they are deleted on load. Bump the version
+  // (and add the old key here) whenever cached content must be thrown away.
+  const CACHE_KEY = 'solar1:content:v2';
+  const RETIRED_CACHE_KEYS = ['solar1:content:v1'];
+  try { RETIRED_CACHE_KEYS.forEach((k) => localStorage.removeItem(k)); } catch { /* storage blocked */ }
 
   function readCache() {
     const cfg = config();
@@ -421,6 +442,7 @@
     defaults: () => clone(DEFAULTS),
     normalize: (key, data) => NORMALIZE[key](data),
     resolve,
+    isStale,
     config,
     fetchRemote,
     readCache,

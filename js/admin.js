@@ -202,7 +202,11 @@
     for (const key of C.SECTIONS) {
       state.saved[key] = C.normalize(key, rows[key] ? rows[key].data : defaults[key]);
       state.meta[key] = rows[key] ? rows[key].updated_at : null;
-      state.draft[key] = clone(state.saved[key]);
+      // A row older than the built-in content (C.isStale) isn't shown on the site;
+      // the editor opens on the defaults as unsaved changes, so saving brings the
+      // database up to date instead of re-publishing the old values.
+      const stale = rows[key] && C.isStale(key, rows[key].updated_at);
+      state.draft[key] = stale ? C.normalize(key, defaults[key]) : clone(state.saved[key]);
     }
   }
 
@@ -619,7 +623,7 @@
           field('เบอร์โทร', text(d, 'phone', { inputmode: 'tel', maxlength: 80 }), 'หลายเบอร์ให้คั่นด้วยจุลภาค เบอร์แรกใช้กับปุ่มนัดสำรวจหน้างาน'),
           field('อีเมล', text(d, 'email', { inputmode: 'email', maxlength: 120 })),
           field('เวลาทำการ', text(d, 'hours', { maxlength: 80 })),
-          field('LINE ID', text(d, 'lineId', { maxlength: 40, placeholder: '@solar1energy' }), 'ปุ่มในส่วนท้ายจะเปิดแชต LINE โดยตรง'))),
+          field('LINE ID', text(d, 'lineId', { maxlength: 40, placeholder: 'solar1.korat' }), 'ปุ่มในส่วนท้ายจะเปิดแชต LINE โดยตรง'))),
       h('fieldset', { class: 'group' }, h('legend', {}, 'โซเชียลมีเดีย'),
         h('div', { class: 'grid-2' },
           link(d, 'facebook', 'Facebook'),
